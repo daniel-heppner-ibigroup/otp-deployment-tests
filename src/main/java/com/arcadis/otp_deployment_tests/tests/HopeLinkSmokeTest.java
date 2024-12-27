@@ -1,5 +1,8 @@
-package com.arcadis.otp_deployment_tests;
+package com.arcadis.otp_deployment_tests.tests;
 
+import com.arcadis.otp_deployment_tests.CoordinatesStore;
+import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
+import com.arcadis.otp_deployment_tests.SmokeTestRequest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 

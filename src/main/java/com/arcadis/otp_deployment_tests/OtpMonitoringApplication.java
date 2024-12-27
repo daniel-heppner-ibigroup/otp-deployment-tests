@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import net.logstash.logback.argument.StructuredArguments;
 import java.time.Instant;
 import java.util.*;
+import com.arcadis.otp_deployment_tests.tests.SoundTransitSmokeTest;
+import com.arcadis.otp_deployment_tests.tests.HopeLinkSmokeTest;
 
 @SpringBootApplication
 @EnableScheduling
@@ -77,7 +79,8 @@ class TestRunner {
             StructuredArguments.kv("startTime", startTime));
 
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-            .selectors(DiscoverySelectors.selectPackage("com.arcadis.otp_deployment_tests.testsuites"))
+            .selectors(DiscoverySelectors.selectClass(SoundTransitSmokeTest.class))
+            .selectors(DiscoverySelectors.selectClass(HopeLinkSmokeTest.class))
             .build();
 
         launcher.registerTestExecutionListeners(listener);

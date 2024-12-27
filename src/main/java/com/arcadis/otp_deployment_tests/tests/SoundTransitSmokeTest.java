@@ -1,4 +1,4 @@
-package com.arcadis.otp_deployment_tests;
+package com.arcadis.otp_deployment_tests.tests;
 
 import static org.opentripplanner.client.model.RequestMode.TRANSIT;
 import static org.opentripplanner.client.model.RequestMode.WALK;
@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
@@ -19,6 +20,7 @@ import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
 
 @Tag("smoke-test")
 @Tag("soundtransit")
+@DisplayName("Sound Transit Smoke Tests")
 public class SoundTransitSmokeTest {
     private static final String OTP_WEB_URL = "https://sound-transit-qa-otp.ibi-transit.com/";
     public static final CoordinatesStore COORDS;
