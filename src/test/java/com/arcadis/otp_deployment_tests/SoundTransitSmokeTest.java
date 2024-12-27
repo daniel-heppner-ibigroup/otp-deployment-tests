@@ -13,6 +13,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import com.arcadis.otp_deployment_tests.CoordinatesStore;
+import com.arcadis.otp_deployment_tests.SmokeTestRequest;
+import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
 
 @Tag("smoke-test")
 @Tag("soundtransit")
@@ -39,25 +42,25 @@ public class SoundTransitSmokeTest {
         // Create the variables object structure
         var variables = String.format(
             "{\"from\":{\"coordinates\":{\"latitude\":%.7f,\"longitude\":%.7f}},"+
-            "\"to\":{\"coordinates\":{\"latitude\":%.7f,\"longitude\":%.7f}},"+
-            "\"dateTime\":\"%s\"}",
+                "\"to\":{\"coordinates\":{\"latitude\":%.7f,\"longitude\":%.7f}},"+
+                "\"dateTime\":\"%s\"}",
             request.from().lat(),
             request.from().lon(),
             request.to().lat(),
             request.to().lon(),
             ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT)
         );
-        
+
         // Double encode the variables to match the format
         String encodedVariables = URLEncoder.encode(
             URLEncoder.encode(variables, StandardCharsets.UTF_8),
             StandardCharsets.UTF_8
         );
-        
+
         // Calculate center point for map view
         double centerLat = (request.from().lat() + request.to().lat()) / 2;
         double centerLon = (request.from().lon() + request.to().lon()) / 2;
-        
+
         return String.format(
             "%s?variables=%s#10.03/%.4f/%.4f",
             OTP_WEB_URL,
@@ -70,7 +73,7 @@ public class SoundTransitSmokeTest {
     @Test
     public void testItinerary() throws IOException {
         var modes = Set.of(TRANSIT, WALK);
-        
+
         // First trip plan
         var request1 = new SmokeTestRequest(COORDS.get("OLIVE_WAY"), COORDS.get("SHORELINE"), modes);
         System.out.println("Trip 1 Web Link: " + generateOtpWebLink(request1));
@@ -99,23 +102,6 @@ public class SoundTransitSmokeTest {
             .withFarePrice(1.0f, "orca:special", "orca:electronic")
             .assertMatches();
 
-        // Third trip plan
-//        var request3 = new SmokeTestRequest(COORDS.get("CASINO_RD"), COORDS.get("MARYSVILLE"), modes);
-//        System.out.println("Trip 3 Web Link: " + generateOtpWebLink(request3));
-//        plan = SmokeTestRequest.basicTripPlan(request3);
-//        SmokeTestItinerary.from(plan)
-//            .hasLeg()
-//            .withMode("BUS")
-//            .withRouteShortName("8")
-//            .withFarePrice(2.00f, "orca:regular", "orca:cash")
-//            .withFarePrice(1.00f, "orca:special", "orca:electronic")
-//            .hasLeg()
-//            .withMode("BUS")
-//            .withRouteShortName("201", "202")
-//            .withFarePrice(2.50f, "orca:regular", "orca:cash")
-//            .withFarePrice(0.25f, "orca:special", "orca:electronic")
-//            .assertMatches();
-
         var routes = SmokeTestRequest.API_CLIENT.routes();
         var actualAgencies = routes.stream()
             .map(route -> route.agency().name())
@@ -139,6 +125,23 @@ public class SoundTransitSmokeTest {
             )
             .sorted()
             .toList();
+
+        // Third trip plan
+        var request3 = new SmokeTestRequest(COORDS.get("CASINO_RD"), COORDS.get("MARYSVILLE"), modes);
+        System.out.println("Trip 3 Web Link: " + generateOtpWebLink(request3));
+        plan = SmokeTestRequest.basicTripPlan(request3);
+        SmokeTestItinerary.from(plan)
+            .hasLeg()
+            .withMode("BUS")
+            .withRouteShortName("8")
+            .withFarePrice(2.00f, "orca:regular", "orca:cash")
+            .withFarePrice(1.00f, "orca:special", "orca:electronic")
+            .hasLeg()
+            .withMode("BUS")
+            .withRouteShortName("201", "202")
+            .withFarePrice(2.50f, "orca:regular", "orca:cash")
+            .withFarePrice(0.25f, "orca:special", "orca:electronic")
+            .assertMatches();
 
         Assertions.assertTrue(
             actualAgencies.containsAll(expectedAgencies) &&
