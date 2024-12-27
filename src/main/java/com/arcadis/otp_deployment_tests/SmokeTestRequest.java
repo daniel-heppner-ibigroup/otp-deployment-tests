@@ -19,15 +19,11 @@ public record SmokeTestRequest(
     Coordinate from,
     Coordinate to,
     Set<RequestMode> modes,
-    boolean arriveBy
+    boolean arriveBy,
+    OtpApiClient apiClient
 ) {
-    public static final OtpApiClient API_CLIENT = new OtpApiClient(
-        ZoneId.of("America/New_York"),
-        System.getenv().getOrDefault("OTP_API_URL", "https://sound-transit-qa-otp.ibi-transit.com")
-    );
-
-    public SmokeTestRequest(Coordinate from, Coordinate to, Set<RequestMode> modes) {
-        this(from, to, modes, false);
+    public SmokeTestRequest(Coordinate from, Coordinate to, Set<RequestMode> modes, OtpApiClient apiClient) {
+        this(from, to, modes, false, apiClient);
     }
 
     public TripPlanParameters.SearchDirection searchDirection() {
@@ -52,6 +48,6 @@ public record SmokeTestRequest(
             .withTime(weekdayAtNoon())
             .withSearchDirection(req.searchDirection())
             .build();
-        return API_CLIENT.plan(tpr);
+        return req.apiClient().plan(tpr);
     }
 }

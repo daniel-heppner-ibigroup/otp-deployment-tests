@@ -17,12 +17,14 @@ import java.time.format.DateTimeFormatter;
 import com.arcadis.otp_deployment_tests.CoordinatesStore;
 import com.arcadis.otp_deployment_tests.SmokeTestRequest;
 import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
+import org.opentripplanner.client.OtpApiClient;
+import java.time.ZoneId;
 
 @Tag("smoke-test")
 @Tag("soundtransit")
 @DisplayName("Sound Transit Smoke Tests")
 public class SoundTransitSmokeTest {
-    private static final String OTP_WEB_URL = "https://sound-transit-qa-otp.ibi-transit.com/";
+    private static final String OTP_WEB_URL = "https://sound-transit-qa-otp.ibi-transit.com";
     public static final CoordinatesStore COORDS;
 
     static {
@@ -75,9 +77,10 @@ public class SoundTransitSmokeTest {
     @Test
     public void testItinerary() throws IOException {
         var modes = Set.of(TRANSIT, WALK);
+        var apiClient = new OtpApiClient(ZoneId.of("America/New_York"), OTP_WEB_URL);
 
         // First trip plan
-        var request1 = new SmokeTestRequest(COORDS.get("OLIVE_WAY"), COORDS.get("SHORELINE"), modes);
+        var request1 = new SmokeTestRequest(COORDS.get("OLIVE_WAY"), COORDS.get("SHORELINE"), modes, apiClient);
         System.out.println("Trip 1 Web Link: " + generateOtpWebLink(request1));
         var plan = SmokeTestRequest.basicTripPlan(request1);
 
@@ -92,7 +95,7 @@ public class SoundTransitSmokeTest {
             .assertMatches();
 
         // Second trip plan
-        var request2 = new SmokeTestRequest(COORDS.get("RONALD_BOG_PARK"), COORDS.get("OLIVE_WAY"), modes);
+        var request2 = new SmokeTestRequest(COORDS.get("RONALD_BOG_PARK"), COORDS.get("OLIVE_WAY"), modes, apiClient);
         System.out.println("Trip 2 Web Link: " + generateOtpWebLink(request2));
         plan = SmokeTestRequest.basicTripPlan(request2);
         SmokeTestItinerary.from(plan)
@@ -104,7 +107,7 @@ public class SoundTransitSmokeTest {
             .withFarePrice(1.0f, "orca:special", "orca:electronic")
             .assertMatches();
 
-        var routes = SmokeTestRequest.API_CLIENT.routes();
+        var routes = apiClient.routes();
         var actualAgencies = routes.stream()
             .map(route -> route.agency().name())
             .distinct()
@@ -129,7 +132,7 @@ public class SoundTransitSmokeTest {
             .toList();
 
         // Third trip plan
-        var request3 = new SmokeTestRequest(COORDS.get("CASINO_RD"), COORDS.get("MARYSVILLE"), modes);
+        var request3 = new SmokeTestRequest(COORDS.get("CASINO_RD"), COORDS.get("MARYSVILLE"), modes, apiClient);
         System.out.println("Trip 3 Web Link: " + generateOtpWebLink(request3));
         plan = SmokeTestRequest.basicTripPlan(request3);
         SmokeTestItinerary.from(plan)
