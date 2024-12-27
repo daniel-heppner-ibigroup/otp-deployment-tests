@@ -32,6 +32,25 @@ public class SmokeTestItinerary {
         return this;
     }
 
+    public SmokeTestItinerary withRouteLongName(String... longNames) {
+        var message = "route '" + Arrays.toString(longNames) + "'";
+        currentLegCriteria.add(new LegCriterion(
+            message,
+            state -> {
+                Leg leg = state.getLeg();
+                boolean matches =
+                    leg.isTransit() &&
+                        leg.route().longName().isPresent() &&
+                        Arrays.stream(longNames).anyMatch(longName -> Objects.equals(longName, leg.route().longName().get()));
+                if (matches) {
+                    state.addMatch(message);
+                } else {
+                    state.addFailure(message);
+                }
+            }));
+        return this;
+    }
+
     public SmokeTestItinerary withRouteShortName(String... shortNames) {
         var message = "route '" + Arrays.toString(shortNames) + "'";
         currentLegCriteria.add(new LegCriterion(
