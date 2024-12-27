@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
+import net.logstash.logback.argument.StructuredArguments;
+import java.time.Instant;
+import java.util.*;
 
 @SpringBootApplication
 @EnableScheduling
@@ -69,6 +69,13 @@ class TestRunner {
     }
 
     private Map<String, Object> executeTests() {
+        String runId = UUID.randomUUID().toString();
+        Instant startTime = Instant.now();
+        
+        logger.info("Starting test execution", 
+            StructuredArguments.kv("runId", runId),
+            StructuredArguments.kv("startTime", startTime));
+
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
             .selectors(DiscoverySelectors.selectPackage("com.arcadis.otp_deployment_tests.testsuites"))
             .build();
@@ -79,35 +86,69 @@ class TestRunner {
         launcher.execute(request);
         
         TestExecutionSummary summary = listener.getSummary();
-        sample.stop(meterRegistry.timer("otp.tests.duration"));
+        long duration = sample.stop(meterRegistry.timer("otp.tests.duration"));
+        Instant endTime = Instant.now();
 
         // Record test execution metrics
         meterRegistry.counter("otp.tests.total").increment(summary.getTestsFoundCount());
         meterRegistry.counter("otp.tests.failures").increment(summary.getTestsFailedCount());
 
-        // Record individual test results
+        // Log detailed test results
+        Map<String, Object> logContext = new HashMap<>();
+        logContext.put("runId", runId);
+        logContext.put("startTime", startTime);
+        logContext.put("endTime", endTime);
+        logContext.put("durationMs", duration);
+        logContext.put("testsFound", summary.getTestsFoundCount());
+        logContext.put("testsSucceeded", summary.getTestsSucceededCount());
+        logContext.put("testsFailed", summary.getTestsFailedCount());
+        logContext.put("testsSkipped", summary.getTestsSkippedCount());
+
+        // Record individual test failures with details
+        List<Map<String, Object>> failures = new ArrayList<>();
         summary.getFailures().forEach(failure -> {
-            String testClass = failure.getTestIdentifier().getSource()
+            Map<String, Object> failureDetails = new HashMap<>();
+            failureDetails.put("testClass", failure.getTestIdentifier().getSource()
                 .map(source -> source.toString().split("\\[")[0])
-                .orElse("unknown");
+                .orElse("unknown"));
+            failureDetails.put("testName", failure.getTestIdentifier().getDisplayName());
+            failureDetails.put("errorMessage", failure.getException().getMessage());
+            failureDetails.put("stackTrace", Arrays.toString(failure.getException().getStackTrace()));
+            failures.add(failureDetails);
             
-            meterRegistry.counter("otp.test.failure", "class", testClass).increment();
+            // Log each failure separately for easier querying
+            logger.error("Test failure occurred", 
+                StructuredArguments.kv("runId", runId),
+                StructuredArguments.kv("failure", failureDetails));
+
+            meterRegistry.counter("otp.test.failure", 
+                "class", failureDetails.get("testClass").toString(),
+                "testName", failureDetails.get("testName").toString()
+            ).increment();
         });
 
-        // Log summary
-        logger.info("Tests found: {}, Succeeded: {}, Failed: {}, Skipped: {}",
-            summary.getTestsFoundCount(),
-            summary.getTestsSucceededCount(),
-            summary.getTestsFailedCount(),
-            summary.getTestsSkippedCount()
-        );
+        logContext.put("failures", failures);
+
+        // Log complete test summary
+        if (summary.getTestsFailedCount() > 0) {
+            logger.error("Test execution completed with failures", 
+                StructuredArguments.entries(logContext));
+        } else {
+            logger.info("Test execution completed successfully", 
+                StructuredArguments.entries(logContext));
+        }
 
         // Return summary for API endpoint
         Map<String, Object> result = new HashMap<>();
+        result.put("runId", runId);
+        result.put("startTime", startTime);
+        result.put("endTime", endTime);
+        result.put("durationMs", duration);
         result.put("testsFound", summary.getTestsFoundCount());
         result.put("testsSucceeded", summary.getTestsSucceededCount());
         result.put("testsFailed", summary.getTestsFailedCount());
         result.put("testsSkipped", summary.getTestsSkippedCount());
+        result.put("failures", failures);
         return result;
     }
 } 
