@@ -1,0 +1,38 @@
+name: Sound Transit Smoke Test
+
+on:
+  schedule:
+    # Run daily at 9 AM UTC (2 AM PST)
+    - cron: '0 9 * * *'
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven'
+    
+    - name: Build and run smoke tests
+      run: |
+        mvn test -Dgroups="smoke-test & soundtransit"
+    
+    - name: Report failure
+      if: failure()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const issue = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '🚨 Sound Transit Smoke Test Failed',
+            body: `The Sound Transit smoke test failed in run [${context.runId}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})\n\nPlease investigate the failure.`
+          }); 
