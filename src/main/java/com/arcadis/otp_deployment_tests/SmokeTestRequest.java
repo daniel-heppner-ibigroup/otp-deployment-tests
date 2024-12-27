@@ -43,7 +43,7 @@ public record SmokeTestRequest(
         return today.with(TemporalAdjusters.next(DayOfWeek.FRIDAY)).atTime(LocalTime.of(12, 0));
     }
 
-    static TripPlan basicTripPlan(SmokeTestRequest req) throws IOException {
+    public static TripPlan basicTripPlan(SmokeTestRequest req) throws IOException {
         var tpr = TripPlanParameters
             .builder()
             .withFrom(req.from())
