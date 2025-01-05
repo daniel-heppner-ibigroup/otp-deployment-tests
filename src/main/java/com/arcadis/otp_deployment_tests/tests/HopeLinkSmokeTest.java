@@ -187,7 +187,6 @@ public class HopeLinkSmokeTest {
   @Test
   public void marysvilleToEverett() throws IOException {
     var plan = flexPlanRequest("Marysville", "Everett");
-    listLongNames(plan);
 
     checkLongName(plan, "Road to Recovery");
     checkLongName(plan, "Medicaid Transportation");
@@ -206,7 +205,6 @@ public class HopeLinkSmokeTest {
   @Test
   public void withinBothell() throws IOException {
     var plan = flexPlanRequest("Bothell", "Bothell2");
-    listLongNames(plan);
 
     checkLongName(plan, "Road to Recovery");
     checkLongName(plan, "Volunteer Transportation");
@@ -223,7 +221,6 @@ public class HopeLinkSmokeTest {
       weekdayAtTime(LocalTime.of(8, 0))
     );
 
-    listLongNames(plan);
     // only getting this one on QA?
     checkLongName(plan, "D'Arling Direct");
   }
@@ -232,7 +229,6 @@ public class HopeLinkSmokeTest {
   public void metroFlexNorth() throws IOException {
     var plan = flexPlanRequest("KenmorePR", "MountlakeTerraceTC");
 
-    listLongNames(plan);
     checkLongName(plan, "Northshore");
   }
 }

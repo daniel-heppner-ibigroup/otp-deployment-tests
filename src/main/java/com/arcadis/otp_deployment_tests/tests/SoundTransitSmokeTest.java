@@ -26,7 +26,7 @@ import org.opentripplanner.client.OtpApiClient;
 public class SoundTransitSmokeTest {
 
   private static final String OTP_WEB_URL =
-    "https://sound-transit-qa-otp.ibi-transit.com";
+    "https://sound-transit-otp.ibi-transit.com";
   public static final CoordinatesStore COORDS;
 
   static {
