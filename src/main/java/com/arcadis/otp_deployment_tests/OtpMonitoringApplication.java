@@ -43,12 +43,12 @@ class TestRunner {
   );
   private final MeterRegistry meterRegistry;
   private final Launcher launcher;
-  private final SummaryGeneratingListener listener;
+  private final Map<Class<?>, String> testSuites;
 
   public TestRunner(MeterRegistry meterRegistry) {
     this.meterRegistry = meterRegistry;
     this.launcher = LauncherFactory.create();
-    this.listener = new SummaryGeneratingListener();
+    this.testSuites = new HashMap<>();
 
     // Initialize base metrics
     Counter
@@ -65,6 +65,23 @@ class TestRunner {
       .builder("otp.tests.duration")
       .description("Time taken to execute OTP tests")
       .register(meterRegistry);
+
+
+    // Add test suites
+    addTestSuite(SoundTransitSmokeTest.class, "SoundTransit");
+    addTestSuite(HopeLinkSmokeTest.class, "Hopelink");
+  }
+
+  private void addTestSuite(Class<?> clazz, String name) {
+    testSuites.put(clazz, name);
+    Counter
+      .builder(String.format("otp.tests.%s.total", name))
+      .description(String.format("Total number of %s OTP tests run", name))
+      .register(meterRegistry);
+    Counter
+      .builder(String.format("otp.tests.%s.failures", name))
+      .description(String.format("Total number of %s OTP test failures", name))
+      .register(meterRegistry);
   }
 
   @GetMapping("/run-tests")
@@ -80,53 +97,49 @@ class TestRunner {
   private Map<String, Object> executeTests() {
     String runId = UUID.randomUUID().toString();
     Instant startTime = Instant.now();
-
+    Timer.Sample totalSample = Timer.start(meterRegistry);
+    
     logger.info(
       "Starting test execution",
       StructuredArguments.kv("runId", runId),
       StructuredArguments.kv("startTime", startTime)
     );
 
-    LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
-      .request()
-      .selectors(DiscoverySelectors.selectClass(SoundTransitSmokeTest.class))
-      .selectors(DiscoverySelectors.selectClass(HopeLinkSmokeTest.class))
-      .build();
+    List<Map<String, Object>> allFailures = new ArrayList<>();
+    Map<String, TestExecutionSummary> suiteResults = new HashMap<>();
+    
+    // Run each test suite individually
+    for (Map.Entry<Class<?>, String> suite : testSuites.entrySet()) {
+      String suiteName = suite.getValue();
+      Class<?> suiteClass = suite.getKey();
+      
+      LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
+        .request()
+        .selectors(DiscoverySelectors.selectClass(suiteClass))
+        .build();
 
-    launcher.registerTestExecutionListeners(listener);
-
-    Timer.Sample sample = Timer.start(meterRegistry);
-    launcher.execute(request);
-
-    TestExecutionSummary summary = listener.getSummary();
-    long duration = sample.stop(meterRegistry.timer("otp.tests.duration"));
-    Instant endTime = Instant.now();
-
-    // Record test execution metrics
-    meterRegistry
-      .counter("otp.tests.total")
-      .increment(summary.getTestsFoundCount());
-    meterRegistry
-      .counter("otp.tests.failures")
-      .increment(summary.getTestsFailedCount());
-
-    // Log detailed test results
-    Map<String, Object> logContext = new HashMap<>();
-    logContext.put("runId", runId);
-    logContext.put("startTime", startTime);
-    logContext.put("endTime", endTime);
-    logContext.put("durationMs", duration);
-    logContext.put("testsFound", summary.getTestsFoundCount());
-    logContext.put("testsSucceeded", summary.getTestsSucceededCount());
-    logContext.put("testsFailed", summary.getTestsFailedCount());
-    logContext.put("testsSkipped", summary.getTestsSkippedCount());
-
-    // Record individual test failures with details
-    List<Map<String, Object>> failures = new ArrayList<>();
-    summary
-      .getFailures()
-      .forEach(failure -> {
+      SummaryGeneratingListener listener = new SummaryGeneratingListener();
+      launcher.registerTestExecutionListeners(listener);
+      
+      Timer.Sample suiteSample = Timer.start(meterRegistry);
+      launcher.execute(request);
+      suiteSample.stop(meterRegistry.timer("otp.tests." + suiteName + ".duration"));
+      
+      TestExecutionSummary summary = listener.getSummary();
+      suiteResults.put(suiteName, summary);
+      
+      // Record suite-specific metrics
+      meterRegistry
+        .counter("otp.tests." + suiteName + ".total")
+        .increment(summary.getTestsFoundCount());
+      meterRegistry
+        .counter("otp.tests." + suiteName + ".failures")
+        .increment(summary.getTestsFailedCount());
+      
+      // Collect failures for this suite
+      summary.getFailures().forEach(failure -> {
         Map<String, Object> failureDetails = new HashMap<>();
+        failureDetails.put("suite", suiteName);
         failureDetails.put(
           "testClass",
           failure
@@ -144,11 +157,10 @@ class TestRunner {
           "stackTrace",
           Arrays.toString(failure.getException().getStackTrace())
         );
-        failures.add(failureDetails);
+        allFailures.add(failureDetails);
 
-        // Log each failure separately for easier querying
         logger.error(
-          "Test failure occurred",
+          "Test failure occurred in suite: " + suiteName,
           StructuredArguments.kv("runId", runId),
           StructuredArguments.kv("failure", failureDetails)
         );
@@ -156,40 +168,72 @@ class TestRunner {
         meterRegistry
           .counter(
             "otp.test.failure",
-            "class",
-            failureDetails.get("testClass").toString(),
-            "testName",
-            failureDetails.get("testName").toString()
+            "suite", suiteName,
+            "class", failureDetails.get("testClass").toString(),
+            "testName", failureDetails.get("testName").toString()
           )
           .increment();
       });
-
-    logContext.put("failures", failures);
-
-    // Log complete test summary
-    if (summary.getTestsFailedCount() > 0) {
-      logger.error(
-        "Test execution completed with failures",
-        StructuredArguments.entries(logContext)
-      );
-    } else {
-      logger.info(
-        "Test execution completed successfully",
-        StructuredArguments.entries(logContext)
-      );
     }
 
-    // Return summary for API endpoint
+    long totalDuration = totalSample.stop(meterRegistry.timer("otp.tests.duration"));
+    Instant endTime = Instant.now();
+
+    // Calculate total metrics across all suites
+    long totalTestsFound = suiteResults.values().stream()
+      .mapToLong(TestExecutionSummary::getTestsFoundCount)
+      .sum();
+    long totalTestsSucceeded = suiteResults.values().stream()
+      .mapToLong(TestExecutionSummary::getTestsSucceededCount)
+      .sum();
+    long totalTestsFailed = suiteResults.values().stream()
+      .mapToLong(TestExecutionSummary::getTestsFailedCount)
+      .sum();
+    long totalTestsSkipped = suiteResults.values().stream()
+      .mapToLong(TestExecutionSummary::getTestsSkippedCount)
+      .sum();
+
+    // Update global metrics
+    meterRegistry.counter("otp.tests.total").increment(totalTestsFound);
+    meterRegistry.counter("otp.tests.failures").increment(totalTestsFailed);
+
+    // Prepare result map
     Map<String, Object> result = new HashMap<>();
     result.put("runId", runId);
     result.put("startTime", startTime);
     result.put("endTime", endTime);
-    result.put("durationMs", duration);
-    result.put("testsFound", summary.getTestsFoundCount());
-    result.put("testsSucceeded", summary.getTestsSucceededCount());
-    result.put("testsFailed", summary.getTestsFailedCount());
-    result.put("testsSkipped", summary.getTestsSkippedCount());
-    result.put("failures", failures);
+    result.put("durationMs", totalDuration);
+    result.put("testsFound", totalTestsFound);
+    result.put("testsSucceeded", totalTestsSucceeded);
+    result.put("testsFailed", totalTestsFailed);
+    result.put("testsSkipped", totalTestsSkipped);
+    result.put("failures", allFailures);
+    
+    // Add per-suite results
+    Map<String, Object> suiteStats = new HashMap<>();
+    suiteResults.forEach((suiteName, summary) -> {
+      Map<String, Object> stats = new HashMap<>();
+      stats.put("testsFound", summary.getTestsFoundCount());
+      stats.put("testsSucceeded", summary.getTestsSucceededCount());
+      stats.put("testsFailed", summary.getTestsFailedCount());
+      stats.put("testsSkipped", summary.getTestsSkippedCount());
+      suiteStats.put(suiteName, stats);
+    });
+    result.put("suiteResults", suiteStats);
+
+    // Log complete test summary
+    if (totalTestsFailed > 0) {
+      logger.error(
+        "Test execution completed with failures",
+        StructuredArguments.entries(result)
+      );
+    } else {
+      logger.info(
+        "Test execution completed successfully",
+        StructuredArguments.entries(result)
+      );
+    }
+
     return result;
   }
 }
