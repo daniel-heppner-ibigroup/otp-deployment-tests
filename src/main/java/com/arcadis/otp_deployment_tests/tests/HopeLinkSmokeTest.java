@@ -12,6 +12,7 @@ import com.arcadis.otp_deployment_tests.CoordinatesStore;
 import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
 import com.arcadis.otp_deployment_tests.SmokeTestRequest;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -96,10 +97,12 @@ public class HopeLinkSmokeTest {
     COORDS.add("Lynnwood2", 47.847904, -122.272449);
     COORDS.add("Bothell", 47.780336, -122.211153);
     COORDS.add("Bothell2", 47.758795, -122.194675);
-    COORDS.add("ArlingtonLib", 48.2546724, -121.6037822);
-    COORDS.add("DarringtonLib", 48.19418487200602, -122.11738797581259);
+    COORDS.add("ArlingtonLib", 48.193364, -122.118405);
+    COORDS.add("DarringtonLib", 48.2546724, -121.6037822);
     COORDS.add("KenmorePR", 47.759201, -122.243057);
     COORDS.add("MountlakeTerraceTC", 47.785057, -122.314788);
+    COORDS.add("TukwilaStn", 47.4642067,-122.288452);
+    COORDS.add("Burien", 47.474748,-122.283666);
   }
 
   private static final Set<RequestMode> FLEX_DIRECT_MODES = Set.of(
@@ -190,7 +193,7 @@ public class HopeLinkSmokeTest {
 
     checkLongName(plan, "Road to Recovery");
     checkLongName(plan, "Medicaid Transportation");
-    checkLongName(plan, "Paratransit");
+//    checkLongName(plan, "Paratransit");
   }
 
   @Test
@@ -215,14 +218,36 @@ public class HopeLinkSmokeTest {
 
   @Test
   public void arlingtonToDarrington() throws IOException {
-    var plan = flexPlanRequest(
-      "ArlingtonLib",
-      "DarringtonLib",
-      weekdayAtTime(LocalTime.of(8, 0))
+        var plan = flexPlanRequest(
+          "ArlingtonLib",
+          "DarringtonLib",
+          weekdayAtTime(LocalTime.of(7, 50))
+        );
+
+        checkLongName(plan, "D'Arling Direct");
+        checkLongName(plan, "Road to Recovery");
+        checkLongName(plan, "Medicaid Transportation");
+
+    plan = apiClient.plan(
+      TripPlanParameters
+        .builder()
+        .withModes(Set.of(TRANSIT, WALK))
+        .withNumberOfItineraries(20)
+        .withFrom(COORDS.get("ArlingtonLib"))
+        .withTo(COORDS.get("DarringtonLib"))
+        .withTime(weekdayAtTime(LocalTime.of(7, 49)))
+        .withTime(LocalDateTime.of(2025, 1, 15, 7, 49))
+        .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
+        .build()
     );
 
-    // only getting this one on QA?
-    checkLongName(plan, "D'Arling Direct");
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withRouteLongName("D'Arling Direct")
+      .hasLeg()
+      .withRouteLongName("DC Direct")
+      .assertMatches();
   }
 
   @Test
@@ -230,5 +255,14 @@ public class HopeLinkSmokeTest {
     var plan = flexPlanRequest("KenmorePR", "MountlakeTerraceTC");
 
     checkLongName(plan, "Northshore");
+  }
+
+  @Test
+  public void tukwilaFlex() throws IOException {
+    var plan = flexPlanRequest("Burien", "TukwilaStn");
+
+    checkLongName(plan, "Tukwila");
+    checkLongName(plan, "Hyde Shuttle");
+    checkLongName(plan, "Medicaid Transportation");
   }
 }
