@@ -66,7 +66,6 @@ class TestRunner {
       .description("Time taken to execute OTP tests")
       .register(meterRegistry);
 
-
     // Add test suites
     addTestSuite(SoundTransitSmokeTest.class, "SoundTransit");
     addTestSuite(HopeLinkSmokeTest.class, "Hopelink");
@@ -98,7 +97,7 @@ class TestRunner {
     String runId = UUID.randomUUID().toString();
     Instant startTime = Instant.now();
     Timer.Sample totalSample = Timer.start(meterRegistry);
-    
+
     logger.info(
       "Starting test execution",
       StructuredArguments.kv("runId", runId),
@@ -107,12 +106,12 @@ class TestRunner {
 
     List<Map<String, Object>> allFailures = new ArrayList<>();
     Map<String, TestExecutionSummary> suiteResults = new HashMap<>();
-    
+
     // Run each test suite individually
     for (Map.Entry<Class<?>, String> suite : testSuites.entrySet()) {
       String suiteName = suite.getValue();
       Class<?> suiteClass = suite.getKey();
-      
+
       LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
         .request()
         .selectors(DiscoverySelectors.selectClass(suiteClass))
@@ -120,14 +119,16 @@ class TestRunner {
 
       SummaryGeneratingListener listener = new SummaryGeneratingListener();
       launcher.registerTestExecutionListeners(listener);
-      
+
       Timer.Sample suiteSample = Timer.start(meterRegistry);
       launcher.execute(request);
-      suiteSample.stop(meterRegistry.timer("otp.tests." + suiteName + ".duration"));
-      
+      suiteSample.stop(
+        meterRegistry.timer("otp.tests." + suiteName + ".duration")
+      );
+
       TestExecutionSummary summary = listener.getSummary();
       suiteResults.put(suiteName, summary);
-      
+
       // Record suite-specific metrics
       meterRegistry
         .counter("otp.tests." + suiteName + ".total")
@@ -135,61 +136,79 @@ class TestRunner {
       meterRegistry
         .counter("otp.tests." + suiteName + ".failures")
         .increment(summary.getTestsFailedCount());
-      
+
       // Collect failures for this suite
-      summary.getFailures().forEach(failure -> {
-        Map<String, Object> failureDetails = new HashMap<>();
-        failureDetails.put("suite", suiteName);
-        failureDetails.put(
-          "testClass",
-          failure
-            .getTestIdentifier()
-            .getSource()
-            .map(source -> source.toString().split("\\[")[0])
-            .orElse("unknown")
-        );
-        failureDetails.put(
-          "testName",
-          failure.getTestIdentifier().getDisplayName()
-        );
-        failureDetails.put("errorMessage", failure.getException().getMessage());
-        failureDetails.put(
-          "stackTrace",
-          Arrays.toString(failure.getException().getStackTrace())
-        );
-        allFailures.add(failureDetails);
+      summary
+        .getFailures()
+        .forEach(failure -> {
+          Map<String, Object> failureDetails = new HashMap<>();
+          failureDetails.put("suite", suiteName);
+          failureDetails.put(
+            "testClass",
+            failure
+              .getTestIdentifier()
+              .getSource()
+              .map(source -> source.toString().split("\\[")[0])
+              .orElse("unknown")
+          );
+          failureDetails.put(
+            "testName",
+            failure.getTestIdentifier().getDisplayName()
+          );
+          failureDetails.put(
+            "errorMessage",
+            failure.getException().getMessage()
+          );
+          failureDetails.put(
+            "stackTrace",
+            Arrays.toString(failure.getException().getStackTrace())
+          );
+          allFailures.add(failureDetails);
 
-        logger.error(
-          "Test failure occurred in suite: " + suiteName,
-          StructuredArguments.kv("runId", runId),
-          StructuredArguments.kv("failure", failureDetails)
-        );
+          logger.error(
+            "Test failure occurred in suite: " + suiteName,
+            StructuredArguments.kv("runId", runId),
+            StructuredArguments.kv("failure", failureDetails)
+          );
 
-        meterRegistry
-          .counter(
-            "otp.test.failure",
-            "suite", suiteName,
-            "class", failureDetails.get("testClass").toString(),
-            "testName", failureDetails.get("testName").toString()
-          )
-          .increment();
-      });
+          meterRegistry
+            .counter(
+              "otp.test.failure",
+              "suite",
+              suiteName,
+              "class",
+              failureDetails.get("testClass").toString(),
+              "testName",
+              failureDetails.get("testName").toString()
+            )
+            .increment();
+        });
     }
 
-    long totalDuration = totalSample.stop(meterRegistry.timer("otp.tests.duration"));
+    long totalDuration = totalSample.stop(
+      meterRegistry.timer("otp.tests.duration")
+    );
     Instant endTime = Instant.now();
 
     // Calculate total metrics across all suites
-    long totalTestsFound = suiteResults.values().stream()
+    long totalTestsFound = suiteResults
+      .values()
+      .stream()
       .mapToLong(TestExecutionSummary::getTestsFoundCount)
       .sum();
-    long totalTestsSucceeded = suiteResults.values().stream()
+    long totalTestsSucceeded = suiteResults
+      .values()
+      .stream()
       .mapToLong(TestExecutionSummary::getTestsSucceededCount)
       .sum();
-    long totalTestsFailed = suiteResults.values().stream()
+    long totalTestsFailed = suiteResults
+      .values()
+      .stream()
       .mapToLong(TestExecutionSummary::getTestsFailedCount)
       .sum();
-    long totalTestsSkipped = suiteResults.values().stream()
+    long totalTestsSkipped = suiteResults
+      .values()
+      .stream()
       .mapToLong(TestExecutionSummary::getTestsSkippedCount)
       .sum();
 
@@ -208,7 +227,7 @@ class TestRunner {
     result.put("testsFailed", totalTestsFailed);
     result.put("testsSkipped", totalTestsSkipped);
     result.put("failures", allFailures);
-    
+
     // Add per-suite results
     Map<String, Object> suiteStats = new HashMap<>();
     suiteResults.forEach((suiteName, summary) -> {

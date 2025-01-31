@@ -19,6 +19,7 @@ import java.time.ZoneId;
 import java.util.Set;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.opentripplanner.client.OtpApiClient;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.model.TripPlan;
@@ -26,6 +27,7 @@ import org.opentripplanner.client.parameters.TripPlanParameters;
 
 @Tag("smoke-test")
 @Tag("hopelink")
+@DisplayName("Hopelink Smoke Tests")
 public class HopeLinkSmokeTest {
 
   private static void checkLongName(TripPlan plan, String longName) {
@@ -103,6 +105,10 @@ public class HopeLinkSmokeTest {
     COORDS.add("MountlakeTerraceTC", 47.785057, -122.314788);
     COORDS.add("TukwilaStn", 47.4642067,-122.288452);
     COORDS.add("Burien", 47.474748,-122.283666);
+    COORDS.add("FrontierMiddleSchool", 47.055521,-122.289541);
+    COORDS.add("OrtingMiddleSchool", 47.101952,-122.217616);
+    COORDS.add("StadiumHighSchool", 47.266575,-122.449147);
+    COORDS.add("PtDefianceTerminal", 47.305630422593595,-122.51442106465043);
   }
 
   private static final Set<RequestMode> FLEX_DIRECT_MODES = Set.of(
@@ -114,6 +120,7 @@ public class HopeLinkSmokeTest {
   );
 
   @Test
+  @DisplayName("Test Road to Recovery and Volunteer Services in Tacoma area")
   public void insideTacoma() throws IOException {
     // First trip plan
     var request1 = new SmokeTestRequest(
@@ -138,6 +145,7 @@ public class HopeLinkSmokeTest {
   }
 
   @Test
+  @DisplayName("Test transportation services from Burien to Bellevue")
   public void burienToBellevue() throws IOException {
     var request = new SmokeTestRequest(
       COORDS.get("Tukwila"),
@@ -166,6 +174,7 @@ public class HopeLinkSmokeTest {
   }
 
   @Test
+  @DisplayName("Test services between Snoqualmie and North Bend")
   public void snoqualmieToNBend() throws IOException {
     var plan = flexPlanRequest("Snoqualmie", "NBend");
     listLongNames(plan);
@@ -177,6 +186,7 @@ public class HopeLinkSmokeTest {
   }
 
   @Test
+  @DisplayName("Test local services within Bellevue")
   public void insideBellevue() throws IOException {
     var plan = flexPlanRequest("Bellevue", "Bellevue2");
 
@@ -188,6 +198,7 @@ public class HopeLinkSmokeTest {
   }
 
   @Test
+  @DisplayName("Test services from Marysville to Everett")
   public void marysvilleToEverett() throws IOException {
     var plan = flexPlanRequest("Marysville", "Everett");
 
@@ -197,6 +208,7 @@ public class HopeLinkSmokeTest {
   }
 
   @Test
+  @DisplayName("Test Alderwood Shuttle within Lynnwood")
   public void withinLynnwood() throws IOException {
     var plan = flexPlanRequest("Lynnwood", "Lynnwood2");
 
@@ -206,6 +218,7 @@ public class HopeLinkSmokeTest {
   }
 
   @Test
+  @DisplayName("Test local services within Bothell")
   public void withinBothell() throws IOException {
     var plan = flexPlanRequest("Bothell", "Bothell2");
 
@@ -217,6 +230,7 @@ public class HopeLinkSmokeTest {
   }
 
   @Test
+  @DisplayName("Test D'Arling Direct service from Arlington to Darrington")
   public void arlingtonToDarrington() throws IOException {
         var plan = flexPlanRequest(
           "ArlingtonLib",
@@ -251,6 +265,7 @@ public class HopeLinkSmokeTest {
   }
 
   @Test
+  @DisplayName("Test Metro Flex service in North Seattle")
   public void metroFlexNorth() throws IOException {
     var plan = flexPlanRequest("KenmorePR", "MountlakeTerraceTC");
 
@@ -258,11 +273,32 @@ public class HopeLinkSmokeTest {
   }
 
   @Test
+  @DisplayName("Test Tukwila Flex service")
   public void tukwilaFlex() throws IOException {
     var plan = flexPlanRequest("Burien", "TukwilaStn");
 
     checkLongName(plan, "Tukwila");
     checkLongName(plan, "Hyde Shuttle");
     checkLongName(plan, "Medicaid Transportation");
+  }
+
+  @Test
+  @DisplayName("Test Beyond the Borders service from Graham to Orting")
+  public void grahamToOrting() throws IOException {
+    var plan = flexPlanRequest("FrontierMiddleSchool", "OrtingMiddleSchool");
+
+    checkLongName(plan, "Beyond the Borders");
+    checkLongName(plan, "Road to Recovery");
+    checkLongName(plan, "Volunteer Services: Southwest");
+  }
+
+  @Test
+  @DisplayName("Test Ruston Runner service")
+  public void rustonRunner() throws IOException {
+    var plan = flexPlanRequest("StadiumHighSchool", "PtDefianceTerminal");
+
+    checkLongName(plan, "Runner");
+    checkLongName(plan, "Road to Recovery");
+    checkLongName(plan, "Volunteer Services: Southwest");
   }
 }
