@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
 import org.opentripplanner.client.OtpApiClient;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.model.TripPlan;
@@ -103,12 +103,12 @@ public class HopeLinkSmokeTest {
     COORDS.add("DarringtonLib", 48.2546724, -121.6037822);
     COORDS.add("KenmorePR", 47.759201, -122.243057);
     COORDS.add("MountlakeTerraceTC", 47.785057, -122.314788);
-    COORDS.add("TukwilaStn", 47.4642067,-122.288452);
-    COORDS.add("Burien", 47.474748,-122.283666);
-    COORDS.add("FrontierMiddleSchool", 47.055521,-122.289541);
-    COORDS.add("OrtingMiddleSchool", 47.101952,-122.217616);
-    COORDS.add("StadiumHighSchool", 47.266575,-122.449147);
-    COORDS.add("PtDefianceTerminal", 47.305630422593595,-122.51442106465043);
+    COORDS.add("TukwilaStn", 47.4642067, -122.288452);
+    COORDS.add("Burien", 47.474748, -122.283666);
+    COORDS.add("FrontierMiddleSchool", 47.055521, -122.289541);
+    COORDS.add("OrtingMiddleSchool", 47.101952, -122.217616);
+    COORDS.add("StadiumHighSchool", 47.266575, -122.449147);
+    COORDS.add("PtDefianceTerminal", 47.305630422593595, -122.51442106465043);
   }
 
   private static final Set<RequestMode> FLEX_DIRECT_MODES = Set.of(
@@ -204,7 +204,7 @@ public class HopeLinkSmokeTest {
 
     checkLongName(plan, "Road to Recovery");
     checkLongName(plan, "Medicaid Transportation");
-//    checkLongName(plan, "Paratransit");
+    //    checkLongName(plan, "Paratransit");
   }
 
   @Test
@@ -232,28 +232,29 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test D'Arling Direct service from Arlington to Darrington")
   public void arlingtonToDarrington() throws IOException {
-        var plan = flexPlanRequest(
-          "ArlingtonLib",
-          "DarringtonLib",
-          weekdayAtTime(LocalTime.of(7, 50))
-        );
-
-        checkLongName(plan, "D'Arling Direct");
-        checkLongName(plan, "Road to Recovery");
-        checkLongName(plan, "Medicaid Transportation");
-
-    plan = apiClient.plan(
-      TripPlanParameters
-        .builder()
-        .withModes(Set.of(TRANSIT, WALK))
-        .withNumberOfItineraries(20)
-        .withFrom(COORDS.get("ArlingtonLib"))
-        .withTo(COORDS.get("DarringtonLib"))
-        .withTime(weekdayAtTime(LocalTime.of(7, 49)))
-        .withTime(LocalDateTime.of(2025, 1, 15, 7, 49))
-        .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
-        .build()
+    var plan = flexPlanRequest(
+      "ArlingtonLib",
+      "DarringtonLib",
+      weekdayAtTime(LocalTime.of(7, 50))
     );
+
+    checkLongName(plan, "D'Arling Direct");
+    checkLongName(plan, "Road to Recovery");
+    checkLongName(plan, "Medicaid Transportation");
+
+    plan =
+      apiClient.plan(
+        TripPlanParameters
+          .builder()
+          .withModes(Set.of(TRANSIT, WALK))
+          .withNumberOfItineraries(20)
+          .withFrom(COORDS.get("ArlingtonLib"))
+          .withTo(COORDS.get("DarringtonLib"))
+          .withTime(weekdayAtTime(LocalTime.of(7, 49)))
+          .withTime(LocalDateTime.of(2025, 1, 15, 7, 49))
+          .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
+          .build()
+      );
 
     SmokeTestItinerary
       .from(plan)
