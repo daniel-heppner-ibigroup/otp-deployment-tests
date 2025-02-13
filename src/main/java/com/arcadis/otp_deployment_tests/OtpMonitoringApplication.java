@@ -24,6 +24,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.junit.jupiter.api.Test;
 
 @SpringBootApplication
 @EnableScheduling
@@ -61,9 +62,28 @@ class TestRunner {
       .description("Total number of OTP test failures")
       .register(meterRegistry);
 
+    // Add timer for overall test execution
     Timer
       .builder("otp.tests.duration")
       .description("Time taken to execute OTP tests")
+      .register(meterRegistry);
+
+    // Add timer specifically for OTP plan requests
+    Timer
+      .builder("otp.plan.requests.duration")
+      .description("Time taken for all OTP plan requests in test suite")
+      .register(meterRegistry);
+
+    // Add counter for plan requests
+    Counter
+      .builder("otp.plan.requests.total")
+      .description("Total number of OTP plan requests made")
+      .register(meterRegistry);
+
+    // Add counter for plan request failures
+    Counter
+      .builder("otp.plan.requests.failures")
+      .description("Number of failed OTP plan requests")
       .register(meterRegistry);
 
     // Add test suites
@@ -73,14 +93,36 @@ class TestRunner {
 
   private void addTestSuite(Class<?> clazz, String name) {
     testSuites.put(clazz, name);
+    
+    // Add suite-specific metrics
     Counter
       .builder(String.format("otp.tests.%s.total", name))
       .description(String.format("Total number of %s OTP tests run", name))
       .register(meterRegistry);
+      
     Counter
       .builder(String.format("otp.tests.%s.failures", name))
       .description(String.format("Total number of %s OTP test failures", name))
       .register(meterRegistry);
+
+    Timer
+      .builder(MetricNames.planRequestTimer(name))
+      .description(String.format("Time taken for %s OTP plan requests", name))
+      .register(meterRegistry);
+
+    // Add test method discovery to create test-specific timers
+    try {
+      for (var method : clazz.getMethods()) {
+        if (method.isAnnotationPresent(Test.class)) {
+          Timer
+            .builder(MetricNames.planRequestTimer(name, method.getName()))
+            .description(MetricNames.planRequestDescription(name, method.getName()))
+            .register(meterRegistry);
+        }
+      }
+    } catch (Exception e) {
+      logger.warn("Failed to register test-specific timers for " + name, e);
+    }
   }
 
   @GetMapping("/run-tests")

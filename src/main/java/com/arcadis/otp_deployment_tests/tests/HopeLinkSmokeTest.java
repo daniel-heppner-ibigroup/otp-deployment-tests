@@ -11,6 +11,10 @@ import static org.opentripplanner.client.model.RequestMode.WALK;
 import com.arcadis.otp_deployment_tests.CoordinatesStore;
 import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
 import com.arcadis.otp_deployment_tests.SmokeTestRequest;
+import com.arcadis.otp_deployment_tests.TimedOtpApiClient;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Metrics;
+import io.micrometer.core.instrument.Timer;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,6 +33,21 @@ import org.opentripplanner.client.parameters.TripPlanParameters;
 @Tag("hopelink")
 @DisplayName("Hopelink Smoke Tests")
 public class HopeLinkSmokeTest {
+
+  private static final MeterRegistry meterRegistry = Metrics.globalRegistry;
+  private static final String SUITE_NAME = "Hopelink";
+
+  // Create a timer for each test method
+  private static Timer getTestTimer(String testName) {
+    return Timer
+      .builder("otp.plan.requests." + SUITE_NAME + "." + testName + ".duration")
+      .description(
+        "Time taken for OTP to respond to plan requests in " + testName
+      )
+      .tag("service", "hopelink")
+      .tag("test", testName)
+      .register(meterRegistry);
+  }
 
   private static void checkLongName(TripPlan plan, String longName) {
     SmokeTestItinerary
@@ -53,24 +72,23 @@ public class HopeLinkSmokeTest {
   private static final String OTP_WEB_URL =
     "https://hopelink-otp.ibi-transit.com";
   public static final CoordinatesStore COORDS;
-  private static final OtpApiClient apiClient = new OtpApiClient(
+  private static final TimedOtpApiClient apiClient = new TimedOtpApiClient(
     ZoneId.of("America/New_York"),
-    OTP_WEB_URL
+    OTP_WEB_URL,
+    Metrics.globalRegistry,
+    SUITE_NAME
   );
-
-  private static TripPlan flexPlanRequest(String fromStr, String toStr)
-    throws IOException {
-    return flexPlanRequest(fromStr, toStr, weekdayAtNoon());
-  }
 
   private static TripPlan flexPlanRequest(
     String fromStr,
     String toStr,
-    LocalDateTime time
+    LocalDateTime time,
+    String testName
   ) throws IOException {
     var from = COORDS.get(fromStr);
     var to = COORDS.get(toStr);
-    return apiClient.plan(
+
+    return apiClient.timedPlan(
       TripPlanParameters
         .builder()
         .withModes(FLEX_DIRECT_MODES)
@@ -79,8 +97,17 @@ public class HopeLinkSmokeTest {
         .withTo(to)
         .withTime(time)
         .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
-        .build()
+        .build(),
+      testName
     );
+  }
+
+  private static TripPlan flexPlanRequest(
+    String fromStr,
+    String toStr,
+    String testName
+  ) throws IOException {
+    return flexPlanRequest(fromStr, toStr, weekdayAtNoon(), testName);
   }
 
   static {
@@ -122,15 +149,7 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test Road to Recovery and Volunteer Services in Tacoma area")
   public void insideTacoma() throws IOException {
-    // First trip plan
-    var request1 = new SmokeTestRequest(
-      COORDS.get("Tacoma"),
-      COORDS.get("Puyallup"),
-      FLEX_DIRECT_MODES,
-      false,
-      apiClient
-    );
-    var plan = SmokeTestRequest.basicTripPlan(request1);
+    var plan = flexPlanRequest("Tacoma", "Puyallup", "insideTacoma");
 
     SmokeTestItinerary
       .from(plan)
@@ -176,7 +195,7 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test services between Snoqualmie and North Bend")
   public void snoqualmieToNBend() throws IOException {
-    var plan = flexPlanRequest("Snoqualmie", "NBend");
+    var plan = flexPlanRequest("Snoqualmie", "NBend", "snoqualmieToNBend");
     listLongNames(plan);
     checkLongName(plan, "Volunteer Transportation");
     checkLongName(plan, "Road to Recovery");
@@ -188,7 +207,7 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test local services within Bellevue")
   public void insideBellevue() throws IOException {
-    var plan = flexPlanRequest("Bellevue", "Bellevue2");
+    var plan = flexPlanRequest("Bellevue", "Bellevue2", "insideBellevue");
 
     checkLongName(plan, "Volunteer Transportation");
     checkLongName(plan, "Road to Recovery");
@@ -200,7 +219,7 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test services from Marysville to Everett")
   public void marysvilleToEverett() throws IOException {
-    var plan = flexPlanRequest("Marysville", "Everett");
+    var plan = flexPlanRequest("Marysville", "Everett", "marysvilleToEverett");
 
     checkLongName(plan, "Road to Recovery");
     checkLongName(plan, "Medicaid Transportation");
@@ -210,7 +229,7 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test Alderwood Shuttle within Lynnwood")
   public void withinLynnwood() throws IOException {
-    var plan = flexPlanRequest("Lynnwood", "Lynnwood2");
+    var plan = flexPlanRequest("Lynnwood", "Lynnwood2", "withinLynnwood");
 
     checkLongName(plan, "Road to Recovery");
     checkLongName(plan, "Medicaid Transportation");
@@ -220,7 +239,7 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test local services within Bothell")
   public void withinBothell() throws IOException {
-    var plan = flexPlanRequest("Bothell", "Bothell2");
+    var plan = flexPlanRequest("Bothell", "Bothell2", "withinBothell");
 
     checkLongName(plan, "Road to Recovery");
     checkLongName(plan, "Volunteer Transportation");
@@ -235,7 +254,8 @@ public class HopeLinkSmokeTest {
     var plan = flexPlanRequest(
       "ArlingtonLib",
       "DarringtonLib",
-      weekdayAtTime(LocalTime.of(7, 50))
+      weekdayAtTime(LocalTime.of(7, 50)),
+      "arlingtonToDarrington"
     );
 
     checkLongName(plan, "D'Arling Direct");
@@ -268,7 +288,11 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test Metro Flex service in North Seattle")
   public void metroFlexNorth() throws IOException {
-    var plan = flexPlanRequest("KenmorePR", "MountlakeTerraceTC");
+    var plan = flexPlanRequest(
+      "KenmorePR",
+      "MountlakeTerraceTC",
+      "metroFlexNorth"
+    );
 
     checkLongName(plan, "Northshore");
   }
@@ -276,7 +300,7 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test Tukwila Flex service")
   public void tukwilaFlex() throws IOException {
-    var plan = flexPlanRequest("Burien", "TukwilaStn");
+    var plan = flexPlanRequest("Burien", "TukwilaStn", "tukwilaFlex");
 
     checkLongName(plan, "Tukwila");
     checkLongName(plan, "Hyde Shuttle");
@@ -286,7 +310,11 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test Beyond the Borders service from Graham to Orting")
   public void grahamToOrting() throws IOException {
-    var plan = flexPlanRequest("FrontierMiddleSchool", "OrtingMiddleSchool");
+    var plan = flexPlanRequest(
+      "FrontierMiddleSchool",
+      "OrtingMiddleSchool",
+      "grahamToOrting"
+    );
 
     checkLongName(plan, "Beyond the Borders");
     checkLongName(plan, "Road to Recovery");
@@ -296,7 +324,11 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test Ruston Runner service")
   public void rustonRunner() throws IOException {
-    var plan = flexPlanRequest("StadiumHighSchool", "PtDefianceTerminal");
+    var plan = flexPlanRequest(
+      "StadiumHighSchool",
+      "PtDefianceTerminal",
+      "rustonRunner"
+    );
 
     checkLongName(plan, "Runner");
     checkLongName(plan, "Road to Recovery");

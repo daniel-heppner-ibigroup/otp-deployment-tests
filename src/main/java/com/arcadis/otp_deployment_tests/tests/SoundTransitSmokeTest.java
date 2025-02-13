@@ -20,12 +20,15 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.opentripplanner.client.OtpApiClient;
 import org.opentripplanner.client.model.RequestMode;
+import io.micrometer.core.instrument.Metrics;
+import com.arcadis.otp_deployment_tests.TimedOtpApiClient;
 
 @Tag("smoke-test")
 @Tag("soundtransit")
 @DisplayName("Sound Transit Smoke Tests")
 public class SoundTransitSmokeTest {
 
+  private static final String SUITE_NAME = "SoundTransit";
   private static final String OTP_WEB_URL =
     "https://sound-transit-otp.ibi-transit.com";
   public static final CoordinatesStore COORDS;
@@ -45,9 +48,11 @@ public class SoundTransitSmokeTest {
     COORDS.add("MARYSVILLE", 48.05523331013222, -122.17763080699298);
   }
 
-  private final OtpApiClient apiClient = new OtpApiClient(
+  private final TimedOtpApiClient apiClient = new TimedOtpApiClient(
     ZoneId.of("America/New_York"),
-    OTP_WEB_URL
+    OTP_WEB_URL,
+    Metrics.globalRegistry,
+    SUITE_NAME
   );
   private final Set<RequestMode> defaultModes = Set.of(TRANSIT, WALK);
 
