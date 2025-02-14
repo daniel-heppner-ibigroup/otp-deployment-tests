@@ -130,7 +130,7 @@ class TestRunner {
     return executeTests();
   }
 
-  @Scheduled(cron = "0 0 * * * *") // Run every hour
+  @Scheduled(cron = "0 */10 * * * *") // Run every hour
   public void runScheduledTests() {
     executeTests();
   }
