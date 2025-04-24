@@ -9,6 +9,7 @@ import static org.opentripplanner.client.model.RequestMode.TRANSIT;
 import static org.opentripplanner.client.model.RequestMode.WALK;
 
 import com.arcadis.otp_deployment_tests.CoordinatesStore;
+import com.arcadis.otp_deployment_tests.GeocodingService;
 import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
 import com.arcadis.otp_deployment_tests.SmokeTestRequest;
 import com.arcadis.otp_deployment_tests.TimedOtpApiClient;
@@ -16,15 +17,15 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Timer;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Set;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.opentripplanner.client.OtpApiClient;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.model.TripPlan;
 import org.opentripplanner.client.parameters.TripPlanParameters;
@@ -112,30 +113,79 @@ public class HopeLinkSmokeTest {
 
   static {
     COORDS = new CoordinatesStore();
+    GeocodingService geocoder = new GeocodingService(COORDS);
 
-    COORDS.add("Tacoma", 47.253304, -122.445237);
-    COORDS.add("Puyallup", 47.189659, -122.295414);
-    COORDS.add("Tukwila", 47.474005, -122.284023);
-    COORDS.add("Bellevue", 47.620659, -122.187675);
-    COORDS.add("Snoqualmie", 47.512752, -121.885709);
-    COORDS.add("NBend", 47.492737, -121.788474);
-    COORDS.add("Bellevue2", 47.571076, -122.163592);
-    COORDS.add("Marysville", 48.060692, -122.174907);
-    COORDS.add("Everett", 47.999847, -122.205627);
-    COORDS.add("Lynnwood", 47.821271, -122.284036);
-    COORDS.add("Lynnwood2", 47.847904, -122.272449);
-    COORDS.add("Bothell", 47.780336, -122.211153);
-    COORDS.add("Bothell2", 47.758795, -122.194675);
-    COORDS.add("ArlingtonLib", 48.193364, -122.118405);
-    COORDS.add("DarringtonLib", 48.2546724, -121.6037822);
-    COORDS.add("KenmorePR", 47.759201, -122.243057);
-    COORDS.add("MountlakeTerraceTC", 47.785057, -122.314788);
-    COORDS.add("TukwilaStn", 47.4642067, -122.288452);
-    COORDS.add("Burien", 47.474748, -122.283666);
-    COORDS.add("FrontierMiddleSchool", 47.055521, -122.289541);
-    COORDS.add("OrtingMiddleSchool", 47.101952, -122.217616);
-    COORDS.add("StadiumHighSchool", 47.266575, -122.449147);
-    COORDS.add("PtDefianceTerminal", 47.305630422593595, -122.51442106465043);
+    geocoder.storeCoordinate("Tacoma", 47.253304, -122.445237);
+    geocoder.storeCoordinate("Puyallup", 47.189659, -122.295414);
+    geocoder.storeCoordinate("Tukwila", 47.474005, -122.284023);
+    geocoder.storeCoordinate("Bellevue", 47.620659, -122.187675);
+    geocoder.storeCoordinate("Snoqualmie", 47.512752, -121.885709);
+    geocoder.storeCoordinate("NBend", 47.492737, -121.788474);
+    geocoder.storeCoordinate("Bellevue2", 47.571076, -122.163592);
+    geocoder.storeCoordinate("Marysville", 48.060692, -122.174907);
+    geocoder.storeCoordinate("Everett", 47.999847, -122.205627);
+    geocoder.storeCoordinate("Lynnwood", 47.821271, -122.284036);
+    geocoder.storeCoordinate("Lynnwood2", 47.847904, -122.272449);
+    geocoder.storeCoordinate("Bothell", 47.780336, -122.211153);
+    geocoder.storeCoordinate("Bothell2", 47.758795, -122.194675);
+    geocoder.storeCoordinate("ArlingtonLib", 48.193364, -122.118405);
+    geocoder.storeCoordinate("DarringtonLib", 48.2546724, -121.6037822);
+    geocoder.storeCoordinate("KenmorePR", 47.759201, -122.243057);
+    geocoder.storeCoordinate("MountlakeTerraceTC", 47.785057, -122.314788);
+    geocoder.storeCoordinate("TukwilaStn", 47.4642067, -122.288452);
+    geocoder.storeCoordinate("Burien", 47.474748, -122.283666);
+    geocoder.storeCoordinate("FrontierMiddleSchool", 47.055521, -122.289541);
+    geocoder.storeCoordinate("OrtingMiddleSchool", 47.101952, -122.217616);
+    geocoder.storeCoordinate(
+      "PtDefianceTerminal",
+      47.305630422593595,
+      -122.51442106465043
+    );
+    try {
+      geocoder.geocodeAndStore(
+        "ShorelineNStation",
+        "Shoreline North/185th Station",
+        "openstreetmap"
+      );
+      geocoder.geocodeAndStore(
+        "TargetAlderwood",
+        "Target, Alderwood Mall Pkwy, Lynnwood",
+        "openstreetmap"
+      );
+      geocoder.geocodeAndStore(
+        "StadiumHS",
+        "Stadium High School",
+        "openstreetmap"
+      );
+      geocoder.geocodeAndStore("PDZoo", "Point Defiance Zoo", "openstreetmap");
+      geocoder.geocodeAndStore(
+        "SumnerSounder",
+        "Sumner Sounder Station",
+        "openstreetmap"
+      );
+      geocoder.geocodeAndStore(
+        "SumnerSeniorCenter",
+        "Sumner Senior Center",
+        "openstreetmap"
+      );
+      geocoder.geocodeAndStore(
+          "Seatac",
+          "Seatac",
+          "otp"
+      );
+      geocoder.geocodeAndStore(
+          "ThrondykeElementary",
+          "Thorndyke Elementary",
+          "openstreetmap"
+      );
+      geocoder.geocodeAndStore(
+          "MarysvilleAshPR",
+          "Marysville Ash Ave Park & Ride (Community Transit)",
+          "otp"
+      );
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private static final Set<RequestMode> FLEX_DIRECT_MODES = Set.of(
@@ -219,11 +269,11 @@ public class HopeLinkSmokeTest {
   @Test
   @DisplayName("Test services from Marysville to Everett")
   public void marysvilleToEverett() throws IOException {
-    var plan = flexPlanRequest("Marysville", "Everett", "marysvilleToEverett");
+    var plan = flexPlanRequest("MarysvilleAshPR", "Everett", "marysvilleToEverett");
 
     checkLongName(plan, "Road to Recovery");
     checkLongName(plan, "Medicaid Transportation");
-    //    checkLongName(plan, "Paratransit");
+    checkLongName(plan, "Paratransit");
   }
 
   @Test
@@ -233,19 +283,19 @@ public class HopeLinkSmokeTest {
 
     checkLongName(plan, "Road to Recovery");
     checkLongName(plan, "Medicaid Transportation");
-    checkLongName(plan, "Alderwood Shuttle");
+    checkLongName(plan, "Zip Shuttle");
   }
 
   @Test
   @DisplayName("Test local services within Bothell")
   public void withinBothell() throws IOException {
-    var plan = flexPlanRequest("Bothell", "Bothell2", "withinBothell");
+    var plan = flexPlanRequest("Bothell2", "Bothell", "withinBothell");
 
-    checkLongName(plan, "Road to Recovery");
-    checkLongName(plan, "Volunteer Transportation");
     checkLongName(plan, "Medicaid Transportation");
     checkLongName(plan, "Transportation Service");
     checkLongName(plan, "Volunteer Services: King County");
+    checkLongName(plan, "Volunteer Transportation");
+    checkLongName(plan, "Road to Recovery");
   }
 
   @Test
@@ -322,10 +372,34 @@ public class HopeLinkSmokeTest {
   }
 
   @Test
+  @DisplayName("StadiumHS To PDZoo")
+  public void StadiumHSToPDZoo() throws IOException {
+    var plan = flexPlanRequest("StadiumHS", "PDZoo", "StadiumHSToPDZoo");
+
+    checkLongName(plan, "Volunteer Services: Southwest");
+    checkLongName(plan, "Road to Recovery");
+  }
+
+  @Test
+  @DisplayName("Sumner Sounder to Senior Center")
+  public void SumnerSounderToSeniorCenter() throws IOException {
+    var plan = flexPlanRequest(
+        "SumnerSounder",
+        "SumnerSeniorCenter",
+        weekdayAtTime(LocalTime.of(14, 40)),
+        "SumnerSounderToSeniorCenter"
+    );
+    checkLongName(plan, "Beyond the Borders");
+    checkLongName(plan, "Road to Recovery");
+    checkLongName(plan, "Volunteer Services: Southwest");
+    checkLongName(plan, "Sumner-Bonney Lake Connector");
+  }
+
+  @Test
   @DisplayName("Test Ruston Runner service")
   public void rustonRunner() throws IOException {
     var plan = flexPlanRequest(
-      "StadiumHighSchool",
+      "StadiumHS",
       "PtDefianceTerminal",
       "rustonRunner"
     );
@@ -333,5 +407,40 @@ public class HopeLinkSmokeTest {
     checkLongName(plan, "Runner");
     checkLongName(plan, "Road to Recovery");
     checkLongName(plan, "Volunteer Services: Southwest");
+  }
+
+  @Test
+  @DisplayName("1 Line to Zip")
+  public void LinkToZip() throws IOException {
+    var plan = flexPlanRequest(
+      "ShorelineNStation",
+      "Lynnwood2",
+      "1lineToZip"
+    );
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withRouteShortName("1 Line")
+      .hasLeg()
+      .withRouteLongName("Zip Shuttle")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("1 Line to Metro Flex Tukwila")
+  public void LinkToMetroFlex() throws IOException {
+    var plan = flexPlanRequest(
+        "Seatac",
+        "ThrondykeElementary",
+        "LinkToMetroFlex"
+    );
+
+    SmokeTestItinerary
+        .from(plan)
+        .hasLeg()
+        .withRouteShortName("1 Line")
+        .hasLeg()
+        .withRouteLongName("Tukwila")
+        .assertMatches();
   }
 }
