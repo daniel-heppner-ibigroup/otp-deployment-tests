@@ -8,113 +8,33 @@ import static org.opentripplanner.client.model.RequestMode.FLEX_EGRESS;
 import static org.opentripplanner.client.model.RequestMode.TRANSIT;
 import static org.opentripplanner.client.model.RequestMode.WALK;
 
-import com.arcadis.otp_deployment_tests.CoordinatesStore;
-import com.arcadis.otp_deployment_tests.GeocodingService;
 import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
 import com.arcadis.otp_deployment_tests.SmokeTestRequest;
-import com.arcadis.otp_deployment_tests.TimedOtpApiClient;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Timer;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.Set;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.model.TripPlan;
 import org.opentripplanner.client.parameters.TripPlanParameters;
+import com.arcadis.otp_deployment_tests.BaseOtpSmokeTest;
 
 @Tag("smoke-test")
 @Tag("hopelink")
 @DisplayName("Hopelink Smoke Tests")
-public class HopeLinkSmokeTest {
+public class HopeLinkSmokeTest extends BaseOtpSmokeTest {
 
-  private static final MeterRegistry meterRegistry = Metrics.globalRegistry;
-  private static final String SUITE_NAME = "Hopelink";
-
-  // Create a timer for each test method
-  private static Timer getTestTimer(String testName) {
-    return Timer
-      .builder("otp.plan.requests." + SUITE_NAME + "." + testName + ".duration")
-      .description(
-        "Time taken for OTP to respond to plan requests in " + testName
-      )
-      .tag("service", "hopelink")
-      .tag("test", testName)
-      .register(meterRegistry);
+  public HopeLinkSmokeTest() {
+    super("Hopelink", "https://hopelink-otp.ibi-transit.com");
   }
 
-  private static void checkLongName(TripPlan plan, String longName) {
-    SmokeTestItinerary
-      .from(plan)
-      .hasLeg()
-      .withRouteLongName(longName)
-      .assertMatches();
-  }
-
-  private static void listLongNames(TripPlan plan) {
-    for (var itin : plan
-      .itineraries()
-      .stream()
-      .flatMap(itin -> itin.legs().stream())
-      .toList()) {
-      if (itin.route() != null && itin.route().longName().isPresent()) {
-        System.out.println(itin.route().longName().get());
-      }
-    }
-  }
-
-  private static final String OTP_WEB_URL =
-    "https://hopelink-otp.ibi-transit.com";
-  public static final CoordinatesStore COORDS;
-  private static final TimedOtpApiClient apiClient = new TimedOtpApiClient(
-    ZoneId.of("America/New_York"),
-    OTP_WEB_URL,
-    Metrics.globalRegistry,
-    SUITE_NAME
-  );
-
-  private static TripPlan flexPlanRequest(
-    String fromStr,
-    String toStr,
-    LocalDateTime time,
-    String testName
-  ) throws IOException {
-    var from = COORDS.get(fromStr);
-    var to = COORDS.get(toStr);
-
-    return apiClient.timedPlan(
-      TripPlanParameters
-        .builder()
-        .withModes(FLEX_DIRECT_MODES)
-        .withNumberOfItineraries(20)
-        .withFrom(from)
-        .withTo(to)
-        .withTime(time)
-        .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
-        .build(),
-      testName
-    );
-  }
-
-  private static TripPlan flexPlanRequest(
-    String fromStr,
-    String toStr,
-    String testName
-  ) throws IOException {
-    return flexPlanRequest(fromStr, toStr, weekdayAtNoon(), testName);
-  }
-
-  static {
-    COORDS = new CoordinatesStore();
-    GeocodingService geocoder = new GeocodingService(COORDS);
-
+  @Override
+  protected void initializeCoordinates() {
     geocoder.storeCoordinate("Tacoma", 47.253304, -122.445237);
     geocoder.storeCoordinate("Puyallup", 47.189659, -122.295414);
     geocoder.storeCoordinate("Tukwila", 47.474005, -122.284023);
@@ -196,6 +116,57 @@ public class HopeLinkSmokeTest {
     WALK
   );
 
+  private TripPlan flexPlanRequest(
+    String fromStr,
+    String toStr,
+    LocalDateTime time,
+    String testName
+  ) throws IOException {
+    var from = COORDS.get(fromStr);
+    var to = COORDS.get(toStr);
+
+    return this.apiClient.timedPlan(
+      TripPlanParameters
+        .builder()
+        .withModes(FLEX_DIRECT_MODES)
+        .withNumberOfItineraries(20)
+        .withFrom(from)
+        .withTo(to)
+        .withTime(time)
+        .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
+        .build(),
+      testName
+    );
+  }
+
+  private TripPlan flexPlanRequest(
+    String fromStr,
+    String toStr,
+    String testName
+  ) throws IOException {
+    return flexPlanRequest(fromStr, toStr, weekdayAtNoon(), testName);
+  }
+
+  private static void checkLongName(TripPlan plan, String longName) {
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withRouteLongName(longName)
+      .assertMatches();
+  }
+
+  private static void listLongNames(TripPlan plan) {
+    for (var itin : plan
+      .itineraries()
+      .stream()
+      .flatMap(itin -> itin.legs().stream())
+      .toList()) {
+      if (itin.route() != null && itin.route().longName().isPresent()) {
+        System.out.println(itin.route().longName().get());
+      }
+    }
+  }
+
   @Test
   @DisplayName("Test Road to Recovery and Volunteer Services in Tacoma area")
   public void insideTacoma() throws IOException {
@@ -221,7 +192,7 @@ public class HopeLinkSmokeTest {
       COORDS.get("Bellevue"),
       FLEX_DIRECT_MODES,
       false,
-      apiClient
+      this.apiClient
     );
     var plan = SmokeTestRequest.basicTripPlan(request);
 
@@ -313,7 +284,7 @@ public class HopeLinkSmokeTest {
     checkLongName(plan, "Medicaid Transportation");
 
     plan =
-      apiClient.plan(
+      this.apiClient.plan(
         TripPlanParameters
           .builder()
           .withModes(Set.of(TRANSIT, WALK))

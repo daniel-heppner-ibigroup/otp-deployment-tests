@@ -3,11 +3,9 @@ package com.arcadis.otp_deployment_tests.tests;
 import static org.opentripplanner.client.model.RequestMode.TRANSIT;
 import static org.opentripplanner.client.model.RequestMode.WALK;
 
-import com.arcadis.otp_deployment_tests.CoordinatesStore;
 import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
 import com.arcadis.otp_deployment_tests.SmokeTestRequest;
 import java.io.IOException;
-import java.time.ZoneId;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
@@ -15,23 +13,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.opentripplanner.client.model.RequestMode;
-import io.micrometer.core.instrument.Metrics;
-import com.arcadis.otp_deployment_tests.TimedOtpApiClient;
-import com.arcadis.otp_deployment_tests.GeocodingService;
+import com.arcadis.otp_deployment_tests.BaseOtpSmokeTest;
 
 @Tag("smoke-test")
 @Tag("soundtransit")
 @DisplayName("Sound Transit Smoke Tests")
-public class SoundTransitSmokeTest {
+public class SoundTransitSmokeTest extends BaseOtpSmokeTest {
 
-  private static final String SUITE_NAME = "SoundTransit";
-  private static final String OTP_WEB_URL =
-    "https://sound-transit-otp.ibi-transit.com";
-  public static final CoordinatesStore COORDS;
+  public SoundTransitSmokeTest() {
+    super("SoundTransit", "https://sound-transit-otp.ibi-transit.com");
+  }
 
-  static {
-    COORDS = new CoordinatesStore();
-    GeocodingService geocoder = new GeocodingService(COORDS);
+  @Override
+  protected void initializeCoordinates() {
+    // GeocodingService geocoder = new GeocodingService(COORDS); // Removed, geocoder is now inherited
 
     // Keep existing coordinates
     geocoder.storeCoordinate("LYNNWOOD_STA", 47.8154272, -122.2940715);
@@ -57,12 +52,6 @@ public class SoundTransitSmokeTest {
     }
   }
 
-  private final TimedOtpApiClient apiClient = new TimedOtpApiClient(
-    ZoneId.of("America/New_York"),
-    OTP_WEB_URL,
-    Metrics.globalRegistry,
-    SUITE_NAME
-  );
   private final Set<RequestMode> defaultModes = Set.of(TRANSIT, WALK);
 
   @Test
@@ -72,7 +61,7 @@ public class SoundTransitSmokeTest {
       COORDS.get("OLIVE_WAY"),
       COORDS.get("SHORELINE"),
       defaultModes,
-      apiClient
+      this.apiClient
     );
     var plan = SmokeTestRequest.basicTripPlan(request);
 
@@ -94,7 +83,7 @@ public class SoundTransitSmokeTest {
       COORDS.get("RONALD_BOG_PARK"),
       COORDS.get("OLIVE_WAY"),
       defaultModes,
-      apiClient
+      this.apiClient
     );
     var plan = SmokeTestRequest.basicTripPlan(request);
 
@@ -116,7 +105,7 @@ public class SoundTransitSmokeTest {
       COORDS.get("CASINO_RD"),
       COORDS.get("MARYSVILLE"),
       defaultModes,
-      apiClient
+      this.apiClient
     );
     var plan = SmokeTestRequest.basicTripPlan(request);
 
@@ -140,7 +129,7 @@ public class SoundTransitSmokeTest {
   @Test
   @DisplayName("Verify all expected transit agencies are present")
   public void testAgencyList() throws IOException {
-    var routes = apiClient.routes();
+    var routes = this.apiClient.routes();
     var actualAgencies = routes
       .stream()
       .map(route -> route.agency().name())
