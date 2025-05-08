@@ -1,4 +1,4 @@
-package com.arcadis.otp_deployment_tests;
+package com.arcadis.otpsmoketests.monitoringapp;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;

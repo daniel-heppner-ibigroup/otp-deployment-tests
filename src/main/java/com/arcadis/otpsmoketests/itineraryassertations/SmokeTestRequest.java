@@ -1,11 +1,10 @@
-package com.arcadis.otp_deployment_tests;
+package com.arcadis.otpsmoketests.itineraryassertations;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Set;
 import org.opentripplanner.client.OtpApiClient;

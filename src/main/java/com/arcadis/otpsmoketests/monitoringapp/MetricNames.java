@@ -1,4 +1,4 @@
-package com.arcadis.otp_deployment_tests;
+package com.arcadis.otpsmoketests.monitoringapp;
 
 public class MetricNames {
     private static final String PLAN_REQUEST_BASE = "otp.plan.requests";

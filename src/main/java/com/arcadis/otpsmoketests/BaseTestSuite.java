@@ -1,5 +1,8 @@
-package com.arcadis.otp_deployment_tests;
+package com.arcadis.otpsmoketests;
 
+import com.arcadis.otpsmoketests.geocoding.CoordinatesStore;
+import com.arcadis.otpsmoketests.geocoding.GeocodingService;
+import com.arcadis.otpsmoketests.monitoringapp.TimedOtpApiClient;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Metrics;
 import java.time.ZoneId;
@@ -8,7 +11,7 @@ import java.time.ZoneId;
  * Base class for OTP smoke tests, providing common setup for coordinates,
  * geocoding, and the OTP API client.
  */
-public abstract class BaseOtpSmokeTest {
+public abstract class BaseTestSuite {
 
     protected static final MeterRegistry meterRegistry = Metrics.globalRegistry;
     protected static final CoordinatesStore COORDS = new CoordinatesStore();
@@ -24,7 +27,7 @@ public abstract class BaseOtpSmokeTest {
      * @param suiteName The name of the test suite (used for metrics).
      * @param otpWebUrl The base URL for the OTP instance being tested.
      */
-    protected BaseOtpSmokeTest(String suiteName, String otpWebUrl) {
+    protected BaseTestSuite(String suiteName, String otpWebUrl) {
         this.suiteName = suiteName;
         this.otpWebUrl = otpWebUrl;
         this.geocoder = new GeocodingService(COORDS);

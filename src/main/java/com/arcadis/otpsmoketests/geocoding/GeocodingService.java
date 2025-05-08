@@ -1,4 +1,4 @@
-package com.arcadis.otp_deployment_tests;
+package com.arcadis.otpsmoketests.geocoding;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

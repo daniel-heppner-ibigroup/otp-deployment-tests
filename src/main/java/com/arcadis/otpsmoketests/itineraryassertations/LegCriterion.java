@@ -1,4 +1,4 @@
-package com.arcadis.otp_deployment_tests;
+package com.arcadis.otpsmoketests.itineraryassertations;
 
 import java.util.function.Consumer;
 

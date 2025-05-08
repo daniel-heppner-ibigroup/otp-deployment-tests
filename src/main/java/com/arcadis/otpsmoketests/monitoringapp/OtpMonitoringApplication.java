@@ -1,7 +1,7 @@
-package com.arcadis.otp_deployment_tests;
+package com.arcadis.otpsmoketests.monitoringapp;
 
-import com.arcadis.otp_deployment_tests.tests.HopeLinkSmokeTest;
-import com.arcadis.otp_deployment_tests.tests.SoundTransitSmokeTest;
+import com.arcadis.otpsmoketests.tests.HopeLinkTestSuite;
+import com.arcadis.otpsmoketests.tests.SoundTransitTestSuite;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -131,8 +131,8 @@ class TestRunner {
       .register(meterRegistry);
 
     // Add test suites
-    addTestSuite(SoundTransitSmokeTest.class, "SoundTransit");
-    addTestSuite(HopeLinkSmokeTest.class, "Hopelink");
+    addTestSuite(SoundTransitTestSuite.class, "SoundTransit");
+    addTestSuite(HopeLinkTestSuite.class, "Hopelink");
   }
 
   private void addTestSuite(Class<?> clazz, String name) {

@@ -1,10 +1,10 @@
-package com.arcadis.otp_deployment_tests.tests;
+package com.arcadis.otpsmoketests.tests;
 
 import static org.opentripplanner.client.model.RequestMode.TRANSIT;
 import static org.opentripplanner.client.model.RequestMode.WALK;
 
-import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
-import com.arcadis.otp_deployment_tests.SmokeTestRequest;
+import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
+import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestRequest;
 import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -13,14 +13,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.opentripplanner.client.model.RequestMode;
-import com.arcadis.otp_deployment_tests.BaseOtpSmokeTest;
+import com.arcadis.otpsmoketests.BaseTestSuite;
 
 @Tag("smoke-test")
 @Tag("soundtransit")
 @DisplayName("Sound Transit Smoke Tests")
-public class SoundTransitSmokeTest extends BaseOtpSmokeTest {
+public class SoundTransitTestSuite extends BaseTestSuite {
 
-  public SoundTransitSmokeTest() {
+  public SoundTransitTestSuite() {
     super("SoundTransit", "https://sound-transit-otp.ibi-transit.com");
   }
 

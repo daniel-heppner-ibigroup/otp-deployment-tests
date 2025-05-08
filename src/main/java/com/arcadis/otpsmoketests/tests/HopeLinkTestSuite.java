@@ -1,16 +1,16 @@
-package com.arcadis.otp_deployment_tests.tests;
+package com.arcadis.otpsmoketests.tests;
 
-import static com.arcadis.otp_deployment_tests.SmokeTestRequest.weekdayAtNoon;
-import static com.arcadis.otp_deployment_tests.SmokeTestRequest.weekdayAtTime;
+import static com.arcadis.otpsmoketests.itineraryassertations.SmokeTestRequest.weekdayAtNoon;
+import static com.arcadis.otpsmoketests.itineraryassertations.SmokeTestRequest.weekdayAtTime;
 import static org.opentripplanner.client.model.RequestMode.FLEX_ACCESS;
 import static org.opentripplanner.client.model.RequestMode.FLEX_DIRECT;
 import static org.opentripplanner.client.model.RequestMode.FLEX_EGRESS;
 import static org.opentripplanner.client.model.RequestMode.TRANSIT;
 import static org.opentripplanner.client.model.RequestMode.WALK;
 
-import com.arcadis.otp_deployment_tests.SmokeTestItinerary;
-import com.arcadis.otp_deployment_tests.SmokeTestRequest;
-import io.micrometer.core.instrument.Timer;
+import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
+import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestRequest;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -22,14 +22,14 @@ import org.junit.jupiter.api.Test;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.model.TripPlan;
 import org.opentripplanner.client.parameters.TripPlanParameters;
-import com.arcadis.otp_deployment_tests.BaseOtpSmokeTest;
+import com.arcadis.otpsmoketests.BaseTestSuite;
 
 @Tag("smoke-test")
 @Tag("hopelink")
 @DisplayName("Hopelink Smoke Tests")
-public class HopeLinkSmokeTest extends BaseOtpSmokeTest {
+public class HopeLinkTestSuite extends BaseTestSuite {
 
-  public HopeLinkSmokeTest() {
+  public HopeLinkTestSuite() {
     super("Hopelink", "https://hopelink-otp.ibi-transit.com");
   }
 
