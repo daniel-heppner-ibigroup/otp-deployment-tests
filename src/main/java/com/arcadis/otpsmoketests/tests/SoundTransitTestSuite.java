@@ -3,6 +3,7 @@ package com.arcadis.otpsmoketests.tests;
 import static org.opentripplanner.client.model.RequestMode.TRANSIT;
 import static org.opentripplanner.client.model.RequestMode.WALK;
 
+import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
 import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestRequest;
 import java.io.IOException;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.opentripplanner.client.model.RequestMode;
-import com.arcadis.otpsmoketests.BaseTestSuite;
 
 @Tag("smoke-test")
 @Tag("soundtransit")
@@ -21,32 +21,45 @@ import com.arcadis.otpsmoketests.BaseTestSuite;
 public class SoundTransitTestSuite extends BaseTestSuite {
 
   public SoundTransitTestSuite() {
-    super("SoundTransit", "https://sound-transit-otp.ibi-transit.com");
+    super(
+      "SoundTransit",
+      "https://sound-transit-otp.ibi-transit.com",
+      "https://87sp37ezga.execute-api.us-east-1.amazonaws.com/st/autocomplete",
+      47.61097,
+      -122.33701
+    );
   }
 
   @Override
   protected void initializeCoordinates() {
-    // GeocodingService geocoder = new GeocodingService(COORDS); // Removed, geocoder is now inherited
-
     // Keep existing coordinates
-    geocoder.storeCoordinate("LYNNWOOD_STA", 47.8154272, -122.2940715);
-    geocoder.storeCoordinate("SODO", 47.5811, -122.3290);
-    geocoder.storeCoordinate("CLYDE_HILL", 47.6316, -122.2173);
-    geocoder.storeCoordinate("RONALD_BOG_PARK", 47.75601664, -122.33141);
-    geocoder.storeCoordinate("ESPERANCE", 47.797330, -122.351560592);
-    geocoder.storeCoordinate("SHORELINE", 47.7568, -122.3483);
-    geocoder.storeCoordinate("MOUNTAINLAKE_TERRACE", 47.7900, -122.30379581);
-    geocoder.storeCoordinate("OLIVE_WAY", 47.61309420, -122.336314916);
-    geocoder.storeCoordinate("CASINO_RD", 47.92175434762228, -122.23896905562611);
-    geocoder.storeCoordinate("MARYSVILLE", 48.05523331013222, -122.17763080699298);
-
-    // Example of how to add new locations using geocoding:
-    // geocoder.geocodeAndStore("NewLocation", "123 Main St, Seattle, WA 98101");
-    
-    // Example of using geocoding with source filtering:
+    geocoder.add("LYNNWOOD_STA", 47.8154272, -122.2940715);
+    geocoder.add("SODO", 47.5811, -122.3290);
+    geocoder.add("CLYDE_HILL", 47.6316, -122.2173);
+    geocoder.add("RONALD_BOG_PARK", 47.75601664, -122.33141);
+    geocoder.add("ESPERANCE", 47.797330, -122.351560592);
+    geocoder.add("SHORELINE", 47.7568, -122.3483);
+    geocoder.add("MOUNTAINLAKE_TERRACE", 47.7900, -122.30379581);
+    geocoder.add("OLIVE_WAY", 47.61309420, -122.336314916);
+    geocoder.add("CASINO_RD", 47.92175434762228, -122.23896905562611);
+    geocoder.add("MARYSVILLE", 48.05523331013222, -122.17763080699298);
     try {
-      geocoder.geocodeAndStore("NORTHGATE_MALL", "Northgate Mall, Seattle", "openstreetmap");
-      geocoder.geocodeAndStore("UW_STATION", "University of Washington Station", "openstreetmap");
+      geocoder.addGeocoded(
+        "NORTHGATE_MALL",
+        "Northgate Mall, Seattle",
+        "openstreetmap"
+      );
+      geocoder.addGeocoded(
+        "UW_STATION",
+        "University of Washington Station",
+        "openstreetmap"
+      );
+      geocoder.addGeocoded("colman dock", "Colman Dock", "openstreetmap");
+      geocoder.addGeocoded(
+        "paul allen center",
+        "paul allen center",
+        "openstreetmap"
+      );
     } catch (IOException e) {
       throw new RuntimeException("Failed to geocode addresses", e);
     }
@@ -58,8 +71,8 @@ public class SoundTransitTestSuite extends BaseTestSuite {
   @DisplayName("Test E Line bus from Olive Way to Shoreline")
   public void testELineBus() throws IOException {
     var request = new SmokeTestRequest(
-      COORDS.get("OLIVE_WAY"),
-      COORDS.get("SHORELINE"),
+      geocoder.get("OLIVE_WAY"),
+      geocoder.get("SHORELINE"),
       defaultModes,
       this.apiClient
     );
@@ -80,8 +93,8 @@ public class SoundTransitTestSuite extends BaseTestSuite {
   @DisplayName("Test 1 Line light rail from Ronald Bog Park to Olive Way")
   public void testLightRail() throws IOException {
     var request = new SmokeTestRequest(
-      COORDS.get("RONALD_BOG_PARK"),
-      COORDS.get("OLIVE_WAY"),
+      geocoder.get("RONALD_BOG_PARK"),
+      geocoder.get("OLIVE_WAY"),
       defaultModes,
       this.apiClient
     );
@@ -102,8 +115,8 @@ public class SoundTransitTestSuite extends BaseTestSuite {
   @DisplayName("Test multi-leg journey from Casino Road to Marysville")
   public void testMultiLegJourney() throws IOException {
     var request = new SmokeTestRequest(
-      COORDS.get("CASINO_RD"),
-      COORDS.get("MARYSVILLE"),
+      geocoder.get("CASINO_RD"),
+      geocoder.get("MARYSVILLE"),
       defaultModes,
       this.apiClient
     );
@@ -124,6 +137,24 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withFarePrice(0.50f, "orca:regular", "orca:electronic")
       .withFarePrice(0.00f, "orca:special", "orca:electronic")
       .assertMatches();
+  }
+
+  @Test
+  @DisplayName("Colman Dock to UW CS Building")
+  public void testColmanDockToUWCSBuilding() throws IOException {
+    var request = new SmokeTestRequest(
+      geocoder.get("colman dock"),
+      geocoder.get("paul allen center"),
+      defaultModes,
+      this.apiClient
+    );
+    var plan = SmokeTestRequest.basicTripPlan(request);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withMode("TRAM")
+      .withRouteShortName("1 Line");
   }
 
   @Test

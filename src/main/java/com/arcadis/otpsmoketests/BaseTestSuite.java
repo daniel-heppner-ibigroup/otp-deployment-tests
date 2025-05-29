@@ -1,6 +1,5 @@
 package com.arcadis.otpsmoketests;
 
-import com.arcadis.otpsmoketests.geocoding.CoordinatesStore;
 import com.arcadis.otpsmoketests.geocoding.GeocodingService;
 import com.arcadis.otpsmoketests.monitoringapp.TimedOtpApiClient;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -13,40 +12,50 @@ import java.time.ZoneId;
  */
 public abstract class BaseTestSuite {
 
-    protected static final MeterRegistry meterRegistry = Metrics.globalRegistry;
-    protected static final CoordinatesStore COORDS = new CoordinatesStore();
+  protected static final MeterRegistry meterRegistry = Metrics.globalRegistry;
 
-    protected final GeocodingService geocoder;
-    protected final TimedOtpApiClient apiClient;
-    protected final String suiteName;
-    protected final String otpWebUrl;
+  protected final GeocodingService geocoder;
+  protected final TimedOtpApiClient apiClient;
+  protected final String suiteName;
+  protected final String otpWebUrl;
 
-    /**
-     * Constructor for BaseOtpSmokeTest.
-     *
-     * @param suiteName The name of the test suite (used for metrics).
-     * @param otpWebUrl The base URL for the OTP instance being tested.
-     */
-    protected BaseTestSuite(String suiteName, String otpWebUrl) {
-        this.suiteName = suiteName;
-        this.otpWebUrl = otpWebUrl;
-        this.geocoder = new GeocodingService(COORDS);
-        // Assuming all tests run against OTP instances configured for America/New_York
-        // If this changes, this might need to become a parameter.
-        this.apiClient = new TimedOtpApiClient(
-                ZoneId.of("America/New_York"),
-                otpWebUrl,
-                meterRegistry,
-                suiteName
-        );
-        initializeCoordinates();
-    }
+  /**
+   * Constructor for BaseOtpSmokeTest.
+   *
+   * @param suiteName The name of the test suite (used for metrics).
+   * @param otpWebUrl The base URL for the OTP instance being tested.
+   */
+  protected BaseTestSuite(
+    String suiteName,
+    String otpWebUrl,
+    String peliasBaseUrl,
+    double lat,
+    double lon
+  ) {
+    this.suiteName = suiteName;
+    this.otpWebUrl = otpWebUrl;
+    this.geocoder =
+      GeocodingService
+        .builder()
+        .peliasBaseUrl(peliasBaseUrl)
+        .focusPoint(lat, lon)
+        .build();
+    // Assuming all tests run against OTP instances configured for America/New_York
+    // If this changes, this might need to become a parameter.
+    this.apiClient =
+      new TimedOtpApiClient(
+        ZoneId.of("America/New_York"),
+        otpWebUrl,
+        meterRegistry,
+        suiteName
+      );
+    initializeCoordinates();
+  }
 
-    /**
-     * Abstract method for subclasses to implement their specific coordinate
-     * initialization using the geocoder.
-     */
-    protected abstract void initializeCoordinates();
-
-    // Common utility methods could be added here if needed in the future.
-} 
+  /**
+   * Abstract method for subclasses to implement their specific coordinate
+   * initialization using the geocoder.
+   */
+  protected abstract void initializeCoordinates();
+  // Common utility methods could be added here if needed in the future.
+}
