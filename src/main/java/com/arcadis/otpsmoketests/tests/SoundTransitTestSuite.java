@@ -153,8 +153,10 @@ public class SoundTransitTestSuite extends BaseTestSuite {
     SmokeTestItinerary
       .from(plan)
       .hasLeg()
+      .withStrictTransitMatching()
       .withMode("TRAM")
-      .withRouteShortName("1 Line");
+      .withRouteShortName("1 Line")
+      .assertMatches();
   }
 
   @Test
