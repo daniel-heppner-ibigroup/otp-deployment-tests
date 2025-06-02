@@ -1,7 +1,5 @@
 package com.arcadis.otpsmoketests.tests;
 
-import static com.arcadis.otpsmoketests.itineraryassertations.SmokeTestRequest.weekdayAtNoon;
-import static com.arcadis.otpsmoketests.itineraryassertations.SmokeTestRequest.weekdayAtTime;
 import static org.opentripplanner.client.model.RequestMode.FLEX_ACCESS;
 import static org.opentripplanner.client.model.RequestMode.FLEX_DIRECT;
 import static org.opentripplanner.client.model.RequestMode.FLEX_EGRESS;
@@ -10,7 +8,6 @@ import static org.opentripplanner.client.model.RequestMode.WALK;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
-import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -118,14 +115,11 @@ public class HopeLinkTestSuite extends BaseTestSuite {
     var to = geocoder.get(toStr);
 
     return this.apiClient.timedPlan(
-        TripPlanParameters
-          .builder()
+        defaultBuilder()
           .withModes(FLEX_DIRECT_MODES)
-          .withNumberOfItineraries(20)
           .withFrom(from)
           .withTo(to)
           .withTime(time)
-          .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
           .build(),
         testName
       );
@@ -179,14 +173,16 @@ public class HopeLinkTestSuite extends BaseTestSuite {
   @Test
   @DisplayName("Test transportation services from Burien to Bellevue")
   public void burienToBellevue() throws IOException {
-    var request = new SmokeTestRequest(
-      geocoder.get("Tukwila"),
-      geocoder.get("Bellevue"),
-      FLEX_DIRECT_MODES,
-      false,
-      this.apiClient
-    );
-    var plan = SmokeTestRequest.basicTripPlan(request);
+    var params = TripPlanParameters
+      .builder()
+      .withFrom(geocoder.get("Tukwila"))
+      .withTo(geocoder.get("Bellevue"))
+      .withModes(FLEX_DIRECT_MODES)
+      .withTime(weekdayAtNoon())
+      .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
+      .build();
+    
+    var plan = apiClient.plan(params);
 
     SmokeTestItinerary
       .from(plan)
