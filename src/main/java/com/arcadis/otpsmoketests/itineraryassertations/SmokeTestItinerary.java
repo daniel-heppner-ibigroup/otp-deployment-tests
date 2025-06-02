@@ -169,6 +169,23 @@ public class SmokeTestItinerary {
     return this;
   }
 
+  public SmokeTestItinerary interlinedWithPreviousLeg() {
+    currentLegCriteria.add(
+      new LegCriterion(
+        "interlined with previous leg",
+        state -> {
+          Leg leg = state.getLeg();
+          if (leg.interlineWithPreviousLeg()) {
+            state.addMatch("interlined with previous leg");
+          } else {
+            state.addFailure("interlined with previous leg");
+          }
+        }
+      )
+    );
+    return this;
+  }
+
   public SmokeTestItinerary withMode(String mode) {
     var message = "mode " + mode;
     currentLegCriteria.add(
@@ -192,6 +209,7 @@ public class SmokeTestItinerary {
     this.strictTransitMatching = true;
     return this;
   }
+
 
   public void assertMatches() {
     List<MatchResult> failedResults = new ArrayList<>();
@@ -247,10 +265,18 @@ public class SmokeTestItinerary {
     List<String> errors = new ArrayList<>();
     List<LegMatchingState> partialMatches = new ArrayList<>();
 
+    if (legCriteria.isEmpty()) {
+      throw new IllegalArgumentException("No leg criteria specified");
+    }
+
     // Try to find a match for each set of criteria
     for (int criteriaIndex = 0; criteriaIndex < legCriteria.size(); criteriaIndex++) {
       List<LegCriterion> criteriaSet = legCriteria.get(criteriaIndex);
       boolean foundMatch = false;
+
+      if (criteriaSet.isEmpty()) {
+        throw new IllegalArgumentException("No leg criteria specified for criteria set " + (criteriaIndex + 1));
+      }
 
       // Look through remaining legs for one that matches this criteria set
       for (int i = 0; i < remainingLegs.size(); i++) {
