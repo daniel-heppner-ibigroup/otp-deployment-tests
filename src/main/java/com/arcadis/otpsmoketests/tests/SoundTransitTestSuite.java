@@ -1,12 +1,9 @@
 package com.arcadis.otpsmoketests.tests;
 
-import static org.opentripplanner.client.model.RequestMode.TRANSIT;
-import static org.opentripplanner.client.model.RequestMode.WALK;
-
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
-import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestRequest;
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +11,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.opentripplanner.client.model.RequestMode;
+import org.opentripplanner.client.parameters.TripPlanParameters;
+import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
 
 @Tag("smoke-test")
 @Tag("soundtransit")
@@ -28,6 +27,15 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       47.61097,
       -122.33701
     );
+  }
+
+  public static TripPlanParametersBuilder defaultBuilder() {
+    return TripPlanParameters
+      .builder()
+      .withTime(weekdayAtNoon())
+      .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
+      .withModes(Set.of(RequestMode.TRANSIT, RequestMode.WALK));
+//      .withWalkReluctance(15);
   }
 
   @Override
@@ -60,23 +68,55 @@ public class SoundTransitTestSuite extends BaseTestSuite {
         "paul allen center",
         "openstreetmap"
       );
+      geocoder.addGeocoded(
+        "king st station",
+        "King St Station",
+        "openstreetmap"
+      );
+      geocoder.addGeocoded("tacoma dome", "Tacoma Dome", "openstreetmap");
+      geocoder.addGeocoded(
+        "45th veg thai",
+        "45th Vegetarian Thai",
+        "openstreetmap"
+      );
+      geocoder.addGeocoded(
+        "s bellevue station",
+        "South Bellevue Station",
+        "otp"
+      );
+      geocoder.addGeocoded("climate pledge", "Climate Pledge", "openstreetmap");
+      geocoder.addGeocoded("1st and lander", "1st ave s and s lander", "otp");
+      geocoder.addGeocoded("e prospect and broadway", "East Prospect Street & Broadway East", "openstreetmap");
+      geocoder.addGeocoded("hopelink food bank", "Hopelink Food Bank", "openstreetmap");
+      geocoder.addGeocoded("queen anne", "1321 W Emerson St", "openaddresses");
+      geocoder.addGeocoded("tractor tavern ballard", "Tractor Tavern", "openstreetmap");
+      geocoder.addGeocoded("mukilteo ferry", "Mukilteo Ferry", "openstreetmap");
+      geocoder.addGeocoded("green lake", "Little Red Hen", "openstreetmap");
+      geocoder.addGeocoded("capitol hill", "Capitol Hill", "otp");
+      geocoder.addGeocoded("paseo fremont", "N 43rd St & Fremont Ave N", "otp");
+      geocoder.addGeocoded("columbia city", "columbia city", "otp");
+      geocoder.addGeocoded("1801 s bush pl", "1801 S Bush Place", "openaddresses");
+      geocoder.addGeocoded("bellevue transit center", "Bellevue Transit Center", "otp");
     } catch (IOException e) {
       throw new RuntimeException("Failed to geocode addresses", e);
     }
   }
 
-  private final Set<RequestMode> defaultModes = Set.of(TRANSIT, WALK);
+  @Override
+  protected TripPlanParameters getDefaultTripPlanParameters() {
+    // Sound Transit specific default parameters
+    return TripPlanParameters.builder().withWalkReluctance(15).build();
+  }
 
   @Test
   @DisplayName("Test E Line bus from Olive Way to Shoreline")
   public void testELineBus() throws IOException {
-    var request = new SmokeTestRequest(
-      geocoder.get("OLIVE_WAY"),
-      geocoder.get("SHORELINE"),
-      defaultModes,
-      this.apiClient
-    );
-    var plan = SmokeTestRequest.basicTripPlan(request);
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("OLIVE_WAY"))
+      .withTo(geocoder.get("SHORELINE"))
+      .build();
+
+    var plan = apiClient.plan(params);
 
     SmokeTestItinerary
       .from(plan)
@@ -92,13 +132,12 @@ public class SoundTransitTestSuite extends BaseTestSuite {
   @Test
   @DisplayName("Test 1 Line light rail from Ronald Bog Park to Olive Way")
   public void testLightRail() throws IOException {
-    var request = new SmokeTestRequest(
-      geocoder.get("RONALD_BOG_PARK"),
-      geocoder.get("OLIVE_WAY"),
-      defaultModes,
-      this.apiClient
-    );
-    var plan = SmokeTestRequest.basicTripPlan(request);
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("RONALD_BOG_PARK"))
+      .withTo(geocoder.get("OLIVE_WAY"))
+      .build();
+
+    var plan = apiClient.plan(params);
 
     SmokeTestItinerary
       .from(plan)
@@ -114,13 +153,12 @@ public class SoundTransitTestSuite extends BaseTestSuite {
   @Test
   @DisplayName("Test multi-leg journey from Casino Road to Marysville")
   public void testMultiLegJourney() throws IOException {
-    var request = new SmokeTestRequest(
-      geocoder.get("CASINO_RD"),
-      geocoder.get("MARYSVILLE"),
-      defaultModes,
-      this.apiClient
-    );
-    var plan = SmokeTestRequest.basicTripPlan(request);
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("CASINO_RD"))
+      .withTo(geocoder.get("MARYSVILLE"))
+      .build();
+
+    var plan = apiClient.plan(params);
 
     SmokeTestItinerary
       .from(plan)
@@ -142,13 +180,12 @@ public class SoundTransitTestSuite extends BaseTestSuite {
   @Test
   @DisplayName("Colman Dock to UW CS Building")
   public void testColmanDockToUWCSBuilding() throws IOException {
-    var request = new SmokeTestRequest(
-      geocoder.get("colman dock"),
-      geocoder.get("paul allen center"),
-      defaultModes,
-      this.apiClient
-    );
-    var plan = SmokeTestRequest.basicTripPlan(request);
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("colman dock"))
+      .withTo(geocoder.get("paul allen center"))
+      .build();
+
+    var plan = apiClient.plan(params);
 
     SmokeTestItinerary
       .from(plan)
@@ -156,6 +193,163 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withStrictTransitMatching()
       .withMode("TRAM")
       .withRouteShortName("1 Line")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("King St Station to Tacoma Dome")
+  public void testKingStStationToTacomaDome() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("king st station"))
+      .withTo(geocoder.get("tacoma dome"))
+      .withTime(weekdayAtTime(LocalTime.of(17, 15)))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("S Line")
+      .assertMatches();
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("590")
+      .assertMatches();
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("578", "577")
+      .hasLeg()
+      .withRouteShortName("574", "586")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("King St Station to 45th Veg Thai")
+  public void testKingStStationTo45thVegThai() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("king st station"))
+      .withTo(geocoder.get("45th veg thai"))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("1 Line")
+      .hasLeg()
+      .withRouteShortName("44")
+      .assertMatches();
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("62")
+      .assertMatches();
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("E Line")
+      .hasLeg()
+      .withRouteShortName("44")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("South Bellevue Station to Climate Pledge")
+  public void testSouthBellevueStationToClimatePledge() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("s bellevue station"))
+      .withTo(geocoder.get("climate pledge"))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("550")
+      .hasLeg()
+      .withRouteShortName("D Line")
+      .assertMatches();
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("550")
+      .hasLeg()
+      .withRouteShortName("Monorail")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("SODO to King St Station")
+  public void sodoToKingSt() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("1st and lander"))
+      .withTo(geocoder.get("king st station"))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("21")
+      .hasLeg()
+      .interlinedWithPreviousLeg()
+      .withRouteShortName("5")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("SODO to N Capitol Hill")
+  public void sodoToNCapitolHill() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("1st and lander"))
+      .withTo(geocoder.get("e prospect and broadway"))
+      .withTime(weekdayAtTime(LocalTime.of(19, 45)))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("1 Line")
+      .assertMatches();
+
+    SmokeTestItinerary
+      .from(plan)
+      .withStrictTransitMatching()
+      .hasLeg()
+      .withRouteShortName("1 Line")
+      .hasLeg()
+      .withRouteShortName("49")
+      .assertMatches();
+
+    SmokeTestItinerary
+      .from(plan)
+      .withStrictTransitMatching()
+      .hasLeg()
+      .withRouteShortName("50")
+      .hasLeg()
+      .withRouteShortName("1 Line")
+      .hasLeg()
+      .withRouteShortName("49")
       .assertMatches();
   }
 
@@ -205,5 +399,239 @@ public class SoundTransitTestSuite extends BaseTestSuite {
           .toList()
       )
     );
+  }
+
+  @Test
+  @DisplayName(
+    "Test with custom trip plan parameters - high number of itineraries"
+  )
+  public void testCustomParameters() throws IOException {
+    // Create custom parameters with more itineraries than the default
+    var customParams = defaultBuilder()
+      .withFrom(geocoder.get("OLIVE_WAY"))
+      .withTo(geocoder.get("SHORELINE"))
+      .build();
+
+    var plan = apiClient.plan(customParams);
+
+    // Verify we get up to 10 itineraries instead of the default 5
+    Assertions.assertTrue(
+      plan.itineraries().size() <= 10,
+      "Should get at most 10 itineraries based on custom parameters"
+    );
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withMode("BUS")
+      .withRouteShortName("E Line")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("Queen Anne to Hopelink Food Bank")
+  public void queenAnneToHopelinkFoodBank() throws IOException {
+    var params = defaultBuilder()
+        .withFrom(geocoder.get("queen anne"))
+        .withTo(geocoder.get("hopelink food bank"))
+        .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+        .from(plan)
+        .hasLeg()
+        .withRouteShortName("31", "32")
+        .hasLeg()
+        .withRouteShortName("255")
+        .assertMatches();
+    SmokeTestItinerary
+        .from(plan)
+        .hasLeg()
+        .withRouteShortName("31", "32")
+        .hasLeg()
+        .withRouteShortName("239")
+        .assertMatches();
+  }
+
+  @Test
+  @DisplayName("King St Station to Tractor Tavern Ballard")
+  public void kingStStationToTractorTavernBallard() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("king st station"))
+      .withTo(geocoder.get("tractor tavern ballard"))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("40")
+      .assertMatches();
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("D Line")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("King St Station to Mukilteo Ferry")
+  public void kingStStationToMukilteoFerry() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("king st station"))
+      .withTo(geocoder.get("mukilteo ferry"))
+      .withTime(weekdayAtTime(LocalTime.of(17, 35)))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("N Line")
+      .assertMatches();
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withRouteShortName("1 Line")
+      .hasLeg()
+      .withRouteShortName("117")
+      .assertMatches();
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("515")
+      .hasLeg()
+      .withRouteShortName("117")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("Green Lake to King St Station")
+  public void greenLakeToKingStStation() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("green lake"))
+      .withTo(geocoder.get("king st station"))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("1 Line")
+      .assertMatches();
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withRouteShortName("62", "45")
+      .hasLeg()
+      .withRouteShortName("1 Line")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("Capitol Hill to King St Station")
+  public void capitolHillToKingStStation() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("capitol hill"))
+      .withTo(geocoder.get("king st station"))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("1 Line")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("Capitol Hill to SODO")
+  public void capitolHillToUWStation() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("capitol hill"))
+      .withTo(geocoder.get("SODO"))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("1 Line")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("Paseo Fremont to SODO")
+  public void paseoFremontToSODO() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("paseo fremont"))
+      .withTo(geocoder.get("1st and lander"))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("5")
+        .hasLeg()
+      .interlinedWithPreviousLeg()
+      .withRouteShortName("21")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("Capitol Hill to Columbia City")
+  public void capitolHillToColumbiaCity() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("capitol hill"))
+      .withTo(geocoder.get("columbia city"))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("1 Line")
+      .assertMatches();
+  }
+
+  @Test
+  @DisplayName("1801 S Bush Pl to Bellevue Transit Center")
+  public void s1801SBushPlaceToBellevueTransitCenter() throws IOException {
+    var params = defaultBuilder()
+      .withFrom(geocoder.get("1801 s bush pl"))
+      .withTo(geocoder.get("bellevue transit center"))
+      .build();
+
+    var plan = apiClient.plan(params);
+
+    SmokeTestItinerary
+      .from(plan)
+      .hasLeg()
+      .withStrictTransitMatching()
+      .withRouteShortName("554")
+      .hasLeg()
+      .withRouteShortName("550")
+      .assertMatches();
   }
 }
