@@ -10,10 +10,10 @@ import org.opentripplanner.client.model.TripPlan;
 
 /**
  * A fluent API for testing OTP itineraries against specific criteria.
- * 
+ *
  * <p>This class allows you to specify required legs with various criteria and validates
  * that at least one itinerary in the trip plan matches all those criteria.
- * 
+ *
  * <h3>Basic Usage:</h3>
  * <pre>
  * SmokeTestItinerary.from(tripPlan)
@@ -21,12 +21,12 @@ import org.opentripplanner.client.model.TripPlan;
  *   .withRouteShortName("1-Line")
  *   .assertMatches();
  * </pre>
- * 
+ *
  * <h3>Strict Transit Matching:</h3>
  * <p>By default, the matcher allows additional transit legs beyond those specified.
  * Use {@code withStrictTransitMatching()} to require that the itinerary contains
  * ONLY the specified transit legs and no others.
- * 
+ *
  * <p>Example - this will PASS if there's an itinerary with exactly one transit leg (the 1-Line):
  * <pre>
  * SmokeTestItinerary.from(tripPlan)
@@ -35,7 +35,7 @@ import org.opentripplanner.client.model.TripPlan;
  *   .withRouteShortName("1-Line")
  *   .assertMatches();
  * </pre>
- * 
+ *
  * <p>Example - this will FAIL if the matching itinerary also contains other transit legs:
  * <pre>
  * // Fails if itinerary has "1-Line" + "E Line" (strict matching rejects extra transit legs)
@@ -45,7 +45,7 @@ import org.opentripplanner.client.model.TripPlan;
  *   .withRouteShortName("1-Line")
  *   .assertMatches();
  * </pre>
- * 
+ *
  * <p>Example - multiple required legs with strict matching:
  * <pre>
  * // This requires exactly two transit legs: 1-Line and E Line, no others
@@ -57,7 +57,7 @@ import org.opentripplanner.client.model.TripPlan;
  *   .withRouteShortName("E Line")
  *   .assertMatches();
  * </pre>
- * 
+ *
  * <p>Note: Walking legs and other non-transit legs are not affected by strict matching.
  */
 public class SmokeTestItinerary {
@@ -210,7 +210,6 @@ public class SmokeTestItinerary {
     return this;
   }
 
-
   public void assertMatches() {
     List<MatchResult> failedResults = new ArrayList<>();
 
@@ -230,7 +229,7 @@ public class SmokeTestItinerary {
       error.append(" with strict transit matching");
     }
     error.append(":\n");
-    
+
     for (int i = 0; i < legCriteria.size(); i++) {
       error.append("Leg ").append(i + 1).append(" criteria:\n");
       error.append(describeCriteria(legCriteria.get(i))).append("\n");
@@ -240,15 +239,16 @@ public class SmokeTestItinerary {
     for (int i = 0; i < failedResults.size(); i++) {
       MatchResult result = failedResults.get(i);
       error.append("Itinerary ").append(i + 1).append(":\n");
-      
+
       for (String err : result.getErrors()) {
         error.append("  - ").append(err).append("\n");
       }
-      
+
       if (!result.getPartialMatches().isEmpty()) {
         error.append("  Partial matches:\n");
         for (LegMatchingState match : result.getPartialMatches()) {
-          error.append("    - Leg with ")
+          error
+            .append("    - Leg with ")
             .append(match.getMatchingCriteria())
             .append(" but missing ")
             .append(match.getMissingCriteria())
@@ -270,12 +270,18 @@ public class SmokeTestItinerary {
     }
 
     // Try to find a match for each set of criteria
-    for (int criteriaIndex = 0; criteriaIndex < legCriteria.size(); criteriaIndex++) {
+    for (
+      int criteriaIndex = 0;
+      criteriaIndex < legCriteria.size();
+      criteriaIndex++
+    ) {
       List<LegCriterion> criteriaSet = legCriteria.get(criteriaIndex);
       boolean foundMatch = false;
 
       if (criteriaSet.isEmpty()) {
-        throw new IllegalArgumentException("No leg criteria specified for criteria set " + (criteriaIndex + 1));
+        throw new IllegalArgumentException(
+          "No leg criteria specified for criteria set " + (criteriaIndex + 1)
+        );
       }
 
       // Look through remaining legs for one that matches this criteria set
@@ -295,18 +301,26 @@ public class SmokeTestItinerary {
       }
 
       if (!foundMatch) {
-        errors.add("No leg found matching criteria set " + (criteriaIndex + 1) + ": " + describeCriteria(criteriaSet).trim());
+        errors.add(
+          "No leg found matching criteria set " +
+          (criteriaIndex + 1) +
+          ": " +
+          describeCriteria(criteriaSet).trim()
+        );
       }
     }
 
     // If strict transit matching is enabled, check that no additional transit legs remain
     if (strictTransitMatching && errors.isEmpty()) {
-      List<Leg> additionalTransitLegs = remainingLegs.stream()
+      List<Leg> additionalTransitLegs = remainingLegs
+        .stream()
         .filter(Leg::isTransit)
         .toList();
-      
+
       if (!additionalTransitLegs.isEmpty()) {
-        StringBuilder error = new StringBuilder("Itinerary contains additional transit legs when strict matching is enabled: ");
+        StringBuilder error = new StringBuilder(
+          "Itinerary contains additional transit legs when strict matching is enabled: "
+        );
         for (Leg leg : additionalTransitLegs) {
           if (leg.route().shortName().isPresent()) {
             error.append(leg.route().shortName().get()).append(" ");
@@ -339,11 +353,16 @@ public class SmokeTestItinerary {
    * Result of attempting to match an itinerary against all required leg criteria.
    */
   private static class MatchResult {
+
     private final boolean success;
     private final List<String> errors;
     private final List<LegMatchingState> partialMatches;
 
-    private MatchResult(boolean success, List<String> errors, List<LegMatchingState> partialMatches) {
+    private MatchResult(
+      boolean success,
+      List<String> errors,
+      List<LegMatchingState> partialMatches
+    ) {
       this.success = success;
       this.errors = new ArrayList<>(errors);
       this.partialMatches = new ArrayList<>(partialMatches);
@@ -353,7 +372,10 @@ public class SmokeTestItinerary {
       return new MatchResult(true, List.of(), List.of());
     }
 
-    public static MatchResult failure(List<String> errors, List<LegMatchingState> partialMatches) {
+    public static MatchResult failure(
+      List<String> errors,
+      List<LegMatchingState> partialMatches
+    ) {
       return new MatchResult(false, errors, partialMatches);
     }
 

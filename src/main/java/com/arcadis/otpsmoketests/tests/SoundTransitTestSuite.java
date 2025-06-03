@@ -35,7 +35,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTime(weekdayAtNoon())
       .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
       .withModes(Set.of(RequestMode.TRANSIT, RequestMode.WALK));
-//      .withWalkReluctance(15);
+    //      .withWalkReluctance(15);
   }
 
   @Override
@@ -86,17 +86,37 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       );
       geocoder.addGeocoded("climate pledge", "Climate Pledge", "openstreetmap");
       geocoder.addGeocoded("1st and lander", "1st ave s and s lander", "otp");
-      geocoder.addGeocoded("e prospect and broadway", "East Prospect Street & Broadway East", "openstreetmap");
-      geocoder.addGeocoded("hopelink food bank", "Hopelink Food Bank", "openstreetmap");
+      geocoder.addGeocoded(
+        "e prospect and broadway",
+        "East Prospect Street & Broadway East",
+        "openstreetmap"
+      );
+      geocoder.addGeocoded(
+        "hopelink food bank",
+        "Hopelink Food Bank",
+        "openstreetmap"
+      );
       geocoder.addGeocoded("queen anne", "1321 W Emerson St", "openaddresses");
-      geocoder.addGeocoded("tractor tavern ballard", "Tractor Tavern", "openstreetmap");
+      geocoder.addGeocoded(
+        "tractor tavern ballard",
+        "Tractor Tavern",
+        "openstreetmap"
+      );
       geocoder.addGeocoded("mukilteo ferry", "Mukilteo Ferry", "openstreetmap");
       geocoder.addGeocoded("green lake", "Little Red Hen", "openstreetmap");
       geocoder.addGeocoded("capitol hill", "Capitol Hill", "otp");
       geocoder.addGeocoded("paseo fremont", "N 43rd St & Fremont Ave N", "otp");
       geocoder.addGeocoded("columbia city", "columbia city", "otp");
-      geocoder.addGeocoded("1801 s bush pl", "1801 S Bush Place", "openaddresses");
-      geocoder.addGeocoded("bellevue transit center", "Bellevue Transit Center", "otp");
+      geocoder.addGeocoded(
+        "1801 s bush pl",
+        "1801 S Bush Place",
+        "openaddresses"
+      );
+      geocoder.addGeocoded(
+        "bellevue transit center",
+        "Bellevue Transit Center",
+        "otp"
+      );
     } catch (IOException e) {
       throw new RuntimeException("Failed to geocode addresses", e);
     }
@@ -432,26 +452,26 @@ public class SoundTransitTestSuite extends BaseTestSuite {
   @DisplayName("Queen Anne to Hopelink Food Bank")
   public void queenAnneToHopelinkFoodBank() throws IOException {
     var params = defaultBuilder()
-        .withFrom(geocoder.get("queen anne"))
-        .withTo(geocoder.get("hopelink food bank"))
-        .build();
+      .withFrom(geocoder.get("queen anne"))
+      .withTo(geocoder.get("hopelink food bank"))
+      .build();
 
     var plan = apiClient.plan(params);
 
     SmokeTestItinerary
-        .from(plan)
-        .hasLeg()
-        .withRouteShortName("31", "32")
-        .hasLeg()
-        .withRouteShortName("255")
-        .assertMatches();
+      .from(plan)
+      .hasLeg()
+      .withRouteShortName("31", "32")
+      .hasLeg()
+      .withRouteShortName("255")
+      .assertMatches();
     SmokeTestItinerary
-        .from(plan)
-        .hasLeg()
-        .withRouteShortName("31", "32")
-        .hasLeg()
-        .withRouteShortName("239")
-        .assertMatches();
+      .from(plan)
+      .hasLeg()
+      .withRouteShortName("31", "32")
+      .hasLeg()
+      .withRouteShortName("239")
+      .assertMatches();
   }
 
   @Test
@@ -591,7 +611,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("5")
-        .hasLeg()
+      .hasLeg()
       .interlinedWithPreviousLeg()
       .withRouteShortName("21")
       .assertMatches();

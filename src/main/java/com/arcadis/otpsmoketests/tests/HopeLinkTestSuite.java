@@ -181,7 +181,7 @@ public class HopeLinkTestSuite extends BaseTestSuite {
       .withTime(weekdayAtNoon())
       .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
       .build();
-    
+
     var plan = apiClient.plan(params);
 
     SmokeTestItinerary
