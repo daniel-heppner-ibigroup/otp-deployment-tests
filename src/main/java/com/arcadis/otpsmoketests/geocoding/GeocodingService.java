@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GeocodingService {
+
+  // Static cache to store geocoded results across all instances
+  private static final Map<String, Coordinate> GLOBAL_GEOCODE_CACHE = new ConcurrentHashMap<>();
 
   /**
    * Builder for creating GeocodingService instances.
@@ -100,6 +104,23 @@ public class GeocodingService {
   }
 
   /**
+   * Clears the global geocoding cache. Useful for testing or when you want to force re-geocoding.
+   */
+  public static void clearGlobalCache() {
+    GLOBAL_GEOCODE_CACHE.clear();
+    logger.debug("Cleared global geocoding cache");
+  }
+
+  /**
+   * Gets the size of the global geocoding cache.
+   *
+   * @return The number of cached geocoded addresses
+   */
+  public static int getGlobalCacheSize() {
+    return GLOBAL_GEOCODE_CACHE.size();
+  }
+
+  /**
    * Gets a stored coordinate by key.
    *
    * @param key The key to look up
@@ -122,7 +143,21 @@ public class GeocodingService {
   }
 
   /**
+   * Creates a cache key for geocoding requests.
+   */
+  private String createCacheKey(String address, String source) {
+    return String.format("%s|%s|%s|%.6f|%.6f", 
+      address.toLowerCase().trim(), 
+      source != null ? source : "any",
+      layers,
+      focusLat,
+      focusLon
+    );
+  }
+
+  /**
    * Geocodes an address using the Pelias geocoding service, filtering by source.
+   * Results are cached globally to avoid repeated requests for the same address.
    *
    * @param address The address to geocode
    * @param source The source to filter by (e.g., "openstreetmap", "geonames"), or null for any source
@@ -131,6 +166,16 @@ public class GeocodingService {
    */
   public Optional<Coordinate> geocode(String address, String source)
     throws IOException {
+    
+    String cacheKey = createCacheKey(address, source);
+    
+    // Check if we already have this result cached
+    Coordinate cachedResult = GLOBAL_GEOCODE_CACHE.get(cacheKey);
+    if (cachedResult != null) {
+      logger.debug("Found cached result for '{}': ({}, {})", address, cachedResult.lat(), cachedResult.lon());
+      return Optional.of(cachedResult);
+    }
+
     HttpUrl url = HttpUrl
       .parse(peliasBaseUrl)
       .newBuilder()
@@ -190,20 +235,25 @@ public class GeocodingService {
         double lon = coordinates.get(0).asDouble();
         double lat = coordinates.get(1).asDouble();
 
+        Coordinate coordinate = new Coordinate(lat, lon);
+        
+        // Cache the result for future use
+        GLOBAL_GEOCODE_CACHE.put(cacheKey, coordinate);
+
         // Log the source of the result
         String resultSource = matchingFeature
           .path("properties")
           .path("source")
           .asText();
         logger.debug(
-          "Found coordinates for '{}' from source '{}': ({}, {})",
+          "Geocoded and cached '{}' from source '{}': ({}, {})",
           address,
           resultSource,
           lat,
           lon
         );
 
-        return Optional.of(new Coordinate(lat, lon));
+        return Optional.of(coordinate);
       }
 
       logger.warn("Invalid coordinates in response for address: {}", address);

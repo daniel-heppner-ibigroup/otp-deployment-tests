@@ -35,7 +35,6 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTime(weekdayAtNoon())
       .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
       .withModes(Set.of(RequestMode.TRANSIT, RequestMode.WALK));
-    //      .withWalkReluctance(15);
   }
 
   @Override

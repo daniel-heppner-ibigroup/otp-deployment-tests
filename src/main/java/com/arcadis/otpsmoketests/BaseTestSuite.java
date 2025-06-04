@@ -19,6 +19,12 @@ import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
  * Base class for OTP smoke tests, providing common setup for coordinates,
  * geocoding, and the OTP API client.
  *
+ * <h3>Geocoding Cache</h3>
+ * <p>Geocoding requests are cached globally across all test instances to improve performance.
+ * This means that the first test suite to run will perform the geocoding HTTP requests,
+ * and subsequent test suites will use the cached results. This significantly reduces
+ * test execution time when running multiple test suites.
+ *
  * <h3>Custom TripPlanParameters</h3>
  * <p>Test suites can customize their default TripPlanParameters by overriding
  * {@code getDefaultTripPlanParameters()}. Individual tests can create custom
@@ -88,6 +94,7 @@ public abstract class BaseTestSuite {
         meterRegistry,
         suiteName
       );
+    // Initialize coordinates - geocoding requests are cached globally for performance
     initializeCoordinates();
   }
 
@@ -139,5 +146,23 @@ public abstract class BaseTestSuite {
       .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
       .withModes(Set.of(RequestMode.TRANSIT, RequestMode.WALK));
   }
+
+  /**
+   * Clears the global geocoding cache. This can be useful for testing scenarios
+   * where you want to force fresh geocoding requests.
+   */
+  protected static void clearGeocodingCache() {
+    GeocodingService.clearGlobalCache();
+  }
+
+  /**
+   * Gets the current size of the global geocoding cache.
+   * 
+   * @return The number of cached geocoded addresses
+   */
+  protected static int getGeocodingCacheSize() {
+    return GeocodingService.getGlobalCacheSize();
+  }
+
   // Common utility methods could be added here if needed in the future.
 }
