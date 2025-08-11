@@ -5,12 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration test for configuration loading.
  */
-@SpringBootTest
+@SpringBootTest(classes = {
+    com.arcadis.otpsmoketests.monitoringapp.OtpMonitoringApplication.class,
+    DeploymentConfiguration.class,
+    ConfigurationValidator.class,
+    ConfigurationLoader.class
+})
 @ActiveProfiles("deployments")
 class ConfigurationIntegrationTest {
 
