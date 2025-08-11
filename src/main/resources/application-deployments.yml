@@ -1,4 +1,10 @@
 otp:
+  # Global geocoding configuration
+  geocoding:
+    pelias-base-url: "https://api.geocode.earth/v1"
+    focus-latitude: 47.6062
+    focus-longitude: -122.3321
+  
   deployments:
     sound-transit:
       name: "SoundTransit"

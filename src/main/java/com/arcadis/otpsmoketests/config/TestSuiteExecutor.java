@@ -28,6 +28,7 @@ public class TestSuiteExecutor {
   private final Class<?> testSuiteClass;
   private final DeploymentContext deploymentContext;
   private final DeploymentConfiguration.TestSuiteConfig testSuiteConfig;
+  private final DeploymentConfiguration.GeocodingConfig geocodingConfig;
   private final TestExecutorFactory factory;
 
   /**
@@ -37,17 +38,20 @@ public class TestSuiteExecutor {
    * @param testSuiteClass The test suite class to execute
    * @param deploymentContext The deployment context
    * @param testSuiteConfig The test suite configuration
+   * @param geocodingConfig The geocoding configuration
    */
   public TestSuiteExecutor(
     String deploymentName,
     Class<?> testSuiteClass,
     DeploymentContext deploymentContext,
-    DeploymentConfiguration.TestSuiteConfig testSuiteConfig
+    DeploymentConfiguration.TestSuiteConfig testSuiteConfig,
+    DeploymentConfiguration.GeocodingConfig geocodingConfig
   ) {
     this.deploymentName = deploymentName;
     this.testSuiteClass = testSuiteClass;
     this.deploymentContext = deploymentContext;
     this.testSuiteConfig = testSuiteConfig;
+    this.geocodingConfig = geocodingConfig;
     this.factory = new TestExecutorFactory();
   }
 
@@ -67,7 +71,7 @@ public class TestSuiteExecutor {
 
     try {
       // Validate that the test suite can be instantiated before execution
-      factory.createTestSuiteInstance(testSuiteClass, deploymentContext);
+      factory.createTestSuiteInstance(testSuiteClass, deploymentContext, geocodingConfig);
 
       // Execute tests using JUnit Platform
       TestExecutionResult result = executeWithJUnitPlatform();
@@ -272,7 +276,7 @@ public class TestSuiteExecutor {
   public boolean isValid() {
     try {
       // Check if the test suite class can be instantiated
-      factory.createTestSuiteInstance(testSuiteClass, deploymentContext);
+      factory.createTestSuiteInstance(testSuiteClass, deploymentContext, geocodingConfig);
 
       // Check if the test suite has any test methods
       int testMethodCount = getTestMethodCount();
@@ -321,7 +325,7 @@ public class TestSuiteExecutor {
 
     try {
       // Validate that the test suite can be instantiated
-      factory.createTestSuiteInstance(testSuiteClass, deploymentContext);
+      factory.createTestSuiteInstance(testSuiteClass, deploymentContext, geocodingConfig);
 
       // Count test methods
       int testMethodCount = getTestMethodCount();

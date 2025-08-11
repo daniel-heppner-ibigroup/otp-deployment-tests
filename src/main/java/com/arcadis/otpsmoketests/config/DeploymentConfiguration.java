@@ -2,7 +2,7 @@ package com.arcadis.otpsmoketests.config;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.util.ArrayList;
@@ -24,7 +24,19 @@ public class DeploymentConfiguration {
 
   @Valid
   @NotNull
+  private GeocodingConfig geocoding = new GeocodingConfig();
+
+  @Valid
+  @NotNull
   private Map<String, DeploymentConfig> deployments = new HashMap<>();
+
+  public GeocodingConfig getGeocoding() {
+    return geocoding;
+  }
+
+  public void setGeocoding(GeocodingConfig geocoding) {
+    this.geocoding = geocoding;
+  }
 
   public Map<String, DeploymentConfig> getDeployments() {
     return deployments;
@@ -32,6 +44,46 @@ public class DeploymentConfiguration {
 
   public void setDeployments(Map<String, DeploymentConfig> deployments) {
     this.deployments = deployments;
+  }
+
+  /**
+   * Configuration for geocoding service.
+   */
+  public static class GeocodingConfig {
+
+    @NotBlank(message = "Pelias base URL cannot be blank")
+    @Pattern(
+      regexp = "^https?://.*",
+      message = "Pelias base URL must be a valid HTTP/HTTPS URL"
+    )
+    private String peliasBaseUrl = "https://api.geocode.earth/v1";
+
+    private double focusLatitude = 47.6062; // Seattle default
+    private double focusLongitude = -122.3321; // Seattle default
+
+    public String getPeliasBaseUrl() {
+      return peliasBaseUrl;
+    }
+
+    public void setPeliasBaseUrl(String peliasBaseUrl) {
+      this.peliasBaseUrl = peliasBaseUrl;
+    }
+
+    public double getFocusLatitude() {
+      return focusLatitude;
+    }
+
+    public void setFocusLatitude(double focusLatitude) {
+      this.focusLatitude = focusLatitude;
+    }
+
+    public double getFocusLongitude() {
+      return focusLongitude;
+    }
+
+    public void setFocusLongitude(double focusLongitude) {
+      this.focusLongitude = focusLongitude;
+    }
   }
 
   /**

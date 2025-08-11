@@ -147,26 +147,26 @@
   - Update manual test execution to work with deployment context
   - _Requirements: 2.3, 3.3_
 
-- [ ] 7. Create configuration files and test deployment
+- [x] 7. Create configuration files and test deployment
   - Create configuration file with existing deployment settings
   - Test complete system with both SoundTransit and HopeLink deployments
   - Validate metrics collection and scheduling functionality
   - _Requirements: 1.1, 1.2, 2.1, 2.2, 3.1, 3.2, 5.1, 5.2_
 
-- [ ] 7.1 Create deployment configuration file
+- [x] 7.1 Create deployment configuration file
   - Write application-deployments.yml with SoundTransit and HopeLink configurations
   - Set appropriate schedules for each test suite per deployment
   - Validate configuration file format and content
   - _Requirements: 1.1, 1.2_
 
-- [ ] 7.2 Integration testing
+- [x] 7.2 Integration testing
   - Test complete system startup with configuration loading
   - Verify all test suites are scheduled correctly
   - Test manual test execution via REST endpoints
   - Validate metrics are properly tagged and collected
   - _Requirements: 2.1, 2.2, 2.3, 3.1, 3.2, 5.1, 5.2_
 
-- [ ] 7.3 End-to-end validation
+- [x] 7.3 End-to-end validation
   - Run system for full test cycle to ensure stability
   - Verify test execution results match previous behavior
   - Check metrics dashboard shows deployment-specific data

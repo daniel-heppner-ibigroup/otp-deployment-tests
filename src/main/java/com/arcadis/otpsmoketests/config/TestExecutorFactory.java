@@ -25,13 +25,15 @@ public class TestExecutorFactory {
    * @param deploymentName The name of the deployment
    * @param deployment The deployment configuration
    * @param testSuiteConfig The test suite configuration
+   * @param geocodingConfig The geocoding configuration
    * @return A TestSuiteExecutor instance
    * @throws TestSuiteInstantiationException if the test suite cannot be created
    */
   public TestSuiteExecutor createExecutor(
     String deploymentName,
     DeploymentConfiguration.DeploymentConfig deployment,
-    DeploymentConfiguration.TestSuiteConfig testSuiteConfig
+    DeploymentConfiguration.TestSuiteConfig testSuiteConfig,
+    DeploymentConfiguration.GeocodingConfig geocodingConfig
   ) {
     logger.debug(
       "Creating test executor for deployment '{}' with test suite '{}'",
@@ -52,7 +54,8 @@ public class TestExecutorFactory {
       deploymentName,
       testSuiteClass,
       deploymentContext,
-      testSuiteConfig
+      testSuiteConfig,
+      geocodingConfig
     );
   }
 
@@ -88,18 +91,20 @@ public class TestExecutorFactory {
   }
 
   /**
-   * Creates an instance of the test suite class with deployment context.
-   * This method handles both legacy constructors (without deployment context)
-   * and new constructors (with deployment context).
+   * Creates an instance of the test suite class with deployment context and geocoding configuration.
+   * This method handles the current constructor pattern that requires DeploymentContext, 
+   * peliasBaseUrl, latitude, and longitude parameters.
    *
    * @param testSuiteClass The test suite class to instantiate
    * @param deploymentContext The deployment context
+   * @param geocodingConfig The geocoding configuration
    * @return An instance of the test suite
    * @throws TestSuiteInstantiationException if the test suite cannot be instantiated
    */
   public Object createTestSuiteInstance(
     Class<?> testSuiteClass,
-    DeploymentContext deploymentContext
+    DeploymentContext deploymentContext,
+    DeploymentConfiguration.GeocodingConfig geocodingConfig
   ) {
     logger.debug(
       "Creating instance of test suite class: {}",
@@ -107,25 +112,25 @@ public class TestExecutorFactory {
     );
 
     try {
-      // First, try to find a constructor that accepts DeploymentContext
-      Constructor<?> contextConstructor = findDeploymentContextConstructor(
-        testSuiteClass
+      // Try to find the constructor that accepts DeploymentContext, String, double, double
+      Constructor<?> constructor = testSuiteClass.getDeclaredConstructor(
+        DeploymentContext.class,
+        String.class,
+        double.class,
+        double.class
       );
-      if (contextConstructor != null) {
-        logger.debug(
-          "Using deployment context constructor for {}",
-          testSuiteClass.getName()
-        );
-        return contextConstructor.newInstance(deploymentContext);
-      }
-
-      // Fall back to default constructor for legacy test suites
+      
       logger.debug(
-        "Using default constructor for legacy test suite: {}",
+        "Using deployment context constructor for {} with geocoding parameters",
         testSuiteClass.getName()
       );
-      Constructor<?> defaultConstructor = testSuiteClass.getDeclaredConstructor();
-      return defaultConstructor.newInstance();
+      
+      return constructor.newInstance(
+        deploymentContext,
+        geocodingConfig.getPeliasBaseUrl(),
+        geocodingConfig.getFocusLatitude(),
+        geocodingConfig.getFocusLongitude()
+      );
     } catch (
       NoSuchMethodException
       | InstantiationException
@@ -133,7 +138,7 @@ public class TestExecutorFactory {
       | InvocationTargetException e
     ) {
       String message = String.format(
-        "Failed to instantiate test suite class: %s",
+        "Failed to instantiate test suite class: %s. Expected constructor with parameters: (DeploymentContext, String, double, double)",
         testSuiteClass.getName()
       );
       logger.error(message, e);
@@ -142,23 +147,22 @@ public class TestExecutorFactory {
   }
 
   /**
-   * Attempts to find a constructor that accepts DeploymentContext.
-   * This supports future test suites that will be refactored to use deployment context.
+   * Checks if the class has the required constructor for test suite instantiation.
    *
-   * @param testSuiteClass The test suite class
-   * @return The constructor if found, null otherwise
+   * @param clazz The class to check
+   * @return true if the required constructor exists
    */
-  private Constructor<?> findDeploymentContextConstructor(
-    Class<?> testSuiteClass
-  ) {
+  private boolean hasRequiredConstructor(Class<?> clazz) {
     try {
-      return testSuiteClass.getDeclaredConstructor(DeploymentContext.class);
-    } catch (NoSuchMethodException e) {
-      logger.debug(
-        "No deployment context constructor found for {}",
-        testSuiteClass.getName()
+      clazz.getDeclaredConstructor(
+        DeploymentContext.class,
+        String.class,
+        double.class,
+        double.class
       );
-      return null;
+      return true;
+    } catch (NoSuchMethodException e) {
+      return false;
     }
   }
 
@@ -173,14 +177,12 @@ public class TestExecutorFactory {
     try {
       Class<?> clazz = loadTestSuiteClass(className);
 
-      // Check if we can find a suitable constructor
-      boolean hasDefaultConstructor = hasDefaultConstructor(clazz);
-      boolean hasContextConstructor =
-        findDeploymentContextConstructor(clazz) != null;
+      // Check if we can find the required constructor
+      boolean hasRequiredConstructor = hasRequiredConstructor(clazz);
 
-      if (!hasDefaultConstructor && !hasContextConstructor) {
+      if (!hasRequiredConstructor) {
         logger.warn(
-          "Test suite class '{}' has no suitable constructor",
+          "Test suite class '{}' does not have required constructor (DeploymentContext, String, double, double)",
           className
         );
         return false;
@@ -198,20 +200,7 @@ public class TestExecutorFactory {
     }
   }
 
-  /**
-   * Checks if the class has a default (no-argument) constructor.
-   *
-   * @param clazz The class to check
-   * @return true if a default constructor exists
-   */
-  private boolean hasDefaultConstructor(Class<?> clazz) {
-    try {
-      clazz.getDeclaredConstructor();
-      return true;
-    } catch (NoSuchMethodException e) {
-      return false;
-    }
-  }
+
 
   /**
    * Exception thrown when test suite instantiation fails.

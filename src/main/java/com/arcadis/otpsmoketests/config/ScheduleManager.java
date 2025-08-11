@@ -53,11 +53,13 @@ public class ScheduleManager {
    * @param deploymentName The name of the deployment
    * @param deployment The deployment configuration
    * @param testSuiteConfig The test suite configuration including schedule
+   * @param geocodingConfig The geocoding configuration
    */
   public void scheduleTestSuite(
     String deploymentName,
     DeploymentConfiguration.DeploymentConfig deployment,
-    DeploymentConfiguration.TestSuiteConfig testSuiteConfig
+    DeploymentConfiguration.TestSuiteConfig testSuiteConfig,
+    DeploymentConfiguration.GeocodingConfig geocodingConfig
   ) {
     if (!testSuiteConfig.isEnabled()) {
       logger.debug(
@@ -85,7 +87,8 @@ public class ScheduleManager {
       TestSuiteExecutor executor = testExecutorFactory.createExecutor(
         deploymentName,
         deployment,
-        testSuiteConfig
+        testSuiteConfig,
+        geocodingConfig
       );
 
       // Parse and create the appropriate trigger
@@ -159,7 +162,7 @@ public class ScheduleManager {
         deployment
           .getTestSuites()
           .forEach(testSuiteConfig -> {
-            scheduleTestSuite(deploymentName, deployment, testSuiteConfig);
+            scheduleTestSuite(deploymentName, deployment, testSuiteConfig, config.getGeocoding());
           });
       });
 

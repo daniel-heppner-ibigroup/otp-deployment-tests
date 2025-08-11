@@ -116,7 +116,7 @@ class TestRunner {
         
         try {
           TestSuiteExecutor executor = testExecutorFactory.createExecutor(
-            deploymentName, deployment, testSuiteConfig
+            deploymentName, deployment, testSuiteConfig, deploymentConfiguration.getGeocoding()
           );
           
           var executionResult = executor.executeTests();
@@ -177,7 +177,7 @@ class TestRunner {
       
       try {
         TestSuiteExecutor executor = testExecutorFactory.createExecutor(
-          deploymentName, deployment, testSuiteConfig
+          deploymentName, deployment, testSuiteConfig, deploymentConfiguration.getGeocoding()
         );
         
         var executionResult = executor.executeTests();
@@ -249,7 +249,7 @@ class TestRunner {
     
     try {
       TestSuiteExecutor executor = testExecutorFactory.createExecutor(
-        deploymentName, deployment, testSuiteConfig
+        deploymentName, deployment, testSuiteConfig, deploymentConfiguration.getGeocoding()
       );
       
       var executionResult = executor.executeTests();
