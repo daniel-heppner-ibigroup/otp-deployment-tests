@@ -1,0 +1,19 @@
+otp:
+  deployments:
+    sound-transit:
+      name: "SoundTransit"
+      otp-url: "https://sound-transit-otp.ibi-transit.com"
+      test-suites:
+        - class-name: "com.arcadis.otpsmoketests.tests.SoundTransitTestSuite"
+          schedule: "0 */10 * * * *"  # Every 10 minutes
+          enabled: true
+    hopelink:
+      name: "Hopelink"
+      otp-url: "https://hopelink-otp.ibi-transit.com"
+      test-suites:
+        - class-name: "com.arcadis.otpsmoketests.tests.HopeLinkTestSuite"
+          schedule: "0 */15 * * * *"  # Every 15 minutes
+          enabled: true
+        - class-name: "com.arcadis.otpsmoketests.tests.SoundTransitTestSuite"
+          schedule: "0 0 */2 * * *"   # Every 2 hours
+          enabled: true

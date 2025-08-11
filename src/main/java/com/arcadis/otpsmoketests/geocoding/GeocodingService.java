@@ -146,8 +146,9 @@ public class GeocodingService {
    * Creates a cache key for geocoding requests.
    */
   private String createCacheKey(String address, String source) {
-    return String.format("%s|%s|%s|%.6f|%.6f", 
-      address.toLowerCase().trim(), 
+    return String.format(
+      "%s|%s|%s|%.6f|%.6f",
+      address.toLowerCase().trim(),
       source != null ? source : "any",
       layers,
       focusLat,
@@ -166,13 +167,17 @@ public class GeocodingService {
    */
   public Optional<Coordinate> geocode(String address, String source)
     throws IOException {
-    
     String cacheKey = createCacheKey(address, source);
-    
+
     // Check if we already have this result cached
     Coordinate cachedResult = GLOBAL_GEOCODE_CACHE.get(cacheKey);
     if (cachedResult != null) {
-      logger.debug("Found cached result for '{}': ({}, {})", address, cachedResult.lat(), cachedResult.lon());
+      logger.debug(
+        "Found cached result for '{}': ({}, {})",
+        address,
+        cachedResult.lat(),
+        cachedResult.lon()
+      );
       return Optional.of(cachedResult);
     }
 
@@ -236,7 +241,7 @@ public class GeocodingService {
         double lat = coordinates.get(1).asDouble();
 
         Coordinate coordinate = new Coordinate(lat, lon);
-        
+
         // Cache the result for future use
         GLOBAL_GEOCODE_CACHE.put(cacheKey, coordinate);
 
