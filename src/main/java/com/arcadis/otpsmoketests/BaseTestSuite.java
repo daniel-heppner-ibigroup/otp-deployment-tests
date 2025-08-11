@@ -1,5 +1,6 @@
 package com.arcadis.otpsmoketests;
 
+import com.arcadis.otpsmoketests.config.DeploymentContext;
 import com.arcadis.otpsmoketests.geocoding.GeocodingService;
 import com.arcadis.otpsmoketests.monitoringapp.TimedOtpApiClient;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -20,38 +21,47 @@ import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
  * geocoding, and the OTP API client.
  *
  * <h3>Geocoding Cache</h3>
- * <p>Geocoding requests are cached globally across all test instances to improve performance.
- * This means that the first test suite to run will perform the geocoding HTTP requests,
- * and subsequent test suites will use the cached results. This significantly reduces
+ * <p>
+ * Geocoding requests are cached globally across all test instances to improve
+ * performance.
+ * This means that the first test suite to run will perform the geocoding HTTP
+ * requests,
+ * and subsequent test suites will use the cached results. This significantly
+ * reduces
  * test execution time when running multiple test suites.
  *
  * <h3>Custom TripPlanParameters</h3>
- * <p>Test suites can customize their default TripPlanParameters by overriding
+ * <p>
+ * Test suites can customize their default TripPlanParameters by overriding
  * {@code getDefaultTripPlanParameters()}. Individual tests can create custom
  * parameters by using TripPlanParameters.builder() directly.
  *
- * <p>Example of customizing suite defaults:
+ * <p>
+ * Example of customizing suite defaults:
+ *
  * <pre>{@code
  * @Override
  * protected TripPlanParameters getDefaultTripPlanParameters() {
  *   return TripPlanParameters
- *     .builder()
- *     .withNumberOfItineraries(10)
- *     .build();
+ *       .builder()
+ *       .withNumberOfItineraries(10)
+ *       .build();
  * }
  * }</pre>
  *
- * <p>Example of using TripPlanParameters directly in a test:
+ * <p>
+ * Example of using TripPlanParameters directly in a test:
+ *
  * <pre>{@code
  * var params = TripPlanParameters
- *   .builder()
- *   .withFrom(geocoder.get("FROM_LOCATION"))
- *   .withTo(geocoder.get("TO_LOCATION"))
- *   .withModes(Set.of(TRANSIT, WALK))
- *   .withTime(weekdayAtNoon())
- *   .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
- *   .withNumberOfItineraries(20)
- *   .build();
+ *     .builder()
+ *     .withFrom(geocoder.get("FROM_LOCATION"))
+ *     .withTo(geocoder.get("TO_LOCATION"))
+ *     .withModes(Set.of(TRANSIT, WALK))
+ *     .withTime(weekdayAtNoon())
+ *     .withSearchDirection(TripPlanParameters.SearchDirection.DEPART_AT)
+ *     .withNumberOfItineraries(20)
+ *     .build();
  * var plan = apiClient.plan(params);
  * }</pre>
  */
@@ -61,24 +71,26 @@ public abstract class BaseTestSuite {
 
   protected final GeocodingService geocoder;
   protected final TimedOtpApiClient apiClient;
-  protected final String suiteName;
-  protected final String otpWebUrl;
+  public final String suiteName;
+  public final String otpWebUrl;
 
   /**
    * Constructor for BaseOtpSmokeTest.
    *
-   * @param suiteName The name of the test suite (used for metrics).
-   * @param otpWebUrl The base URL for the OTP instance being tested.
+   * @param deploymentContext The deployment context containing deployment name
+   *                          and OTP URL.
+   * @param peliasBaseUrl     The base URL for the Pelias geocoding service.
+   * @param lat               The latitude for the geocoding focus point.
+   * @param lon               The longitude for the geocoding focus point.
    */
   protected BaseTestSuite(
-    String suiteName,
-    String otpWebUrl,
+    DeploymentContext deploymentContext,
     String peliasBaseUrl,
     double lat,
     double lon
   ) {
-    this.suiteName = suiteName;
-    this.otpWebUrl = otpWebUrl;
+    this.suiteName = deploymentContext.getDeploymentName();
+    this.otpWebUrl = deploymentContext.getOtpUrl();
     this.geocoder =
       GeocodingService
         .builder()
@@ -90,11 +102,12 @@ public abstract class BaseTestSuite {
     this.apiClient =
       new TimedOtpApiClient(
         ZoneId.of("America/New_York"),
-        otpWebUrl,
+        deploymentContext.getOtpUrl(),
         meterRegistry,
-        suiteName
+        deploymentContext.getDeploymentName()
       );
-    // Initialize coordinates - geocoding requests are cached globally for performance
+    // Initialize coordinates - geocoding requests are cached globally for
+    // performance
     initializeCoordinates();
   }
 
@@ -105,9 +118,11 @@ public abstract class BaseTestSuite {
   protected abstract void initializeCoordinates();
 
   /**
-   * Creates default TripPlanParameters that can be used as a base for test suite customizations.
+   * Creates default TripPlanParameters that can be used as a base for test suite
+   * customizations.
    *
-   * Subclasses can override this method to provide suite-specific default parameters.
+   * Subclasses can override this method to provide suite-specific default
+   * parameters.
    *
    * @return Default TripPlanParameters that can be used as a starting point
    */
@@ -162,6 +177,50 @@ public abstract class BaseTestSuite {
    */
   protected static int getGeocodingCacheSize() {
     return GeocodingService.getGlobalCacheSize();
+  }
+
+  /**
+   * Factory method for creating test suite instances with deployment context.
+   * This method uses reflection to instantiate test suites that have constructors
+   * accepting DeploymentContext and geocoding parameters.
+   *
+   * @param testSuiteClass    The class of the test suite to create
+   * @param deploymentContext The deployment context
+   * @param peliasBaseUrl     The base URL for the Pelias geocoding service
+   * @param lat               The latitude for the geocoding focus point
+   * @param lon               The longitude for the geocoding focus point
+   * @param <T>               The type of the test suite
+   * @return A new instance of the test suite
+   * @throws RuntimeException if the test suite cannot be instantiated
+   */
+  public static <T extends BaseTestSuite> T createWithDeploymentContext(
+    Class<T> testSuiteClass,
+    DeploymentContext deploymentContext,
+    String peliasBaseUrl,
+    double lat,
+    double lon
+  ) {
+    try {
+      // Try to find constructor that accepts DeploymentContext
+      var constructor = testSuiteClass.getDeclaredConstructor(
+        DeploymentContext.class,
+        String.class,
+        double.class,
+        double.class
+      );
+      return constructor.newInstance(
+        deploymentContext,
+        peliasBaseUrl,
+        lat,
+        lon
+      );
+    } catch (Exception e) {
+      throw new RuntimeException(
+        "Failed to create test suite instance for class: " +
+        testSuiteClass.getName(),
+        e
+      );
+    }
   }
   // Common utility methods could be added here if needed in the future.
 }

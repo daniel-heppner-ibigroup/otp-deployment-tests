@@ -73,26 +73,26 @@
   - Add schedule update capability without application restart
   - _Requirements: 3.2, 3.3, 3.5_
 
-- [ ] 4. Update test suite architecture
+- [x] 4. Update test suite architecture
   - Modify BaseTestSuite to support deployment context injection
   - Update existing test suites to use new constructor pattern
   - Remove hardcoded deployment configurations from test suites
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [ ] 4.1 Modify BaseTestSuite constructor
+- [x] 4.1 Modify BaseTestSuite constructor
   - Update BaseTestSuite to accept deployment context
   - Maintain existing constructor for geocoding parameters
   - Add factory method for creating test suites with deployment context
   - _Requirements: 4.1, 4.2, 4.3_
 
-- [ ] 4.2 Update SoundTransitTestSuite
+- [x] 4.2 Update SoundTransitTestSuite
   - Remove hardcoded deployment URL from constructor
   - Update constructor to accept deployment context parameter
   - Keep geocoding URL and focus coordinates in test suite
   - Test that all existing tests still pass with new constructor
   - _Requirements: 4.1, 4.2, 4.4, 4.5_
 
-- [ ] 4.3 Update HopeLinkTestSuite
+- [x] 4.3 Update HopeLinkTestSuite
   - Remove hardcoded deployment URL from constructor
   - Update constructor to accept deployment context parameter
   - Keep geocoding URL and focus coordinates in test suite

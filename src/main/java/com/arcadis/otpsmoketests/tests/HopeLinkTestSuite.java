@@ -7,6 +7,7 @@ import static org.opentripplanner.client.model.RequestMode.TRANSIT;
 import static org.opentripplanner.client.model.RequestMode.WALK;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
+import com.arcadis.otpsmoketests.config.DeploymentContext;
 import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -24,14 +25,21 @@ import org.opentripplanner.client.parameters.TripPlanParameters;
 @DisplayName("Hopelink Smoke Tests")
 public class HopeLinkTestSuite extends BaseTestSuite {
 
-  public HopeLinkTestSuite() {
-    super(
-      "Hopelink",
-      "https://hopelink-otp.ibi-transit.com",
-      "https://im5b1wfh6d.execute-api.us-east-1.amazonaws.com/commtrans/autocomplete",
-      47.61097,
-      -122.33701
-    );
+  /**
+   * Constructor for HopeLinkTestSuite.
+   *
+   * @param deploymentContext The deployment context containing deployment name and OTP URL
+   * @param peliasBaseUrl The base URL for the Pelias geocoding service
+   * @param lat The latitude for the geocoding focus point
+   * @param lon The longitude for the geocoding focus point
+   */
+  public HopeLinkTestSuite(
+    DeploymentContext deploymentContext,
+    String peliasBaseUrl,
+    double lat,
+    double lon
+  ) {
+    super(deploymentContext, peliasBaseUrl, lat, lon);
   }
 
   @Override

@@ -1,6 +1,7 @@
 package com.arcadis.otpsmoketests.tests;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
+import com.arcadis.otpsmoketests.config.DeploymentContext;
 import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
 import java.io.IOException;
 import java.time.LocalTime;
@@ -19,14 +20,21 @@ import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
 @DisplayName("Sound Transit Smoke Tests")
 public class SoundTransitTestSuite extends BaseTestSuite {
 
-  public SoundTransitTestSuite() {
-    super(
-      "SoundTransit",
-      "https://sound-transit-otp.ibi-transit.com",
-      "https://87sp37ezga.execute-api.us-east-1.amazonaws.com/st/autocomplete",
-      47.61097,
-      -122.33701
-    );
+  /**
+   * Constructor for SoundTransitTestSuite.
+   *
+   * @param deploymentContext The deployment context containing deployment name and OTP URL
+   * @param peliasBaseUrl The base URL for the Pelias geocoding service
+   * @param lat The latitude for the geocoding focus point
+   * @param lon The longitude for the geocoding focus point
+   */
+  public SoundTransitTestSuite(
+    DeploymentContext deploymentContext,
+    String peliasBaseUrl,
+    double lat,
+    double lon
+  ) {
+    super(deploymentContext, peliasBaseUrl, lat, lon);
   }
 
   public static TripPlanParametersBuilder defaultBuilder() {
