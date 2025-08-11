@@ -99,25 +99,25 @@
   - Test that all existing tests still pass with new constructor
   - _Requirements: 4.1, 4.2, 4.4, 4.5_
 
-- [ ] 5. Enhance metrics system
+- [x] 5. Enhance metrics system
   - Update metrics to include deployment tags
   - Create DeploymentMetricsManager for deployment-specific metrics
   - Update existing metrics collection to use new tagging system
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [ ] 5.1 Create DeploymentMetricsManager
+- [x] 5.1 Create DeploymentMetricsManager
   - Implement metrics manager with deployment and test suite tagging
   - Add methods for recording test execution results with tags
   - Update metric naming convention to include deployment information
   - _Requirements: 5.1, 5.2, 5.4_
 
-- [ ] 5.2 Update TimedOtpApiClient metrics
+- [x] 5.2 Update TimedOtpApiClient metrics
   - Modify TimedOtpApiClient to accept deployment context
   - Update metrics recording to include deployment tags
   - Ensure metrics are properly tagged for filtering and aggregation
   - _Requirements: 5.1, 5.2, 5.3_
 
-- [ ] 5.3 Update TestRunner metrics integration
+- [x] 5.3 Update TestRunner metrics integration
   - Modify TestRunner to use DeploymentMetricsManager
   - Update all metric recording calls to include deployment context
   - Test that metrics are properly tagged and accessible

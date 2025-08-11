@@ -1,5 +1,6 @@
 package com.arcadis.otpsmoketests.monitoringapp;
 
+import com.arcadis.otpsmoketests.config.DeploymentMetricsManager;
 import com.arcadis.otpsmoketests.tests.HopeLinkTestSuite;
 import com.arcadis.otpsmoketests.tests.SoundTransitTestSuite;
 import io.micrometer.core.instrument.Counter;
@@ -49,6 +50,7 @@ class TestRunner {
     TestRunner.class
   );
   private final MeterRegistry meterRegistry;
+  private final DeploymentMetricsManager metricsManager;
   private final Launcher launcher;
   private final Map<Class<?>, String> testSuites;
 
@@ -64,6 +66,7 @@ class TestRunner {
 
   public TestRunner(MeterRegistry meterRegistry) {
     this.meterRegistry = meterRegistry;
+    this.metricsManager = new DeploymentMetricsManager(meterRegistry);
     this.launcher = LauncherFactory.create();
     this.testSuites = new HashMap<>();
 
@@ -237,7 +240,12 @@ class TestRunner {
       launcher.registerTestExecutionListeners(listener);
 
       Timer.Sample suiteSample = Timer.start(meterRegistry);
+      Timer.Sample deploymentSample = metricsManager.startTestTimer(suiteName, suiteName);
+      
       launcher.execute(request);
+      
+      // Stop both timers
+      metricsManager.stopTestTimer(deploymentSample, suiteName, suiteName);
       long suiteDurationNanos = suiteSample.stop(
         meterRegistry.timer(String.format("otp.tests.%s.duration", suiteName))
       ); // Store duration
@@ -245,7 +253,11 @@ class TestRunner {
       TestExecutionSummary summary = listener.getSummary();
       suiteResults.put(suiteName, summary);
 
-      // Record suite-specific metrics
+      // Record suite-specific metrics using DeploymentMetricsManager
+      // For backward compatibility, treat each suite as its own deployment
+      metricsManager.recordTestExecution(suiteName, suiteName, summary);
+
+      // Keep legacy metrics for backward compatibility
       meterRegistry
         .counter("otp.tests." + suiteName + ".total")
         .increment(summary.getTestsFoundCount());
@@ -294,6 +306,15 @@ class TestRunner {
             StructuredArguments.kv("failure", failureDetails)
           );
 
+          // Record failure using DeploymentMetricsManager
+          metricsManager.recordTestFailure(
+            suiteName, // deployment name
+            suiteName, // test suite name
+            failureDetails.get("testName").toString(),
+            failure.getException()
+          );
+
+          // Keep legacy metrics for backward compatibility
           meterRegistry
             .counter(
               "otp.test.failure",

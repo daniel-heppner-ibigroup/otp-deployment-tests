@@ -1,6 +1,7 @@
 package com.arcadis.otpsmoketests;
 
 import com.arcadis.otpsmoketests.config.DeploymentContext;
+import com.arcadis.otpsmoketests.config.DeploymentMetricsManager;
 import com.arcadis.otpsmoketests.geocoding.GeocodingService;
 import com.arcadis.otpsmoketests.monitoringapp.TimedOtpApiClient;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -71,6 +72,7 @@ public abstract class BaseTestSuite {
 
   protected final GeocodingService geocoder;
   protected final TimedOtpApiClient apiClient;
+  protected final DeploymentMetricsManager metricsManager;
   public final String suiteName;
   public final String otpWebUrl;
 
@@ -91,6 +93,7 @@ public abstract class BaseTestSuite {
   ) {
     this.suiteName = deploymentContext.getDeploymentName();
     this.otpWebUrl = deploymentContext.getOtpUrl();
+    this.metricsManager = new DeploymentMetricsManager(meterRegistry);
     this.geocoder =
       GeocodingService
         .builder()
@@ -104,7 +107,9 @@ public abstract class BaseTestSuite {
         ZoneId.of("America/New_York"),
         deploymentContext.getOtpUrl(),
         meterRegistry,
-        deploymentContext.getDeploymentName()
+        deploymentContext.getDeploymentName(),
+        this.getClass().getSimpleName(),
+        metricsManager
       );
     // Initialize coordinates - geocoding requests are cached globally for
     // performance
@@ -221,6 +226,15 @@ public abstract class BaseTestSuite {
         e
       );
     }
+  }
+
+  /**
+   * Gets the deployment metrics manager for this test suite.
+   *
+   * @return The deployment metrics manager
+   */
+  protected DeploymentMetricsManager getMetricsManager() {
+    return metricsManager;
   }
   // Common utility methods could be added here if needed in the future.
 }
