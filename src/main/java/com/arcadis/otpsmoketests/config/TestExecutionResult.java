@@ -265,6 +265,36 @@ public class TestExecutionResult {
     );
   }
 
+  /**
+   * Converts this result to a Map for JSON serialization.
+   *
+   * @return A Map representation of this result
+   */
+  public java.util.Map<String, Object> toMap() {
+    java.util.Map<String, Object> map = new java.util.HashMap<>();
+    map.put("deploymentName", deploymentName);
+    map.put("testSuiteName", testSuiteName);
+    map.put("success", success);
+    map.put("testsFound", testsRun);
+    map.put("testsRun", testsRun);
+    map.put("testsSucceeded", successCount);
+    map.put("testsFailed", failureCount);
+    map.put("testsSkipped", skippedCount);
+    map.put("executionTimeMs", executionTimeMs);
+    map.put("executionTime", executionTime);
+    map.put("failureMessages", failureMessages);
+    map.put("hasFailures", hasFailures());
+    map.put("successRate", getSuccessRate());
+    map.put("summary", getSummary());
+    map.put("status", success ? "success" : "failed");
+    
+    if (executionException != null) {
+      map.put("executionError", executionException.getMessage());
+    }
+    
+    return map;
+  }
+
   @Override
   public String toString() {
     return (

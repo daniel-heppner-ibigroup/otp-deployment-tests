@@ -123,25 +123,25 @@
   - Test that metrics are properly tagged and accessible
   - _Requirements: 5.1, 5.2, 5.4, 5.5_
 
-- [ ] 6. Replace TestRunner with configuration-driven system
+- [x] 6. Replace TestRunner with configuration-driven system
   - Remove hardcoded test suite registration from TestRunner
   - Implement configuration-based test scheduling in main application
   - Update REST endpoints to work with dynamic deployments
   - _Requirements: 2.1, 2.2, 2.3, 3.1, 3.2, 3.3_
 
-- [ ] 6.1 Remove hardcoded test suites from TestRunner
+- [x] 6.1 Remove hardcoded test suites from TestRunner
   - Remove addTestSuite calls for SoundTransitTestSuite and HopeLinkTestSuite
   - Remove hardcoded test suite map and related initialization
   - Clean up unused metrics registration code
   - _Requirements: 2.1, 2.2_
 
-- [ ] 6.2 Implement configuration-driven scheduling
+- [x] 6.2 Implement configuration-driven scheduling
   - Update OtpMonitoringApplication to use ScheduleManager
   - Add configuration loading and validation on application startup
   - Implement automatic scheduling of all configured test suites
   - _Requirements: 2.1, 2.2, 2.3, 3.1, 3.2_
 
-- [ ] 6.3 Update REST endpoints
+- [x] 6.3 Update REST endpoints
   - Modify /run-tests endpoint to support deployment-specific execution
   - Add endpoint to list configured deployments and schedules
   - Update manual test execution to work with deployment context
