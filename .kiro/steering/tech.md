@@ -56,3 +56,7 @@ docker run -p 8080:8080 otp-smoke-tests
 - Application properties in `src/main/resources/application.properties`
 - Structured JSON logging via Logback configuration
 - Timezone: America/New_York for OTP API calls
+
+
+# Special Note:
+Please note that you cannot run commands because Kiro is not compatible with my shell configuration. I can run things myself in Intellij.
