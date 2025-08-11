@@ -126,39 +126,45 @@ public class TestSuiteExecutor {
     TestExecutionResult result = new TestExecutionResult();
     result.setDeploymentName(deploymentName);
     result.setTestSuiteName(testSuiteClass.getSimpleName());
-    
+
     // Use the actual test counts from the summary
     result.setTestsRun((int) summary.getTestsStartedCount());
     result.setSuccessCount((int) summary.getTestsSucceededCount());
     result.setFailureCount((int) summary.getTestsFailedCount());
     result.setSkippedCount((int) summary.getTestsSkippedCount());
-    result.setSuccess(summary.getTestsFailedCount() == 0 && summary.getTestsAbortedCount() == 0);
+    result.setSuccess(
+      summary.getTestsFailedCount() == 0 && summary.getTestsAbortedCount() == 0
+    );
 
     // Collect failure details with more comprehensive error information
-    if (summary.getTestsFailedCount() > 0 || summary.getTestsAbortedCount() > 0) {
+    if (
+      summary.getTestsFailedCount() > 0 || summary.getTestsAbortedCount() > 0
+    ) {
       List<String> failures = new ArrayList<>();
-      
+
       // Add failed test details
-      summary.getFailures().forEach(failure -> {
-        String testName = failure.getTestIdentifier().getDisplayName();
-        Throwable exception = failure.getException();
-        String failureMessage = String.format(
-          "FAILED: %s - %s: %s",
-          testName,
-          exception.getClass().getSimpleName(),
-          exception.getMessage()
-        );
-        failures.add(failureMessage);
-        
-        logger.debug(
-          "Test failure in '{}' for deployment '{}': {}",
-          testName,
-          deploymentName,
-          exception.getMessage(),
-          exception
-        );
-      });
-      
+      summary
+        .getFailures()
+        .forEach(failure -> {
+          String testName = failure.getTestIdentifier().getDisplayName();
+          Throwable exception = failure.getException();
+          String failureMessage = String.format(
+            "FAILED: %s - %s: %s",
+            testName,
+            exception.getClass().getSimpleName(),
+            exception.getMessage()
+          );
+          failures.add(failureMessage);
+
+          logger.debug(
+            "Test failure in '{}' for deployment '{}': {}",
+            testName,
+            deploymentName,
+            exception.getMessage(),
+            exception
+          );
+        });
+
       result.setFailureMessages(failures);
     }
 
@@ -267,7 +273,7 @@ public class TestSuiteExecutor {
     try {
       // Check if the test suite class can be instantiated
       factory.createTestSuiteInstance(testSuiteClass, deploymentContext);
-      
+
       // Check if the test suite has any test methods
       int testMethodCount = getTestMethodCount();
       if (testMethodCount == 0) {
@@ -277,14 +283,14 @@ public class TestSuiteExecutor {
         );
         return false;
       }
-      
+
       logger.debug(
         "Test suite executor validation passed for '{}' on '{}' - {} test methods found",
         testSuiteClass.getSimpleName(),
         deploymentName,
         testMethodCount
       );
-      
+
       return true;
     } catch (Exception e) {
       logger.error(
@@ -316,12 +322,12 @@ public class TestSuiteExecutor {
     try {
       // Validate that the test suite can be instantiated
       factory.createTestSuiteInstance(testSuiteClass, deploymentContext);
-      
+
       // Count test methods
       int testMethodCount = getTestMethodCount();
-      
+
       long executionTime = System.currentTimeMillis() - startTime;
-      
+
       logger.debug(
         "Dry run successful for '{}' on '{}' - {} test methods found in {}ms",
         testSuiteClass.getSimpleName(),
@@ -338,7 +344,7 @@ public class TestSuiteExecutor {
       );
     } catch (Exception e) {
       long executionTime = System.currentTimeMillis() - startTime;
-      
+
       logger.error(
         "Dry run failed for '{}' on '{}' after {}ms",
         testSuiteClass.getSimpleName(),

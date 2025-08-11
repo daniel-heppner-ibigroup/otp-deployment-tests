@@ -44,7 +44,9 @@ public class TestExecutorFactory {
       deployment.getOtpUrl()
     );
 
-    Class<?> testSuiteClass = loadTestSuiteClass(testSuiteConfig.getClassName());
+    Class<?> testSuiteClass = loadTestSuiteClass(
+      testSuiteConfig.getClassName()
+    );
 
     return new TestSuiteExecutor(
       deploymentName,
@@ -69,10 +71,7 @@ public class TestExecutorFactory {
       // Verify that the class extends BaseTestSuite
       if (!BaseTestSuite.class.isAssignableFrom(clazz)) {
         throw new TestSuiteInstantiationException(
-          String.format(
-            "Class '%s' does not extend BaseTestSuite",
-            className
-          )
+          String.format("Class '%s' does not extend BaseTestSuite", className)
         );
       }
 
@@ -176,8 +175,8 @@ public class TestExecutorFactory {
 
       // Check if we can find a suitable constructor
       boolean hasDefaultConstructor = hasDefaultConstructor(clazz);
-      boolean hasContextConstructor = findDeploymentContextConstructor(clazz) !=
-      null;
+      boolean hasContextConstructor =
+        findDeploymentContextConstructor(clazz) != null;
 
       if (!hasDefaultConstructor && !hasContextConstructor) {
         logger.warn(
@@ -190,7 +189,11 @@ public class TestExecutorFactory {
       logger.debug("Test suite class '{}' validation passed", className);
       return true;
     } catch (TestSuiteInstantiationException e) {
-      logger.warn("Test suite class '{}' validation failed: {}", className, e.getMessage());
+      logger.warn(
+        "Test suite class '{}' validation failed: {}",
+        className,
+        e.getMessage()
+      );
       return false;
     }
   }

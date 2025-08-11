@@ -167,7 +167,8 @@ public class TestExecutionResult {
   }
 
   public void setFailureMessages(List<String> failureMessages) {
-    this.failureMessages = failureMessages != null ? failureMessages : new ArrayList<>();
+    this.failureMessages =
+      failureMessages != null ? failureMessages : new ArrayList<>();
   }
 
   public Throwable getExecutionException() {
