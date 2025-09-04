@@ -57,7 +57,16 @@ import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
  */
 public abstract class BaseTestSuite {
 
-  protected static final MeterRegistry meterRegistry = Metrics.globalRegistry;
+  protected static MeterRegistry meterRegistry = Metrics.globalRegistry;
+
+  /**
+   * Sets the MeterRegistry to be used by all test suites.
+   * This should be called by the monitoring application to ensure
+   * all metrics are registered to the same registry used by the HTTP endpoint.
+   */
+  public static void setMeterRegistry(MeterRegistry registry) {
+    meterRegistry = registry;
+  }
 
   protected final GeocodingService geocoder;
   protected final TimedOtpApiClient apiClient;

@@ -1,10 +1,13 @@
 package com.arcadis.otpsmoketests.monitoringapp;
 
+import com.arcadis.otpsmoketests.BaseTestSuite;
+import com.arcadis.otpsmoketests.monitoringapp.MetricNames;
 import com.arcadis.otpsmoketests.tests.HopeLinkTestSuite;
 import com.arcadis.otpsmoketests.tests.SoundTransitTestSuite;
 import io.javalin.Javalin;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import it.sauronsoftware.cron4j.Scheduler;
@@ -13,6 +16,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import net.logstash.logback.argument.StructuredArguments;
+import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -35,6 +39,9 @@ public class OtpMonitoringApplication {
       PrometheusMeterRegistry meterRegistry = new PrometheusMeterRegistry(
         PrometheusConfig.DEFAULT
       );
+
+      // Set the meter registry for all test suites to use the same registry as the HTTP endpoint
+      BaseTestSuite.setMeterRegistry(meterRegistry);
 
       TestRunner testRunner = new TestRunner(meterRegistry);
 
@@ -82,7 +89,6 @@ class TestRunner {
   private final Launcher launcher;
   private final Map<Class<?>, String> testSuites;
 
-
   // Fields to store the results of the most recent run for each suite
   private final Map<String, AtomicLong> lastRunSuiteTestsFound = new ConcurrentHashMap<>();
   private final Map<String, AtomicLong> lastRunSuiteTestsFailed = new ConcurrentHashMap<>();
@@ -93,10 +99,9 @@ class TestRunner {
     this.launcher = LauncherFactory.create();
     this.testSuites = new HashMap<>();
 
-
     // Add test suites
     addTestSuite(SoundTransitTestSuite.class, "SoundTransit");
-//    addTestSuite(HopeLinkTestSuite.class, "Hopelink");
+    addTestSuite(HopeLinkTestSuite.class, "Hopelink");
   }
 
   private void addTestSuite(Class<?> clazz, String name) {
@@ -106,7 +111,6 @@ class TestRunner {
     lastRunSuiteTestsFound.put(name, new AtomicLong(0));
     lastRunSuiteTestsFailed.put(name, new AtomicLong(0));
     lastRunSuiteDurationMs.put(name, new AtomicLong(0));
-
 
     // Add suite-specific last run gauges
     Gauge
@@ -134,7 +138,6 @@ class TestRunner {
       )
       .description(String.format("Duration (ms) of the last run of %s", name))
       .register(meterRegistry);
-
   }
 
   public Map<String, Object> runTestsManually() {
@@ -178,13 +181,10 @@ class TestRunner {
       TestExecutionSummary summary = listener.getSummary();
       suiteResults.put(suiteName, summary);
 
-
       // Update suite-specific last run metrics
       lastRunSuiteTestsFound.get(suiteName).set(summary.getTestsFoundCount());
       lastRunSuiteTestsFailed.get(suiteName).set(summary.getTestsFailedCount());
-      lastRunSuiteDurationMs
-        .get(suiteName)
-        .set(suiteDurationNanos / 1_000_000);
+      lastRunSuiteDurationMs.get(suiteName).set(suiteDurationNanos / 1_000_000);
 
       // Collect failures for this suite
       summary
@@ -219,12 +219,13 @@ class TestRunner {
             StructuredArguments.kv("runId", runId),
             StructuredArguments.kv("failure", failureDetails)
           );
-
         });
     }
 
     Instant endTime = Instant.now();
-    long totalDurationMs = java.time.Duration.between(startTime, endTime).toMillis();
+    long totalDurationMs = java.time.Duration
+      .between(startTime, endTime)
+      .toMillis();
 
     // Calculate total metrics across all suites
     long totalTestsFound = suiteResults
@@ -248,7 +249,6 @@ class TestRunner {
       .mapToLong(TestExecutionSummary::getTestsSkippedCount)
       .sum();
 
-
     // Prepare result map
     Map<String, Object> result = new HashMap<>();
     result.put("runId", runId);
@@ -260,7 +260,6 @@ class TestRunner {
     result.put("testsFailed", totalTestsFailed);
     result.put("testsSkipped", totalTestsSkipped);
     result.put("failures", allFailures);
-
 
     // Add per-suite results
     Map<String, Object> suiteStats = new HashMap<>();
