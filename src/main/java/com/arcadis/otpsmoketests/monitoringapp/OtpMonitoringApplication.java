@@ -3,20 +3,16 @@ package com.arcadis.otpsmoketests.monitoringapp;
 import com.arcadis.otpsmoketests.tests.HopeLinkTestSuite;
 import com.arcadis.otpsmoketests.tests.SoundTransitTestSuite;
 import io.javalin.Javalin;
-import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import it.sauronsoftware.cron4j.Scheduler;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import net.logstash.logback.argument.StructuredArguments;
-import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -86,10 +82,6 @@ class TestRunner {
   private final Launcher launcher;
   private final Map<Class<?>, String> testSuites;
 
-  // Fields to store the results of the most recent test run
-  private final AtomicLong lastRunTestsFound = new AtomicLong(0);
-  private final AtomicLong lastRunTestsFailed = new AtomicLong(0);
-  private final AtomicLong lastRunDurationMs = new AtomicLong(0);
 
   // Fields to store the results of the most recent run for each suite
   private final Map<String, AtomicLong> lastRunSuiteTestsFound = new ConcurrentHashMap<>();
@@ -101,64 +93,6 @@ class TestRunner {
     this.launcher = LauncherFactory.create();
     this.testSuites = new HashMap<>();
 
-    // Initialize base metrics
-    Counter
-      .builder("otp.tests.total")
-      .description("Total number of OTP tests run")
-      .register(meterRegistry);
-
-    Counter
-      .builder("otp.tests.failures")
-      .description("Total number of OTP test failures")
-      .register(meterRegistry);
-
-    // Add timer for overall test execution
-    Timer
-      .builder("otp.tests.duration")
-      .description("Time taken to execute OTP tests")
-      .register(meterRegistry);
-
-    // Add timer specifically for OTP plan requests
-    Timer
-      .builder("otp.plan.requests.duration")
-      .description("Time taken for all OTP plan requests in test suite")
-      .register(meterRegistry);
-
-    // Add counter for plan requests
-    Counter
-      .builder("otp.plan.requests.total")
-      .description("Total number of OTP plan requests made")
-      .register(meterRegistry);
-
-    // Add counter for plan request failures
-    Counter
-      .builder("otp.plan.requests.failures")
-      .description("Number of failed OTP plan requests")
-      .register(meterRegistry);
-
-    // Add gauges for the most recent test run results
-    Gauge
-      .builder("otp.tests.last_run.total", lastRunTestsFound, AtomicLong::get)
-      .description("Total number of tests found in the most recent test run")
-      .register(meterRegistry);
-
-    Gauge
-      .builder(
-        "otp.tests.last_run.failures",
-        lastRunTestsFailed,
-        AtomicLong::get
-      )
-      .description("Total number of tests failed in the most recent test run")
-      .register(meterRegistry);
-
-    Gauge
-      .builder(
-        "otp.tests.last_run.duration_ms",
-        lastRunDurationMs,
-        AtomicLong::get
-      )
-      .description("Duration (in milliseconds) of the most recent test run")
-      .register(meterRegistry);
 
     // Add test suites
     addTestSuite(SoundTransitTestSuite.class, "SoundTransit");
@@ -173,64 +107,34 @@ class TestRunner {
     lastRunSuiteTestsFailed.put(name, new AtomicLong(0));
     lastRunSuiteDurationMs.put(name, new AtomicLong(0));
 
-    // Add suite-specific metrics
-    Counter
-      .builder(String.format("otp.tests.%s.total", name))
-      .description(String.format("Total number of %s OTP tests run", name))
-      .register(meterRegistry);
-
-    Counter
-      .builder(String.format("otp.tests.%s.failures", name))
-      .description(String.format("Total number of %s OTP test failures", name))
-      .register(meterRegistry);
-
-    Timer
-      .builder(MetricNames.planRequestTimer(name))
-      .description(String.format("Time taken for %s OTP plan requests", name))
-      .register(meterRegistry);
 
     // Add suite-specific last run gauges
     Gauge
       .builder(
-        String.format("otp.tests.%s.last_run.total", name),
+        String.format("otp.tests.%s.tests_run", name),
         () -> lastRunSuiteTestsFound.get(name).get()
       )
       .description(
-        String.format("Total tests found in the last run of %s", name)
+        String.format("Number of tests run in the last run of %s", name)
       )
       .register(meterRegistry);
     Gauge
       .builder(
-        String.format("otp.tests.%s.last_run.failures", name),
+        String.format("otp.tests.%s.tests_failed", name),
         () -> lastRunSuiteTestsFailed.get(name).get()
       )
       .description(
-        String.format("Total tests failed in the last run of %s", name)
+        String.format("Number of tests failed in the last run of %s", name)
       )
       .register(meterRegistry);
     Gauge
       .builder(
-        String.format("otp.tests.%s.last_run.duration_ms", name),
+        String.format("otp.tests.%s.duration_ms", name),
         () -> lastRunSuiteDurationMs.get(name).get()
       )
       .description(String.format("Duration (ms) of the last run of %s", name))
       .register(meterRegistry);
 
-    // Add test method discovery to create test-specific timers
-    try {
-      for (var method : clazz.getMethods()) {
-        if (method.isAnnotationPresent(Test.class)) {
-          Timer
-            .builder(MetricNames.planRequestTimer(name, method.getName()))
-            .description(
-              MetricNames.planRequestDescription(name, method.getName())
-            )
-            .register(meterRegistry);
-        }
-      }
-    } catch (Exception e) {
-      logger.warn("Failed to register test-specific timers for " + name, e);
-    }
   }
 
   public Map<String, Object> runTestsManually() {
@@ -244,7 +148,6 @@ class TestRunner {
   private Map<String, Object> executeTests() {
     String runId = UUID.randomUUID().toString();
     Instant startTime = Instant.now();
-    Timer.Sample totalSample = Timer.start(meterRegistry);
 
     logger.info(
       "Starting test execution",
@@ -268,29 +171,20 @@ class TestRunner {
       SummaryGeneratingListener listener = new SummaryGeneratingListener();
       launcher.registerTestExecutionListeners(listener);
 
-      Timer.Sample suiteSample = Timer.start(meterRegistry);
+      long suiteStartTime = System.nanoTime();
       launcher.execute(request);
-      long suiteDurationNanos = suiteSample.stop(
-        meterRegistry.timer(String.format("otp.tests.%s.duration", suiteName))
-      );
+      long suiteDurationNanos = System.nanoTime() - suiteStartTime;
 
       TestExecutionSummary summary = listener.getSummary();
       suiteResults.put(suiteName, summary);
 
-      // Record suite-specific metrics
-      meterRegistry
-        .counter("otp.tests." + suiteName + ".total")
-        .increment(summary.getTestsFoundCount());
-      meterRegistry
-        .counter("otp.tests." + suiteName + ".failures")
-        .increment(summary.getTestsFailedCount());
 
       // Update suite-specific last run metrics
       lastRunSuiteTestsFound.get(suiteName).set(summary.getTestsFoundCount());
       lastRunSuiteTestsFailed.get(suiteName).set(summary.getTestsFailedCount());
       lastRunSuiteDurationMs
         .get(suiteName)
-        .set(TimeUnit.NANOSECONDS.toMillis(suiteDurationNanos));
+        .set(suiteDurationNanos / 1_000_000);
 
       // Collect failures for this suite
       summary
@@ -326,24 +220,11 @@ class TestRunner {
             StructuredArguments.kv("failure", failureDetails)
           );
 
-          meterRegistry
-            .counter(
-              "otp.test.failure",
-              "suite",
-              suiteName,
-              "class",
-              failureDetails.get("testClass").toString(),
-              "testName",
-              failureDetails.get("testName").toString()
-            )
-            .increment();
         });
     }
 
-    long totalDuration = totalSample.stop(
-      meterRegistry.timer("otp.tests.duration")
-    );
     Instant endTime = Instant.now();
+    long totalDurationMs = java.time.Duration.between(startTime, endTime).toMillis();
 
     // Calculate total metrics across all suites
     long totalTestsFound = suiteResults
@@ -367,26 +248,19 @@ class TestRunner {
       .mapToLong(TestExecutionSummary::getTestsSkippedCount)
       .sum();
 
-    // Update global metrics
-    meterRegistry.counter("otp.tests.total").increment(totalTestsFound);
-    meterRegistry.counter("otp.tests.failures").increment(totalTestsFailed);
 
     // Prepare result map
     Map<String, Object> result = new HashMap<>();
     result.put("runId", runId);
     result.put("startTime", startTime);
     result.put("endTime", endTime);
-    result.put("durationMs", totalDuration);
+    result.put("durationMs", totalDurationMs);
     result.put("testsFound", totalTestsFound);
     result.put("testsSucceeded", totalTestsSucceeded);
     result.put("testsFailed", totalTestsFailed);
     result.put("testsSkipped", totalTestsSkipped);
     result.put("failures", allFailures);
 
-    // Update last run metrics
-    this.lastRunTestsFound.set(totalTestsFound);
-    this.lastRunTestsFailed.set(totalTestsFailed);
-    this.lastRunDurationMs.set(TimeUnit.NANOSECONDS.toMillis(totalDuration));
 
     // Add per-suite results
     Map<String, Object> suiteStats = new HashMap<>();
