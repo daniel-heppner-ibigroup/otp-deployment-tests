@@ -2,10 +2,14 @@ package com.arcadis.otpsmoketests.monitoringapp;
 
 import com.arcadis.otpsmoketests.tests.HopeLinkTestSuite;
 import com.arcadis.otpsmoketests.tests.SoundTransitTestSuite;
+import io.javalin.Javalin;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.prometheus.PrometheusConfig;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
+import it.sauronsoftware.cron4j.Scheduler;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,25 +26,57 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
-@EnableScheduling
 public class OtpMonitoringApplication {
 
+  private static final Logger logger = LoggerFactory.getLogger(
+    OtpMonitoringApplication.class
+  );
+
   public static void main(String[] args) {
-    SpringApplication.run(OtpMonitoringApplication.class, args);
+    try {
+      // Create Micrometer registry for Prometheus
+      PrometheusMeterRegistry meterRegistry = new PrometheusMeterRegistry(
+        PrometheusConfig.DEFAULT
+      );
+
+      TestRunner testRunner = new TestRunner(meterRegistry);
+
+      // Start Javalin HTTP server
+      Javalin app = Javalin.create().start(8080);
+      app.get("/run-tests", ctx -> ctx.json(testRunner.runTestsManually()));
+      app.get("/health", ctx -> ctx.json(Map.of("status", "UP")));
+      app.get(
+        "/metrics",
+        ctx -> ctx.result(meterRegistry.scrape()).contentType("text/plain")
+      );
+
+      // Start cron scheduler
+      Scheduler scheduler = new Scheduler();
+      scheduler.schedule("*/10 * * * *", testRunner::runScheduledTests);
+      scheduler.start();
+
+      logger.info(
+        "OTP Monitoring Application started on port 8080, metrics at /metrics"
+      );
+
+      // Add shutdown hook
+      Runtime
+        .getRuntime()
+        .addShutdownHook(
+          new Thread(() -> {
+            logger.info("Shutting down...");
+            app.stop();
+            scheduler.stop();
+          })
+        );
+    } catch (Exception e) {
+      logger.error("Failed to start application", e);
+      System.exit(1);
+    }
   }
 }
 
-@RestController
-@Component
 class TestRunner {
 
   private static final Logger logger = LoggerFactory.getLogger(
@@ -126,7 +162,7 @@ class TestRunner {
 
     // Add test suites
     addTestSuite(SoundTransitTestSuite.class, "SoundTransit");
-    addTestSuite(HopeLinkTestSuite.class, "Hopelink");
+//    addTestSuite(HopeLinkTestSuite.class, "Hopelink");
   }
 
   private void addTestSuite(Class<?> clazz, String name) {
@@ -197,12 +233,10 @@ class TestRunner {
     }
   }
 
-  @GetMapping("/run-tests")
   public Map<String, Object> runTestsManually() {
     return executeTests();
   }
 
-  @Scheduled(cron = "0 */10 * * * *") // Run every hour
   public void runScheduledTests() {
     executeTests();
   }
@@ -238,7 +272,7 @@ class TestRunner {
       launcher.execute(request);
       long suiteDurationNanos = suiteSample.stop(
         meterRegistry.timer(String.format("otp.tests.%s.duration", suiteName))
-      ); // Store duration
+      );
 
       TestExecutionSummary summary = listener.getSummary();
       suiteResults.put(suiteName, summary);

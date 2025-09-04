@@ -157,12 +157,11 @@ public abstract class BaseTestSuite {
 
   /**
    * Gets the current size of the global geocoding cache.
-   * 
+   *
    * @return The number of cached geocoded addresses
    */
   protected static int getGeocodingCacheSize() {
     return GeocodingService.getGlobalCacheSize();
   }
-
   // Common utility methods could be added here if needed in the future.
 }
