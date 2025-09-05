@@ -10,11 +10,14 @@ public class Configuration {
   public record DeploymentUnderTest(
     String name,
     String url,
-    String interval,
     Collection<TestSuite> suites
   ) {}
 
-  public record TestSuite(String name, Class<BaseTestSuite> clazz) {}
+  public record TestSuite(
+    String name,
+    Class<BaseTestSuite> clazz,
+    String interval
+  ) {}
 
   public Collection<DeploymentUnderTest> getDeploymentsUnderTest() {
     return deploymentsUnderTest;

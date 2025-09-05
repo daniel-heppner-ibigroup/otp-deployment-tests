@@ -1,13 +1,11 @@
 package com.arcadis.otpsmoketests.monitoringapp;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
-import com.arcadis.otpsmoketests.monitoringapp.MetricNames;
-import com.arcadis.otpsmoketests.tests.HopeLinkTestSuite;
-import com.arcadis.otpsmoketests.tests.SoundTransitTestSuite;
+import com.arcadis.otpsmoketests.configuration.Configuration;
+import com.arcadis.otpsmoketests.configuration.ConfigurationLoader;
 import io.javalin.Javalin;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import it.sauronsoftware.cron4j.Scheduler;
@@ -16,7 +14,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import net.logstash.logback.argument.StructuredArguments;
-import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -35,6 +32,21 @@ public class OtpMonitoringApplication {
 
   public static void main(String[] args) {
     try {
+      // Load configuration
+      String configPath = args.length > 0 ? args[0] : "config.kdl";
+      logger.info("Loading configuration from: {}", configPath);
+      
+      Configuration config;
+      try {
+        config = ConfigurationLoader.loadFromFile(configPath);
+        logger.info("Configuration loaded successfully with {} deployments", 
+                   config.getDeploymentsUnderTest().size());
+      } catch (Exception e) {
+        logger.error("Failed to load configuration from: {}", configPath, e);
+        System.exit(1);
+        return;
+      }
+      
       // Create Micrometer registry for Prometheus
       PrometheusMeterRegistry meterRegistry = new PrometheusMeterRegistry(
         PrometheusConfig.DEFAULT
@@ -43,7 +55,7 @@ public class OtpMonitoringApplication {
       // Set the meter registry for all test suites to use the same registry as the HTTP endpoint
       BaseTestSuite.setMeterRegistry(meterRegistry);
 
-      TestRunner testRunner = new TestRunner(meterRegistry);
+      TestRunner testRunner = new TestRunner(meterRegistry, config);
 
       // Start Javalin HTTP server
       Javalin app = Javalin.create().start(8080);
@@ -88,20 +100,25 @@ class TestRunner {
   private final MeterRegistry meterRegistry;
   private final Launcher launcher;
   private final Map<Class<?>, String> testSuites;
+  private final Configuration configuration;
 
   // Fields to store the results of the most recent run for each suite
   private final Map<String, AtomicLong> lastRunSuiteTestsFound = new ConcurrentHashMap<>();
   private final Map<String, AtomicLong> lastRunSuiteTestsFailed = new ConcurrentHashMap<>();
   private final Map<String, AtomicLong> lastRunSuiteDurationMs = new ConcurrentHashMap<>();
 
-  public TestRunner(MeterRegistry meterRegistry) {
+  public TestRunner(MeterRegistry meterRegistry, Configuration configuration) {
     this.meterRegistry = meterRegistry;
+    this.configuration = configuration;
     this.launcher = LauncherFactory.create();
     this.testSuites = new HashMap<>();
 
-    // Add test suites
-    addTestSuite(SoundTransitTestSuite.class, "SoundTransit");
-    addTestSuite(HopeLinkTestSuite.class, "Hopelink");
+    // Add test suites from configuration
+    for (Configuration.DeploymentUnderTest deployment : configuration.getDeploymentsUnderTest()) {
+      for (Configuration.TestSuite testSuite : deployment.suites()) {
+        addTestSuite(testSuite.clazz(), testSuite.name());
+      }
+    }
   }
 
   private void addTestSuite(Class<?> clazz, String name) {
