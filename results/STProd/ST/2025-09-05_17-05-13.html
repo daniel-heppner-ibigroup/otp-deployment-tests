@@ -1,0 +1,441 @@
+<html><head><title>Test Results: STProd - ST</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-size: 2.5em;
+}
+
+.test-info p {
+  margin: 8px 0;
+  font-size: 1.1em;
+}
+
+.summary {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.summary h2 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.summary-card {
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+}
+
+.summary-card.total {
+  background-color: #3498db;
+}
+
+.summary-card.passed {
+  background-color: #27ae60;
+}
+
+.summary-card.failed {
+  background-color: #e74c3c;
+}
+
+.summary-number {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.summary-label {
+  font-size: 1.1em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.section {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.section h2 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+}
+
+.tests-container {
+  display: grid;
+  gap: 15px;
+}
+
+.test-card {
+  border-radius: 6px;
+  padding: 20px;
+  border-left: 4px solid;
+}
+
+.test-card.passed {
+  background-color: #d5f4e6;
+  border-left-color: #27ae60;
+}
+
+.test-card.failed {
+  background-color: #fadbd8;
+  border-left-color: #e74c3c;
+}
+
+.test-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.test-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.2em;
+}
+
+.test-duration {
+  color: #7f8c8d;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.test-content {
+  color: #2c3e50;
+}
+
+.error-message {
+  margin-bottom: 15px;
+  font-size: 1em;
+  color: #c0392b;
+}
+
+.stack-trace {
+  margin-top: 15px;
+}
+
+.stack-trace pre {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 15px;
+  overflow-x: auto;
+  font-size: 0.9em;
+  color: #495057;
+  margin: 10px 0 0 0;
+}
+
+/* Enhanced structured failure styles */
+.failure-summary {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.failure-summary h4 {
+  margin: 0 0 10px 0;
+  color: #856404;
+  font-size: 1.1em;
+}
+
+.main-error {
+  margin: 0;
+  font-weight: 500;
+  color: #d63031;
+}
+
+.expected-section {
+  background-color: #e8f4fd;
+  border: 1px solid #74b9ff;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.expected-section h4 {
+  margin: 0 0 15px 0;
+  color: #0984e3;
+  font-size: 1.1em;
+}
+
+.criteria-list {
+  display: grid;
+  gap: 10px;
+}
+
+.criteria-item {
+  background-color: white;
+  padding: 10px;
+  border-radius: 4px;
+  border-left: 3px solid #0984e3;
+}
+
+.leg-number {
+  font-weight: bold;
+  color: #0984e3;
+  margin-right: 10px;
+}
+
+.criteria-text {
+  color: #2c3e50;
+}
+
+.itinerary-failures-section {
+  background-color: #ffeef0;
+  border: 1px solid #ff7675;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.itinerary-failures-section h4 {
+  margin: 0 0 15px 0;
+  color: #d63031;
+  font-size: 1.1em;
+}
+
+.itinerary-failures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+}
+
+.itinerary-failure {
+  background-color: white;
+  border-radius: 4px;
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+.itinerary-header {
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  color: #2c3e50;
+}
+
+.missing-criteria {
+  display: grid;
+  gap: 5px;
+}
+
+.missing-item {
+  color: #d63031;
+  font-size: 0.9em;
+  padding: 2px 0;
+}
+
+.success-badge {
+  color: #00b894;
+  font-weight: 500;
+}
+
+.partial-matches-section {
+  background-color: #fff8e1;
+  border: 1px solid #ffcc02;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.partial-matches-section h4 {
+  margin: 0 0 15px 0;
+  color: #f39c12;
+  font-size: 1.1em;
+}
+
+.partial-matches-list {
+  display: grid;
+  gap: 12px;
+}
+
+.partial-match {
+  background-color: white;
+  border-radius: 4px;
+  padding: 12px;
+  border-left: 3px solid #f39c12;
+}
+
+.match-found {
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.match-missing {
+  font-size: 0.9em;
+}
+
+.found-badge {
+  color: #00b894;
+  font-weight: bold;
+}
+
+.missing-badge {
+  color: #d63031;
+  font-weight: bold;
+}
+
+.stack-trace-section {
+  margin-top: 20px;
+}
+
+.stack-trace-section details {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0;
+}
+
+.stack-trace-section summary {
+  background-color: #f8f9fa;
+  padding: 10px 15px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 500;
+  color: #6c757d;
+  border-radius: 4px 4px 0 0;
+}
+
+.stack-trace-section summary:hover {
+  background-color: #e9ecef;
+}
+
+.stack-trace-section .stack-trace {
+  margin: 0;
+  border-top: 1px solid #ddd;
+}
+
+.stack-trace-section .stack-trace pre {
+  margin: 0;
+  border-radius: 0 0 4px 4px;
+  border: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .header, .summary, .section {
+    padding: 20px;
+  }
+
+  .header h1 {
+    font-size: 2em;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .test-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .itinerary-failures-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style></head><body><div class="container"><div class="header"><h1>OTP Test Results</h1><div class="test-info"><p><strong>Deployment: </strong>STProd</p><p><strong>Test Suite: </strong>ST</p><p><strong>Execution Time: </strong>2025-09-05 17:05:13</p><p><strong>Duration: </strong>13860 ms</p></div></div><div class="summary"><h2>Summary</h2><div class="summary-grid"><div class="summary-card total"><div class="summary-number">20</div><div class="summary-label">Total Tests</div></div><div class="summary-card passed"><div class="summary-number">14</div><div class="summary-label">Passed</div></div><div class="summary-card failed"><div class="summary-number">6</div><div class="summary-label">Failed</div></div></div></div><div class="section"><h2>Failed Tests (6)</h2><div class="tests-container"><div class="test-card failed"><div class="test-header"><h3>testSouthBellevueStationToClimatePledge</h3><span class="test-duration">1220 ms</span></div><div class="test-content"><div><div class="failure-summary"><h4>Test Failure Summary</h4><p class="main-error">No itinerary found matching all required legs with strict transit matching</p></div><div class="expected-section"><h4>Expected Criteria</h4><div class="criteria-list"><div class="criteria-item"><span class="leg-number">Leg 1:</span><span class="criteria-text">route &#x27;[550]&#x27;</span></div><div class="criteria-item"><span class="leg-number">Leg 2:</span><span class="criteria-text">route &#x27;[Monorail]&#x27;</span></div></div></div><div class="itinerary-failures-section"><h4>Itinerary Analysis</h4><div class="itinerary-failures-grid"><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 1</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: route &#x27;[Monorail]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 2</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: route &#x27;[Monorail]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 3</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: route &#x27;[Monorail]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 4</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: route &#x27;[Monorail]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 5</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: route &#x27;[Monorail]&#x27;</div></div></div></div></div><div></div><div class="stack-trace-section"><details><summary>Technical Details</summary><div class="stack-trace"><pre>com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary.assertMatches(SmokeTestItinerary.java:260)
+com.arcadis.otpsmoketests.tests.SoundTransitTestSuite.testSouthBellevueStationToClimatePledge(SoundTransitTestSuite.java:323)
+java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+java.base/java.lang.reflect.Method.invoke(Method.java:565)
+com.arcadis.otpsmoketests.runner.CustomTestRunner.runTestSuite(CustomTestRunner.java:118)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.executeTests(OtpMonitoringApplication.java:319)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.runTestsManually(OtpMonitoringApplication.java:213)
+com.arcadis.otpsmoketests.monitoringapp.OtpMonitoringApplication.lambda$main$1(OtpMonitoringApplication.java:70)
+io.javalin.router.Endpoint.handle(Endpoint.kt:52)
+io.javalin.router.ParsedEndpoint.handle(ParsedEndpoint.kt:15)
+</pre></div></details></div></div></div></div><div class="test-card failed"><div class="test-header"><h3>sodoToKingSt</h3><span class="test-duration">175 ms</span></div><div class="test-content"><div><div class="failure-summary"><h4>Test Failure Summary</h4><p class="main-error">No itinerary found matching all required legs with strict transit matching</p></div><div class="expected-section"><h4>Expected Criteria</h4><div class="criteria-list"><div class="criteria-item"><span class="leg-number">Leg 1:</span><span class="criteria-text">route &#x27;[21]&#x27;</span></div><div class="criteria-item"><span class="leg-number">Leg 2:</span><span class="criteria-text">interlined with previous leg</span></div></div></div><div class="itinerary-failures-section"><h4>Itinerary Analysis</h4><div class="itinerary-failures-grid"><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 1</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 1: route &#x27;[21]&#x27;</div><div class="missing-item">✗ No leg found matching criteria set 2: interlined with previous leg</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 2</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: interlined with previous leg</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 3</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 1: route &#x27;[21]&#x27;</div><div class="missing-item">✗ No leg found matching criteria set 2: interlined with previous leg</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 4</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: interlined with previous leg</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 5</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: interlined with previous leg</div></div></div></div></div><div class="partial-matches-section"><h4>Partial Matches</h4><div class="partial-matches-list"><div class="partial-match"><div class="match-found"><span class="found-badge">✓ Found: </span>route &#x27;[5]&#x27;</div><div class="match-missing"><span class="missing-badge">✗ Missing: </span>interlined with previous leg</div></div></div></div><div class="stack-trace-section"><details><summary>Technical Details</summary><div class="stack-trace"><pre>com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary.assertMatches(SmokeTestItinerary.java:260)
+com.arcadis.otpsmoketests.tests.SoundTransitTestSuite.sodoToKingSt(SoundTransitTestSuite.java:344)
+java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+java.base/java.lang.reflect.Method.invoke(Method.java:565)
+com.arcadis.otpsmoketests.runner.CustomTestRunner.runTestSuite(CustomTestRunner.java:118)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.executeTests(OtpMonitoringApplication.java:319)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.runTestsManually(OtpMonitoringApplication.java:213)
+com.arcadis.otpsmoketests.monitoringapp.OtpMonitoringApplication.lambda$main$1(OtpMonitoringApplication.java:70)
+io.javalin.router.Endpoint.handle(Endpoint.kt:52)
+io.javalin.router.ParsedEndpoint.handle(ParsedEndpoint.kt:15)
+</pre></div></details></div></div></div></div><div class="test-card failed"><div class="test-header"><h3>sodoToNCapitolHill</h3><span class="test-duration">252 ms</span></div><div class="test-content"><div><div class="failure-summary"><h4>Test Failure Summary</h4><p class="main-error">No itinerary found matching all required legs with strict transit matching</p></div><div class="expected-section"><h4>Expected Criteria</h4><div class="criteria-list"><div class="criteria-item"><span class="leg-number">Leg 1:</span><span class="criteria-text">route &#x27;[50]&#x27;</span></div><div class="criteria-item"><span class="leg-number">Leg 2:</span><span class="criteria-text">route &#x27;[1 Line]&#x27;</span></div><div class="criteria-item"><span class="leg-number">Leg 3:</span><span class="criteria-text">route &#x27;[49]&#x27;</span></div></div></div><div class="itinerary-failures-section"><h4>Itinerary Analysis</h4><div class="itinerary-failures-grid"><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 1</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 1: route &#x27;[50]&#x27;</div><div class="missing-item">✗ No leg found matching criteria set 3: route &#x27;[49]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 2</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 1: route &#x27;[50]&#x27;</div><div class="missing-item">✗ No leg found matching criteria set 2: route &#x27;[1 Line]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 3</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 1: route &#x27;[50]&#x27;</div><div class="missing-item">✗ No leg found matching criteria set 3: route &#x27;[49]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 4</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 1: route &#x27;[50]&#x27;</div><div class="missing-item">✗ No leg found matching criteria set 2: route &#x27;[1 Line]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 5</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 1: route &#x27;[50]&#x27;</div></div></div></div></div><div></div><div class="stack-trace-section"><details><summary>Technical Details</summary><div class="stack-trace"><pre>com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary.assertMatches(SmokeTestItinerary.java:260)
+com.arcadis.otpsmoketests.tests.SoundTransitTestSuite.sodoToNCapitolHill(SoundTransitTestSuite.java:383)
+java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+java.base/java.lang.reflect.Method.invoke(Method.java:565)
+com.arcadis.otpsmoketests.runner.CustomTestRunner.runTestSuite(CustomTestRunner.java:118)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.executeTests(OtpMonitoringApplication.java:319)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.runTestsManually(OtpMonitoringApplication.java:213)
+com.arcadis.otpsmoketests.monitoringapp.OtpMonitoringApplication.lambda$main$1(OtpMonitoringApplication.java:70)
+io.javalin.router.Endpoint.handle(Endpoint.kt:52)
+io.javalin.router.ParsedEndpoint.handle(ParsedEndpoint.kt:15)
+</pre></div></details></div></div></div></div><div class="test-card failed"><div class="test-header"><h3>paseoFremontToSODO</h3><span class="test-duration">336 ms</span></div><div class="test-content"><div><div class="failure-summary"><h4>Test Failure Summary</h4><p class="main-error">No itinerary found matching all required legs with strict transit matching</p></div><div class="expected-section"><h4>Expected Criteria</h4><div class="criteria-list"><div class="criteria-item"><span class="leg-number">Leg 1:</span><span class="criteria-text">route &#x27;[5]&#x27;</span></div><div class="criteria-item"><span class="leg-number">Leg 2:</span><span class="criteria-text">interlined with previous leg</span></div></div></div><div class="itinerary-failures-section"><h4>Itinerary Analysis</h4><div class="itinerary-failures-grid"><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 1</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: interlined with previous leg</div></div></div></div></div><div class="partial-matches-section"><h4>Partial Matches</h4><div class="partial-matches-list"><div class="partial-match"><div class="match-found"><span class="found-badge">✓ Found: </span>route &#x27;[21]&#x27;</div><div class="match-missing"><span class="missing-badge">✗ Missing: </span>interlined with previous leg</div></div><div class="partial-match"><div class="match-found"><span class="found-badge">✓ Found: </span>route &#x27;[21]&#x27;</div><div class="match-missing"><span class="missing-badge">✗ Missing: </span>interlined with previous leg</div></div><div class="partial-match"><div class="match-found"><span class="found-badge">✓ Found: </span>route &#x27;[21]&#x27;</div><div class="match-missing"><span class="missing-badge">✗ Missing: </span>interlined with previous leg</div></div><div class="partial-match"><div class="match-found"><span class="found-badge">✓ Found: </span>route &#x27;[21]&#x27;</div><div class="match-missing"><span class="missing-badge">✗ Missing: </span>interlined with previous leg</div></div></div></div><div class="stack-trace-section"><details><summary>Technical Details</summary><div class="stack-trace"><pre>com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary.assertMatches(SmokeTestItinerary.java:260)
+com.arcadis.otpsmoketests.tests.SoundTransitTestSuite.paseoFremontToSODO(SoundTransitTestSuite.java:630)
+java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+java.base/java.lang.reflect.Method.invoke(Method.java:565)
+com.arcadis.otpsmoketests.runner.CustomTestRunner.runTestSuite(CustomTestRunner.java:118)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.executeTests(OtpMonitoringApplication.java:319)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.runTestsManually(OtpMonitoringApplication.java:213)
+com.arcadis.otpsmoketests.monitoringapp.OtpMonitoringApplication.lambda$main$1(OtpMonitoringApplication.java:70)
+io.javalin.router.Endpoint.handle(Endpoint.kt:52)
+io.javalin.router.ParsedEndpoint.handle(ParsedEndpoint.kt:15)
+</pre></div></details></div></div></div></div><div class="test-card failed"><div class="test-header"><h3>testAgencyList</h3><span class="test-duration">80 ms</span></div><div class="test-content"><div><div class="error-message"><strong>Error: </strong>Agency lists differ.
+Expected: [City of Seattle, Community Transit, Everett Transit, Intercity Transit, Kitsap Transit, Metro Transit, Pierce Transit, Seattle Center Monorail, Skagit Transit, Sound Transit, Washington State Ferries, Whatcom Transportation Authority]
+Actual: [City of Seattle, Community Transit, Everett Transit, Intercity Transit, Kitsap Transit, Metro Transit, Pierce Transit, Seattle Center Monorail, Skagit Transit, Sound Transit, Washington State Ferries, Waterfront Shuttle Seattle, Whatcom Transportation Authority]
+Missing from expected: []
+Missing from actual: [Waterfront Shuttle Seattle] ==&gt; expected: &lt;true&gt; but was: &lt;false&gt;</div><div class="stack-trace"><strong>Stack Trace:</strong><pre>org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:214)
+com.arcadis.otpsmoketests.tests.SoundTransitTestSuite.testAgencyList(SoundTransitTestSuite.java:415)
+java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+java.base/java.lang.reflect.Method.invoke(Method.java:565)
+com.arcadis.otpsmoketests.runner.CustomTestRunner.runTestSuite(CustomTestRunner.java:118)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.executeTests(OtpMonitoringApplication.java:319)
+</pre></div></div></div></div><div class="test-card failed"><div class="test-header"><h3>testKingStStationTo45thVegThai</h3><span class="test-duration">386 ms</span></div><div class="test-content"><div><div class="failure-summary"><h4>Test Failure Summary</h4><p class="main-error">No itinerary found matching all required legs with strict transit matching</p></div><div class="expected-section"><h4>Expected Criteria</h4><div class="criteria-list"><div class="criteria-item"><span class="leg-number">Leg 1:</span><span class="criteria-text">route &#x27;[E Line]&#x27;</span></div><div class="criteria-item"><span class="leg-number">Leg 2:</span><span class="criteria-text">route &#x27;[44]&#x27;</span></div></div></div><div class="itinerary-failures-section"><h4>Itinerary Analysis</h4><div class="itinerary-failures-grid"><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 1</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: route &#x27;[44]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 2</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 1: route &#x27;[E Line]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 3</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 2: route &#x27;[44]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 4</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 1: route &#x27;[E Line]&#x27;</div><div class="missing-item">✗ No leg found matching criteria set 2: route &#x27;[44]&#x27;</div></div></div><div class="itinerary-failure"><div class="itinerary-header"><strong>Itinerary 5</strong></div><div class="missing-criteria"><div class="missing-item">✗ No leg found matching criteria set 1: route &#x27;[E Line]&#x27;</div></div></div></div></div><div></div><div class="stack-trace-section"><details><summary>Technical Details</summary><div class="stack-trace"><pre>com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary.assertMatches(SmokeTestItinerary.java:260)
+com.arcadis.otpsmoketests.tests.SoundTransitTestSuite.testKingStStationTo45thVegThai(SoundTransitTestSuite.java:292)
+java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+java.base/java.lang.reflect.Method.invoke(Method.java:565)
+com.arcadis.otpsmoketests.runner.CustomTestRunner.runTestSuite(CustomTestRunner.java:118)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.executeTests(OtpMonitoringApplication.java:319)
+com.arcadis.otpsmoketests.monitoringapp.TestRunner.runTestsManually(OtpMonitoringApplication.java:213)
+com.arcadis.otpsmoketests.monitoringapp.OtpMonitoringApplication.lambda$main$1(OtpMonitoringApplication.java:70)
+io.javalin.router.Endpoint.handle(Endpoint.kt:52)
+io.javalin.router.ParsedEndpoint.handle(ParsedEndpoint.kt:15)
+</pre></div></details></div></div></div></div></div></div><div class="section"><h2>Passed Tests (14)</h2><div class="tests-container"><div class="test-card passed"><div class="test-header"><h3>kingStStationToTractorTavernBallard</h3><span class="test-duration">373 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>s1801SBushPlaceToBellevueTransitCenter</h3><span class="test-duration">374 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>testELineBus</h3><span class="test-duration">544 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>testLightRail</h3><span class="test-duration">379 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>testMultiLegJourney</h3><span class="test-duration">179 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>testColmanDockToUWCSBuilding</h3><span class="test-duration">312 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>testKingStStationToTacomaDome</h3><span class="test-duration">265 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>testCustomParameters</h3><span class="test-duration">537 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>queenAnneToHopelinkFoodBank</h3><span class="test-duration">858 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>kingStStationToMukilteoFerry</h3><span class="test-duration">351 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>greenLakeToKingStStation</h3><span class="test-duration">381 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>capitolHillToKingStStation</h3><span class="test-duration">206 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>capitolHillToUWStation</h3><span class="test-duration">217 ms</span></div></div><div class="test-card passed"><div class="test-header"><h3>capitolHillToColumbiaCity</h3><span class="test-duration">277 ms</span></div></div></div></div></div></body></html>

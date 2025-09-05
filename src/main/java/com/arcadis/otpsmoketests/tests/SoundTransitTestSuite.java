@@ -20,12 +20,16 @@ import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
 public class SoundTransitTestSuite extends BaseTestSuite {
 
   public SoundTransitTestSuite() {
-    this("https://sound-transit-otp.ibi-transit.com");
+    this("https://sound-transit-otp.ibi-transit.com", "SoundTransit");
   }
 
   public SoundTransitTestSuite(String baseUrl) {
+    this(baseUrl, "SoundTransit");
+  }
+
+  public SoundTransitTestSuite(String baseUrl, String deploymentName) {
     super(
-      "SoundTransit",
+      deploymentName,
       baseUrl,
       "https://87sp37ezga.execute-api.us-east-1.amazonaws.com/st/autocomplete",
       47.61097,

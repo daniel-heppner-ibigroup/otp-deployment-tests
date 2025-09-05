@@ -3,8 +3,12 @@ package com.arcadis.otpsmoketests.monitoringapp;
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.configuration.Configuration;
 import com.arcadis.otpsmoketests.configuration.ConfigurationLoader;
+import com.arcadis.otpsmoketests.reporting.HtmlResultsGenerator;
 import com.arcadis.otpsmoketests.runner.CustomTestRunner;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.Javalin;
+import io.javalin.json.JavalinJackson;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.prometheus.PrometheusConfig;
@@ -53,8 +57,16 @@ public class OtpMonitoringApplication {
 
       TestRunner testRunner = new TestRunner(meterRegistry, config);
 
-      // Start Javalin HTTP server
-      Javalin app = Javalin.create().start(8080);
+      // Configure ObjectMapper with JSR310 module for Java 8 time support
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.registerModule(new JavaTimeModule());
+
+      // Start Javalin HTTP server with custom ObjectMapper
+      Javalin app = Javalin
+        .create(jConfig -> {
+          jConfig.jsonMapper(new JavalinJackson());
+        })
+        .start(8080);
       app.get("/run-tests", ctx -> ctx.json(testRunner.runTestsManually()));
       app.get("/health", ctx -> ctx.json(Map.of("status", "UP")));
       app.get(
@@ -62,9 +74,9 @@ public class OtpMonitoringApplication {
         ctx -> ctx.result(meterRegistry.scrape()).contentType("text/plain")
       );
 
-      // Start cron scheduler
+      // Start cron scheduler with individual suite intervals
       Scheduler scheduler = new Scheduler();
-      scheduler.schedule("*/10 * * * *", testRunner::runScheduledTests);
+      testRunner.scheduleTestSuites(scheduler);
       scheduler.start();
 
       logger.info(
@@ -94,8 +106,16 @@ class TestRunner {
     TestRunner.class
   );
   private final MeterRegistry meterRegistry;
-  private final Map<Class<BaseTestSuite>, String> testSuites;
+  private final Map<String, TestSuiteConfig> testSuites;
   private final Configuration configuration;
+
+  public record TestSuiteConfig(
+    Class<BaseTestSuite> clazz,
+    String suiteName,
+    String deploymentName,
+    String interval,
+    String baseUrl
+  ) {}
 
   // Fields to store the results of the most recent run for each suite
   private final Map<String, AtomicLong> lastRunSuiteTestsFound = new ConcurrentHashMap<>();
@@ -110,44 +130,82 @@ class TestRunner {
     // Add test suites from configuration
     for (Configuration.DeploymentUnderTest deployment : configuration.getDeploymentsUnderTest()) {
       for (Configuration.TestSuite testSuite : deployment.suites()) {
-        addTestSuite(testSuite.clazz(), testSuite.name());
+        addTestSuite(
+          testSuite.clazz(),
+          testSuite.name(),
+          deployment.name(),
+          testSuite.interval(),
+          deployment.url()
+        );
       }
     }
   }
 
-  private void addTestSuite(Class<BaseTestSuite> clazz, String name) {
-    testSuites.put(clazz, name);
+  private void addTestSuite(
+    Class<BaseTestSuite> clazz,
+    String suiteName,
+    String deploymentName,
+    String interval,
+    String baseUrl
+  ) {
+    String testSuiteKey = deploymentName + "." + suiteName;
+    TestSuiteConfig config = new TestSuiteConfig(
+      clazz,
+      suiteName,
+      deploymentName,
+      interval,
+      baseUrl
+    );
+    testSuites.put(testSuiteKey, config);
 
-    // Initialize last run metrics for the suite
-    lastRunSuiteTestsFound.put(name, new AtomicLong(0));
-    lastRunSuiteTestsFailed.put(name, new AtomicLong(0));
-    lastRunSuiteDurationMs.put(name, new AtomicLong(0));
+    // Initialize last run metrics for the suite with deployment.suite naming
+    lastRunSuiteTestsFound.put(testSuiteKey, new AtomicLong(0));
+    lastRunSuiteTestsFailed.put(testSuiteKey, new AtomicLong(0));
+    lastRunSuiteDurationMs.put(testSuiteKey, new AtomicLong(0));
 
-    // Add suite-specific last run gauges
+    // Add suite-specific last run gauges with deployment.suite naming
     Gauge
       .builder(
-        String.format("otp.tests.%s.tests_run", name),
-        () -> lastRunSuiteTestsFound.get(name).get()
+        String.format("otp.tests.%s.%s.tests_run", deploymentName, suiteName),
+        () -> lastRunSuiteTestsFound.get(testSuiteKey).get()
       )
       .description(
-        String.format("Number of tests run in the last run of %s", name)
+        String.format(
+          "Number of tests run in the last run of %s.%s",
+          deploymentName,
+          suiteName
+        )
       )
       .register(meterRegistry);
     Gauge
       .builder(
-        String.format("otp.tests.%s.tests_failed", name),
-        () -> lastRunSuiteTestsFailed.get(name).get()
+        String.format(
+          "otp.tests.%s.%s.tests_failed",
+          deploymentName,
+          suiteName
+        ),
+        () -> lastRunSuiteTestsFailed.get(testSuiteKey).get()
       )
       .description(
-        String.format("Number of tests failed in the last run of %s", name)
+        String.format(
+          "Number of tests failed in the last run of %s.%s",
+          deploymentName,
+          suiteName
+        )
       )
       .register(meterRegistry);
     Gauge
       .builder(
-        String.format("otp.tests.%s.duration_ms", name),
-        () -> lastRunSuiteDurationMs.get(name).get()
+        String.format("otp.tests.%s.%s.duration_ms", deploymentName, suiteName),
+        () -> lastRunSuiteDurationMs.get(testSuiteKey).get()
       )
-      .description(String.format("Duration (ms) of the last run of %s", name))
+      .description(
+        String.format(
+          "Duration (ms) of the last run of %s.%s",
+          deploymentName,
+          suiteName
+        )
+      )
       .register(meterRegistry);
   }
 
@@ -155,8 +213,88 @@ class TestRunner {
     return executeTests();
   }
 
-  public void runScheduledTests() {
-    executeTests();
+  public void scheduleTestSuites(Scheduler scheduler) {
+    // Schedule each test suite based on its configured interval
+    for (Map.Entry<String, TestSuiteConfig> entry : testSuites.entrySet()) {
+      String testSuiteKey = entry.getKey();
+      TestSuiteConfig config = entry.getValue();
+
+      // Create a runnable that executes just this specific test suite
+      Runnable suiteRunner = () -> runSpecificTestSuite(testSuiteKey, config);
+
+      // Schedule with the configured interval
+      scheduler.schedule(config.interval(), suiteRunner);
+
+      logger.info(
+        "Scheduled test suite {} with interval: {}",
+        testSuiteKey,
+        config.interval()
+      );
+    }
+  }
+
+  private void runSpecificTestSuite(
+    String testSuiteKey,
+    TestSuiteConfig config
+  ) {
+    String runId = UUID.randomUUID().toString();
+    Instant startTime = Instant.now();
+
+    logger.info(
+      "Starting scheduled test execution for suite: {}",
+      testSuiteKey,
+      StructuredArguments.kv("runId", runId)
+    );
+
+    // Run the test suite with the custom URL and deployment name
+    CustomTestRunner.SuiteResult suiteResult = CustomTestRunner.runTestSuite(
+      config.clazz(),
+      config.suiteName(),
+      config.baseUrl(),
+      config.deploymentName()
+    );
+
+    // Update suite-specific last run metrics
+    lastRunSuiteTestsFound
+      .get(testSuiteKey)
+      .set(suiteResult.getTestsFoundCount());
+    lastRunSuiteTestsFailed
+      .get(testSuiteKey)
+      .set(suiteResult.getTestsFailedCount());
+    lastRunSuiteDurationMs.get(testSuiteKey).set(suiteResult.totalDurationMs());
+
+    // Generate HTML report
+    try {
+      HtmlResultsGenerator.TestSuiteReport report = new HtmlResultsGenerator.TestSuiteReport(
+        config.deploymentName(),
+        config.suiteName(),
+        suiteResult,
+        startTime
+      );
+      HtmlResultsGenerator.generateHtmlReport(report);
+    } catch (Exception e) {
+      logger.error(
+        "Failed to generate HTML report for suite: {}",
+        testSuiteKey,
+        e
+      );
+    }
+
+    // Log results
+    if (suiteResult.getTestsFailedCount() > 0) {
+      logger.error(
+        "Scheduled test suite {} completed with {} failures",
+        testSuiteKey,
+        suiteResult.getTestsFailedCount(),
+        StructuredArguments.kv("runId", runId)
+      );
+    } else {
+      logger.info(
+        "Scheduled test suite {} completed successfully",
+        testSuiteKey,
+        StructuredArguments.kv("runId", runId)
+      );
+    }
   }
 
   private Map<String, Object> executeTests() {
@@ -173,30 +311,47 @@ class TestRunner {
     Map<String, CustomTestRunner.SuiteResult> suiteResults = new HashMap<>();
 
     // Run each test suite individually with custom URL
-    for (Map.Entry<Class<BaseTestSuite>, String> suite : testSuites.entrySet()) {
-      String suiteName = suite.getValue();
-      Class<BaseTestSuite> suiteClass = suite.getKey();
+    for (Map.Entry<String, TestSuiteConfig> entry : testSuites.entrySet()) {
+      String testSuiteKey = entry.getKey();
+      TestSuiteConfig config = entry.getValue();
 
-      // Get the base URL for this suite from configuration
-      String baseUrl = getBaseUrlForSuite(suiteName);
-
-      // Run the test suite with the custom URL
+      // Run the test suite with the custom URL and deployment name
       CustomTestRunner.SuiteResult suiteResult = CustomTestRunner.runTestSuite(
-        suiteClass,
-        suiteName,
-        baseUrl
+        config.clazz(),
+        config.suiteName(),
+        config.baseUrl(),
+        config.deploymentName()
       );
 
-      suiteResults.put(suiteName, suiteResult);
+      suiteResults.put(testSuiteKey, suiteResult);
 
       // Update suite-specific last run metrics
       lastRunSuiteTestsFound
-        .get(suiteName)
+        .get(testSuiteKey)
         .set(suiteResult.getTestsFoundCount());
       lastRunSuiteTestsFailed
-        .get(suiteName)
+        .get(testSuiteKey)
         .set(suiteResult.getTestsFailedCount());
-      lastRunSuiteDurationMs.get(suiteName).set(suiteResult.totalDurationMs());
+      lastRunSuiteDurationMs
+        .get(testSuiteKey)
+        .set(suiteResult.totalDurationMs());
+
+      // Generate HTML report for this suite
+      try {
+        HtmlResultsGenerator.TestSuiteReport report = new HtmlResultsGenerator.TestSuiteReport(
+          config.deploymentName(),
+          config.suiteName(),
+          suiteResult,
+          startTime
+        );
+        HtmlResultsGenerator.generateHtmlReport(report);
+      } catch (Exception e) {
+        logger.error(
+          "Failed to generate HTML report for suite: {}",
+          testSuiteKey,
+          e
+        );
+      }
 
       // Collect failures for this suite
       suiteResult
@@ -205,8 +360,9 @@ class TestRunner {
         .filter(testResult -> !testResult.isPassed())
         .forEach(testResult -> {
           Map<String, Object> failureDetails = new HashMap<>();
-          failureDetails.put("suite", suiteName);
-          failureDetails.put("testClass", suiteClass.getSimpleName());
+          failureDetails.put("deployment", config.deploymentName());
+          failureDetails.put("suite", config.suiteName());
+          failureDetails.put("testClass", config.clazz().getSimpleName());
           failureDetails.put("testName", testResult.getTestName());
           failureDetails.put(
             "errorMessage",
@@ -223,7 +379,10 @@ class TestRunner {
           allFailures.add(failureDetails);
 
           logger.error(
-            "Test failure occurred in suite: " + suiteName,
+            "Test failure occurred in suite: " +
+            config.deploymentName() +
+            "." +
+            config.suiteName(),
             StructuredArguments.kv("runId", runId),
             StructuredArguments.kv("failure", failureDetails)
           );
@@ -271,13 +430,13 @@ class TestRunner {
 
     // Add per-suite results
     Map<String, Object> suiteStats = new HashMap<>();
-    suiteResults.forEach((suiteName, suiteResult) -> {
+    suiteResults.forEach((testSuiteKey, suiteResult) -> {
       Map<String, Object> stats = new HashMap<>();
       stats.put("testsFound", suiteResult.getTestsFoundCount());
       stats.put("testsSucceeded", suiteResult.getTestsSucceededCount());
       stats.put("testsFailed", suiteResult.getTestsFailedCount());
       stats.put("testsSkipped", suiteResult.getTestsSkippedCount());
-      suiteStats.put(suiteName, stats);
+      suiteStats.put(testSuiteKey, stats);
     });
     result.put("suiteResults", suiteStats);
 
@@ -295,20 +454,5 @@ class TestRunner {
     }
 
     return result;
-  }
-
-  private String getBaseUrlForSuite(String suiteName) {
-    return configuration
-      .getDeploymentsUnderTest()
-      .stream()
-      .filter(deployment ->
-        deployment
-          .suites()
-          .stream()
-          .anyMatch(suite -> suite.name().equals(suiteName))
-      )
-      .findFirst()
-      .map(Configuration.DeploymentUnderTest::url)
-      .orElse(null);
   }
 }

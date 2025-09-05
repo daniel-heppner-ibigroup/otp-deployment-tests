@@ -77,15 +77,34 @@ public class CustomTestRunner {
     String suiteName,
     String baseUrl
   ) {
+    return runTestSuite(suiteClass, suiteName, baseUrl, null);
+  }
+
+  public static SuiteResult runTestSuite(
+    Class<? extends BaseTestSuite> suiteClass,
+    String suiteName,
+    String baseUrl,
+    String deploymentName
+  ) {
     List<TestResult> testResults = new ArrayList<>();
     long suiteStartTime = System.nanoTime();
 
     try {
-      // Create instance with baseUrl parameter
-      Constructor<? extends BaseTestSuite> constructor = suiteClass.getConstructor(
-        String.class
-      );
-      BaseTestSuite suiteInstance = constructor.newInstance(baseUrl);
+      // Try constructor with baseUrl and deploymentName parameters first
+      BaseTestSuite suiteInstance;
+      try {
+        Constructor<? extends BaseTestSuite> constructor = suiteClass.getConstructor(
+          String.class,
+          String.class
+        );
+        suiteInstance = constructor.newInstance(baseUrl, deploymentName);
+      } catch (NoSuchMethodException e) {
+        // Fall back to single-parameter constructor
+        Constructor<? extends BaseTestSuite> constructor = suiteClass.getConstructor(
+          String.class
+        );
+        suiteInstance = constructor.newInstance(baseUrl);
+      }
 
       // Find all @Test methods
       Method[] methods = suiteClass.getMethods();
