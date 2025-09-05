@@ -135,7 +135,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("SHORELINE"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "testELineBus");
 
     SmokeTestItinerary
       .from(plan)
@@ -156,7 +156,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("OLIVE_WAY"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "testLightRail");
 
     SmokeTestItinerary
       .from(plan)
@@ -177,7 +177,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("MARYSVILLE"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "testMultiLegJourney");
 
     SmokeTestItinerary
       .from(plan)
@@ -204,7 +204,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("paul allen center"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "testColmanDockToUWCSBuilding");
 
     SmokeTestItinerary
       .from(plan)
@@ -224,7 +224,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTime(weekdayAtTime(LocalTime.of(17, 15)))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "testKingStStationToTacomaDome");
 
     SmokeTestItinerary
       .from(plan)
@@ -256,7 +256,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("45th veg thai"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "testKingStStationTo45thVegThai");
 
     SmokeTestItinerary
       .from(plan)
@@ -292,7 +292,10 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("climate pledge"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(
+      params,
+      "testSouthBellevueStationToClimatePledge"
+    );
 
     SmokeTestItinerary
       .from(plan)
@@ -320,7 +323,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("king st station"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "sodoToKingSt");
 
     SmokeTestItinerary
       .from(plan)
@@ -342,7 +345,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTime(weekdayAtTime(LocalTime.of(19, 45)))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "sodoToNCapitolHill");
 
     SmokeTestItinerary
       .from(plan)
@@ -431,7 +434,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("SHORELINE"))
       .build();
 
-    var plan = apiClient.plan(customParams);
+    var plan = apiClient.timedPlan(customParams, "testCustomParameters");
 
     // Verify we get up to 10 itineraries instead of the default 5
     Assertions.assertTrue(
@@ -455,7 +458,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("hopelink food bank"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "queenAnneToHopelinkFoodBank");
 
     SmokeTestItinerary
       .from(plan)
@@ -481,7 +484,10 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("tractor tavern ballard"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(
+      params,
+      "kingStStationToTractorTavernBallard"
+    );
 
     SmokeTestItinerary
       .from(plan)
@@ -506,7 +512,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTime(weekdayAtTime(LocalTime.of(17, 35)))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "kingStStationToMukilteoFerry");
 
     SmokeTestItinerary
       .from(plan)
@@ -541,7 +547,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("king st station"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "greenLakeToKingStStation");
 
     SmokeTestItinerary
       .from(plan)
@@ -567,7 +573,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("king st station"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "capitolHillToKingStStation");
 
     SmokeTestItinerary
       .from(plan)
@@ -585,7 +591,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("SODO"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "capitolHillToUWStation");
 
     SmokeTestItinerary
       .from(plan)
@@ -603,7 +609,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("1st and lander"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "paseoFremontToSODO");
 
     SmokeTestItinerary
       .from(plan)
@@ -624,7 +630,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("columbia city"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(params, "capitolHillToColumbiaCity");
 
     SmokeTestItinerary
       .from(plan)
@@ -642,7 +648,10 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withTo(geocoder.get("bellevue transit center"))
       .build();
 
-    var plan = apiClient.plan(params);
+    var plan = apiClient.timedPlan(
+      params,
+      "s1801SBushPlaceToBellevueTransitCenter"
+    );
 
     SmokeTestItinerary
       .from(plan)
