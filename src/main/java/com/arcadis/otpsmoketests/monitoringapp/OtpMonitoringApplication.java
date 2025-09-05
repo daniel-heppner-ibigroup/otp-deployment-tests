@@ -3,6 +3,7 @@ package com.arcadis.otpsmoketests.monitoringapp;
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.configuration.Configuration;
 import com.arcadis.otpsmoketests.configuration.ConfigurationLoader;
+import com.arcadis.otpsmoketests.runner.CustomTestRunner;
 import io.javalin.Javalin;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -14,13 +15,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import net.logstash.logback.argument.StructuredArguments;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.launcher.Launcher;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
-import org.junit.platform.launcher.core.LauncherFactory;
-import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,18 +29,20 @@ public class OtpMonitoringApplication {
       // Load configuration
       String configPath = args.length > 0 ? args[0] : "config.kdl";
       logger.info("Loading configuration from: {}", configPath);
-      
+
       Configuration config;
       try {
         config = ConfigurationLoader.loadFromFile(configPath);
-        logger.info("Configuration loaded successfully with {} deployments", 
-                   config.getDeploymentsUnderTest().size());
+        logger.info(
+          "Configuration loaded successfully with {} deployments",
+          config.getDeploymentsUnderTest().size()
+        );
       } catch (Exception e) {
         logger.error("Failed to load configuration from: {}", configPath, e);
         System.exit(1);
         return;
       }
-      
+
       // Create Micrometer registry for Prometheus
       PrometheusMeterRegistry meterRegistry = new PrometheusMeterRegistry(
         PrometheusConfig.DEFAULT
@@ -98,8 +94,7 @@ class TestRunner {
     TestRunner.class
   );
   private final MeterRegistry meterRegistry;
-  private final Launcher launcher;
-  private final Map<Class<?>, String> testSuites;
+  private final Map<Class<BaseTestSuite>, String> testSuites;
   private final Configuration configuration;
 
   // Fields to store the results of the most recent run for each suite
@@ -110,7 +105,6 @@ class TestRunner {
   public TestRunner(MeterRegistry meterRegistry, Configuration configuration) {
     this.meterRegistry = meterRegistry;
     this.configuration = configuration;
-    this.launcher = LauncherFactory.create();
     this.testSuites = new HashMap<>();
 
     // Add test suites from configuration
@@ -121,7 +115,7 @@ class TestRunner {
     }
   }
 
-  private void addTestSuite(Class<?> clazz, String name) {
+  private void addTestSuite(Class<BaseTestSuite> clazz, String name) {
     testSuites.put(clazz, name);
 
     // Initialize last run metrics for the suite
@@ -176,58 +170,55 @@ class TestRunner {
     );
 
     List<Map<String, Object>> allFailures = new ArrayList<>();
-    Map<String, TestExecutionSummary> suiteResults = new HashMap<>();
+    Map<String, CustomTestRunner.SuiteResult> suiteResults = new HashMap<>();
 
-    // Run each test suite individually
-    for (Map.Entry<Class<?>, String> suite : testSuites.entrySet()) {
+    // Run each test suite individually with custom URL
+    for (Map.Entry<Class<BaseTestSuite>, String> suite : testSuites.entrySet()) {
       String suiteName = suite.getValue();
-      Class<?> suiteClass = suite.getKey();
+      Class<BaseTestSuite> suiteClass = suite.getKey();
 
-      LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder
-        .request()
-        .selectors(DiscoverySelectors.selectClass(suiteClass))
-        .build();
+      // Get the base URL for this suite from configuration
+      String baseUrl = getBaseUrlForSuite(suiteName);
 
-      SummaryGeneratingListener listener = new SummaryGeneratingListener();
-      launcher.registerTestExecutionListeners(listener);
+      // Run the test suite with the custom URL
+      CustomTestRunner.SuiteResult suiteResult = CustomTestRunner.runTestSuite(
+        suiteClass,
+        suiteName,
+        baseUrl
+      );
 
-      long suiteStartTime = System.nanoTime();
-      launcher.execute(request);
-      long suiteDurationNanos = System.nanoTime() - suiteStartTime;
-
-      TestExecutionSummary summary = listener.getSummary();
-      suiteResults.put(suiteName, summary);
+      suiteResults.put(suiteName, suiteResult);
 
       // Update suite-specific last run metrics
-      lastRunSuiteTestsFound.get(suiteName).set(summary.getTestsFoundCount());
-      lastRunSuiteTestsFailed.get(suiteName).set(summary.getTestsFailedCount());
-      lastRunSuiteDurationMs.get(suiteName).set(suiteDurationNanos / 1_000_000);
+      lastRunSuiteTestsFound
+        .get(suiteName)
+        .set(suiteResult.getTestsFoundCount());
+      lastRunSuiteTestsFailed
+        .get(suiteName)
+        .set(suiteResult.getTestsFailedCount());
+      lastRunSuiteDurationMs.get(suiteName).set(suiteResult.totalDurationMs());
 
       // Collect failures for this suite
-      summary
-        .getFailures()
-        .forEach(failure -> {
+      suiteResult
+        .testResults()
+        .stream()
+        .filter(testResult -> !testResult.isPassed())
+        .forEach(testResult -> {
           Map<String, Object> failureDetails = new HashMap<>();
           failureDetails.put("suite", suiteName);
-          failureDetails.put(
-            "testClass",
-            failure
-              .getTestIdentifier()
-              .getSource()
-              .map(source -> source.toString().split("\\[")[0])
-              .orElse("unknown")
-          );
-          failureDetails.put(
-            "testName",
-            failure.getTestIdentifier().getDisplayName()
-          );
+          failureDetails.put("testClass", suiteClass.getSimpleName());
+          failureDetails.put("testName", testResult.getTestName());
           failureDetails.put(
             "errorMessage",
-            failure.getException().getMessage()
+            testResult.getException() != null
+              ? testResult.getException().getMessage()
+              : "Unknown error"
           );
           failureDetails.put(
             "stackTrace",
-            Arrays.toString(failure.getException().getStackTrace())
+            testResult.getException() != null
+              ? Arrays.toString(testResult.getException().getStackTrace())
+              : ""
           );
           allFailures.add(failureDetails);
 
@@ -248,22 +239,22 @@ class TestRunner {
     long totalTestsFound = suiteResults
       .values()
       .stream()
-      .mapToLong(TestExecutionSummary::getTestsFoundCount)
+      .mapToLong(CustomTestRunner.SuiteResult::getTestsFoundCount)
       .sum();
     long totalTestsSucceeded = suiteResults
       .values()
       .stream()
-      .mapToLong(TestExecutionSummary::getTestsSucceededCount)
+      .mapToLong(CustomTestRunner.SuiteResult::getTestsSucceededCount)
       .sum();
     long totalTestsFailed = suiteResults
       .values()
       .stream()
-      .mapToLong(TestExecutionSummary::getTestsFailedCount)
+      .mapToLong(CustomTestRunner.SuiteResult::getTestsFailedCount)
       .sum();
     long totalTestsSkipped = suiteResults
       .values()
       .stream()
-      .mapToLong(TestExecutionSummary::getTestsSkippedCount)
+      .mapToLong(CustomTestRunner.SuiteResult::getTestsSkippedCount)
       .sum();
 
     // Prepare result map
@@ -280,12 +271,12 @@ class TestRunner {
 
     // Add per-suite results
     Map<String, Object> suiteStats = new HashMap<>();
-    suiteResults.forEach((suiteName, summary) -> {
+    suiteResults.forEach((suiteName, suiteResult) -> {
       Map<String, Object> stats = new HashMap<>();
-      stats.put("testsFound", summary.getTestsFoundCount());
-      stats.put("testsSucceeded", summary.getTestsSucceededCount());
-      stats.put("testsFailed", summary.getTestsFailedCount());
-      stats.put("testsSkipped", summary.getTestsSkippedCount());
+      stats.put("testsFound", suiteResult.getTestsFoundCount());
+      stats.put("testsSucceeded", suiteResult.getTestsSucceededCount());
+      stats.put("testsFailed", suiteResult.getTestsFailedCount());
+      stats.put("testsSkipped", suiteResult.getTestsSkippedCount());
       suiteStats.put(suiteName, stats);
     });
     result.put("suiteResults", suiteStats);
@@ -304,5 +295,20 @@ class TestRunner {
     }
 
     return result;
+  }
+
+  private String getBaseUrlForSuite(String suiteName) {
+    return configuration
+      .getDeploymentsUnderTest()
+      .stream()
+      .filter(deployment ->
+        deployment
+          .suites()
+          .stream()
+          .anyMatch(suite -> suite.name().equals(suiteName))
+      )
+      .findFirst()
+      .map(Configuration.DeploymentUnderTest::url)
+      .orElse(null);
   }
 }

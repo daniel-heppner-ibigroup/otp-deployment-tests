@@ -5,7 +5,6 @@ import dev.kdl.KdlDocument;
 import dev.kdl.KdlNode;
 import dev.kdl.parse.KdlParseException;
 import dev.kdl.parse.KdlParser;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,7 +20,7 @@ public class ConfigurationLoader {
   }
 
   public static Configuration loadFromString(String kdlContent)
-          throws KdlParseException, IOException {
+    throws KdlParseException, IOException {
     KdlParser parser = KdlParser.v2();
     KdlDocument document = parser.parse(kdlContent);
     Configuration config = new Configuration();
@@ -57,8 +56,16 @@ public class ConfigurationLoader {
 
   private static Configuration.TestSuite parseTestSuite(KdlNode testSuiteNode) {
     String name = testSuiteNode.getProperty("name").get().value().toString();
-    String className = testSuiteNode.getProperty("class").get().value().toString();
-    String interval = testSuiteNode.getProperty("interval").get().value().toString();
+    String className = testSuiteNode
+      .getProperty("class")
+      .get()
+      .value()
+      .toString();
+    String interval = testSuiteNode
+      .getProperty("interval")
+      .get()
+      .value()
+      .toString();
 
     Class<BaseTestSuite> clazz = resolveTestSuiteClass(className);
 
