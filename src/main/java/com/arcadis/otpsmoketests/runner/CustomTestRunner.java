@@ -1,7 +1,9 @@
 package com.arcadis.otpsmoketests.runner;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
+import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertationError;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import org.junit.jupiter.api.Test;
@@ -108,20 +110,24 @@ public class CustomTestRunner {
 
       // Find all @Test methods
       Method[] methods = suiteClass.getMethods();
-      for (Method method : methods) {
-        if (method.isAnnotationPresent(Test.class)) {
-          String testName = method.getName();
-          long testStartTime = System.nanoTime();
+      var filteredMethods = Arrays
+        .stream(methods)
+        .filter(m -> m.isAnnotationPresent(Test.class))
+        .toList();
+      for (Method method : filteredMethods) {
+        String testName = method.getName();
+        long testStartTime = System.nanoTime();
 
-          try {
-            logger.debug("Running test: {}.{}", suiteName, testName);
-            method.invoke(suiteInstance);
+        try {
+          logger.debug("Running test: {}.{}", suiteName, testName);
+          method.invoke(suiteInstance);
+          long testDuration = (System.nanoTime() - testStartTime) / 1_000_000;
+          testResults.add(new TestResult(testName, true, null, testDuration));
+          logger.debug("Test passed: {}.{}", suiteName, testName);
+        } catch (InvocationTargetException e) {
+          if (e.getTargetException() instanceof ItineraryAssertationError) {
             long testDuration = (System.nanoTime() - testStartTime) / 1_000_000;
-            testResults.add(new TestResult(testName, true, null, testDuration));
-            logger.debug("Test passed: {}.{}", suiteName, testName);
-          } catch (Exception e) {
-            long testDuration = (System.nanoTime() - testStartTime) / 1_000_000;
-            Throwable cause = e.getCause() != null ? e.getCause() : e;
+            ItineraryAssertationError cause = (ItineraryAssertationError) e.getCause();
             testResults.add(
               new TestResult(testName, false, cause, testDuration)
             );

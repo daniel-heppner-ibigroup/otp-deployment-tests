@@ -3,7 +3,6 @@ package com.arcadis.otpsmoketests.monitoringapp;
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.configuration.Configuration;
 import com.arcadis.otpsmoketests.configuration.ConfigurationLoader;
-import com.arcadis.otpsmoketests.reporting.HtmlResultsGenerator;
 import com.arcadis.otpsmoketests.runner.CustomTestRunner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -263,23 +262,6 @@ class TestRunner {
       .set(suiteResult.getTestsFailedCount());
     lastRunSuiteDurationMs.get(testSuiteKey).set(suiteResult.totalDurationMs());
 
-    // Generate HTML report
-    try {
-      HtmlResultsGenerator.TestSuiteReport report = new HtmlResultsGenerator.TestSuiteReport(
-        config.deploymentName(),
-        config.suiteName(),
-        suiteResult,
-        startTime
-      );
-      HtmlResultsGenerator.generateHtmlReport(report);
-    } catch (Exception e) {
-      logger.error(
-        "Failed to generate HTML report for suite: {}",
-        testSuiteKey,
-        e
-      );
-    }
-
     // Log results
     if (suiteResult.getTestsFailedCount() > 0) {
       logger.error(
@@ -335,23 +317,6 @@ class TestRunner {
       lastRunSuiteDurationMs
         .get(testSuiteKey)
         .set(suiteResult.totalDurationMs());
-
-      // Generate HTML report for this suite
-      try {
-        HtmlResultsGenerator.TestSuiteReport report = new HtmlResultsGenerator.TestSuiteReport(
-          config.deploymentName(),
-          config.suiteName(),
-          suiteResult,
-          startTime
-        );
-        HtmlResultsGenerator.generateHtmlReport(report);
-      } catch (Exception e) {
-        logger.error(
-          "Failed to generate HTML report for suite: {}",
-          testSuiteKey,
-          e
-        );
-      }
 
       // Collect failures for this suite
       suiteResult

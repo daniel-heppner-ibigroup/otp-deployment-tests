@@ -216,7 +216,7 @@ public class SmokeTestItinerary {
     for (Itinerary itinerary : tripPlan.itineraries()) {
       MatchResult result = matchesAllLegs(itinerary);
       if (result.isSuccess()) {
-        return; // Found an itinerary that matches all leg criteria
+        return;
       }
       failedResults.add(result);
     }
@@ -238,6 +238,7 @@ public class SmokeTestItinerary {
     error.append("\nFailures by itinerary:\n");
     for (int i = 0; i < failedResults.size(); i++) {
       MatchResult result = failedResults.get(i);
+      Itinerary itinerary = tripPlan.itineraries().get(i);
       error.append("Itinerary ").append(i + 1).append(":\n");
 
       for (String err : result.getErrors()) {
@@ -255,9 +256,43 @@ public class SmokeTestItinerary {
             .append("\n");
         }
       }
+
+      // Add actual itinerary breakdown
+      error.append("  Actual itinerary:\n");
+      for (int legIndex = 0; legIndex < itinerary.legs().size(); legIndex++) {
+        Leg leg = itinerary.legs().get(legIndex);
+        error.append("    Leg ").append(legIndex + 1).append(": ");
+
+        if (leg.isTransit()) {
+          error.append("TRANSIT - ");
+          if (leg.route().shortName().isPresent()) {
+            error.append("Route: ").append(leg.route().shortName().get());
+          } else if (leg.route().longName().isPresent()) {
+            error.append("Route: ").append(leg.route().longName().get());
+          } else {
+            error.append("Route: ").append(leg.mode().toString());
+          }
+
+          if (leg.interlineWithPreviousLeg()) {
+            error.append(" (interlined)");
+          }
+
+          error.append(", From: ").append(leg.from().name());
+          error.append(", To: ").append(leg.to().name());
+        } else {
+          error.append(leg.mode().toString().toUpperCase());
+          error.append(" - From: ").append(leg.from().name());
+          error.append(", To: ").append(leg.to().name());
+          error
+            .append(", Distance: ")
+            .append(String.format("%.0fm", leg.distance()));
+        }
+        error.append("\n");
+      }
+      error.append("\n");
     }
 
-    throw new AssertionError(error.toString());
+    throw new ItineraryAssertationError(error.toString(), failedResults);
   }
 
   private MatchResult matchesAllLegs(Itinerary itinerary) {
@@ -352,7 +387,7 @@ public class SmokeTestItinerary {
   /**
    * Result of attempting to match an itinerary against all required leg criteria.
    */
-  private static class MatchResult {
+  public static class MatchResult {
 
     private final boolean success;
     private final List<String> errors;
