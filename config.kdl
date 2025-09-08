@@ -1,0 +1,14 @@
+// Example OTP deployment configuration
+// This file demonstrates how to configure deployments and test suites
+
+deployment name="SoundTransitQA" url="https://sound-transit-qa-otp.ibi-transit.com" {
+  test-suite name="ST" class="SoundTransit" interval="*/10 * * * *"
+}
+
+deployment name="SoundTransitProd" url="https://sound-transit-otp.ibi-transit.com" {
+    test-suite name="ST" class="SoundTransit" interval="*/10 * * * *"
+}
+
+//deployment name="Hope Link Staging" url="https://staging.hopelink.org/otp" {
+//  test-suite name="Hope Link Basic" class="HopeLink" interval="*/10 * * * *"
+//}

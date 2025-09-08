@@ -25,9 +25,17 @@ import org.opentripplanner.client.parameters.TripPlanParameters;
 public class HopeLinkTestSuite extends BaseTestSuite {
 
   public HopeLinkTestSuite() {
+    this("https://hopelink-otp.ibi-transit.com", "Hopelink");
+  }
+
+  public HopeLinkTestSuite(String baseUrl) {
+    this(baseUrl, "Hopelink");
+  }
+
+  public HopeLinkTestSuite(String baseUrl, String deploymentName) {
     super(
-      "Hopelink",
-      "https://hopelink-otp.ibi-transit.com",
+      deploymentName,
+      baseUrl,
       "https://im5b1wfh6d.execute-api.us-east-1.amazonaws.com/commtrans/autocomplete",
       47.61097,
       -122.33701
