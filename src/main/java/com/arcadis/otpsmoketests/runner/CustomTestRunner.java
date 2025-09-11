@@ -2,6 +2,7 @@ package com.arcadis.otpsmoketests.runner;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertationError;
+import com.arcadis.otpsmoketests.reporting.HtmlReportGenerator;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -141,6 +142,24 @@ public class CustomTestRunner {
     }
 
     long totalDuration = (System.nanoTime() - suiteStartTime) / 1_000_000;
-    return new SuiteResult(suiteName, testResults, totalDuration);
+    SuiteResult suiteResult = new SuiteResult(
+      suiteName,
+      testResults,
+      totalDuration
+    );
+
+    // Generate HTML report
+    try {
+      HtmlReportGenerator reportGenerator = new HtmlReportGenerator();
+      reportGenerator.generateReport(suiteResult, deploymentName, baseUrl);
+    } catch (Exception e) {
+      logger.error(
+        "Failed to generate HTML report for suite '{}'",
+        suiteName,
+        e
+      );
+    }
+
+    return suiteResult;
   }
 }

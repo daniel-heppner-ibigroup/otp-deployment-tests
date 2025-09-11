@@ -2,6 +2,7 @@ package com.arcadis.otpsmoketests.tests;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
+import com.arcadis.otpsmoketests.resolver.TestParameterResolver;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Set;
@@ -10,6 +11,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.parameters.TripPlanParameters;
 import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
@@ -17,15 +20,9 @@ import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
 @Tag("smoke-test")
 @Tag("soundtransit")
 @DisplayName("Sound Transit Smoke Tests")
+@ExtendWith(TestParameterResolver.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SoundTransitTestSuite extends BaseTestSuite {
-
-  public SoundTransitTestSuite() {
-    this("https://sound-transit-otp.ibi-transit.com", "SoundTransit");
-  }
-
-  public SoundTransitTestSuite(String baseUrl) {
-    this(baseUrl, "SoundTransit");
-  }
 
   public SoundTransitTestSuite(String baseUrl, String deploymentName) {
     super(

@@ -1,5 +1,6 @@
 package com.arcadis.otpsmoketests.itineraryassertations;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,7 +66,7 @@ public class SmokeTestItinerary {
   // Each item in this list is a list that represents the complete list of criteria that a leg
   // needs to match in order to pass. For each item, there must be at least one leg that matches all the
   // criteria in the second list.
-  private final List<List<LegCriterion>> legCriteria = new ArrayList<>();
+  private final List<List<LegCriterion>> distinctLegCriteria = new ArrayList<>();
   private List<LegCriterion> currentLegCriteria;
   private final TripPlan tripPlan;
   private boolean strictTransitMatching = false;
@@ -80,7 +81,7 @@ public class SmokeTestItinerary {
 
   public SmokeTestItinerary hasLeg() {
     currentLegCriteria = new ArrayList<>();
-    legCriteria.add(currentLegCriteria);
+    distinctLegCriteria.add(currentLegCriteria);
     return this;
   }
 
@@ -99,6 +100,26 @@ public class SmokeTestItinerary {
               .anyMatch(longName ->
                 Objects.equals(longName, leg.route().longName().get())
               );
+          if (matches) {
+            state.addMatch(message);
+          } else {
+            state.addFailure(message);
+          }
+        }
+      )
+    );
+    return this;
+  }
+
+  public SmokeTestItinerary withMaxDuration(Duration duration) {
+    var message = "duration '" + duration + "'";
+    currentLegCriteria.add(
+      new LegCriterion(
+        message,
+        state -> {
+          Leg leg = state.getLeg();
+          boolean matches =
+            leg.isTransit() && leg.duration().compareTo(duration) < 1;
           if (matches) {
             state.addMatch(message);
           } else {
@@ -230,9 +251,9 @@ public class SmokeTestItinerary {
     }
     error.append(":\n");
 
-    for (int i = 0; i < legCriteria.size(); i++) {
+    for (int i = 0; i < distinctLegCriteria.size(); i++) {
       error.append("Leg ").append(i + 1).append(" criteria:\n");
-      error.append(describeCriteria(legCriteria.get(i))).append("\n");
+      error.append(describeCriteria(distinctLegCriteria.get(i))).append("\n");
     }
 
     error.append("\nFailures by itinerary:\n");
@@ -295,22 +316,24 @@ public class SmokeTestItinerary {
     throw new ItineraryAssertationError(error.toString(), failedResults);
   }
 
+    /**
+     * Check each requirement to make sure that some leg on the itinerary matches
+     * If strictItineraryMatching is true, then all transit legs must match a requirement.
+     * @param itinerary Itinerary to be checked
+     * @return MatchResult object containing the results
+     */
   private MatchResult matchesAllLegs(Itinerary itinerary) {
     List<Leg> remainingLegs = new ArrayList<>(itinerary.legs());
     List<String> errors = new ArrayList<>();
     List<LegMatchingState> partialMatches = new ArrayList<>();
 
-    if (legCriteria.isEmpty()) {
+    if (distinctLegCriteria.isEmpty()) {
       throw new IllegalArgumentException("No leg criteria specified");
     }
 
     // Try to find a match for each set of criteria
-    for (
-      int criteriaIndex = 0;
-      criteriaIndex < legCriteria.size();
-      criteriaIndex++
-    ) {
-      List<LegCriterion> criteriaSet = legCriteria.get(criteriaIndex);
+    for(var criteriaIndex = 0; criteriaIndex < distinctLegCriteria.size(); criteriaIndex++) {
+      List<LegCriterion> criteriaSet = distinctLegCriteria.get(criteriaIndex);
       boolean foundMatch = false;
 
       if (criteriaSet.isEmpty()) {
@@ -343,7 +366,7 @@ public class SmokeTestItinerary {
           describeCriteria(criteriaSet).trim()
         );
       }
-    }
+    });
 
     // If strict transit matching is enabled, check that no additional transit legs remain
     if (strictTransitMatching && errors.isEmpty()) {
