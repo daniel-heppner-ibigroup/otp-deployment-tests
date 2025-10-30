@@ -366,7 +366,7 @@ public class SmokeTestItinerary {
           describeCriteria(criteriaSet).trim()
         );
       }
-    });
+    };
 
     // If strict transit matching is enabled, check that no additional transit legs remain
     if (strictTransitMatching && errors.isEmpty()) {

@@ -1,4 +1,4 @@
-package com.arcadis.otpsmoketests.resolver;
+package com.arcadis.otpsmoketests.tests;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -22,16 +22,10 @@ public class TestParameterResolver implements ParameterResolver {
     ExtensionContext extensionContext
   ) {
     Class<?> parameterType = parameterContext.getParameter().getType();
-    String parameterName = parameterContext.getParameter().getName();
+    int parameterIndex = parameterContext.getIndex();
 
-    // Support String parameters named "baseUrl" or "deploymentName"
-    return (
-      parameterType == String.class &&
-      (
-        parameterName.equals("baseUrl") ||
-        parameterName.equals("deploymentName")
-      )
-    );
+    // Support first two String parameters (baseUrl, deploymentName)
+    return parameterType == String.class && parameterIndex < 2;
   }
 
   @Override
@@ -39,28 +33,28 @@ public class TestParameterResolver implements ParameterResolver {
     ParameterContext parameterContext,
     ExtensionContext extensionContext
   ) {
-    String parameterName = parameterContext.getParameter().getName();
+    int parameterIndex = parameterContext.getIndex();
 
-    if (parameterName.equals("baseUrl")) {
-      // Try to get from system property first, then environment variable, then default
+    if (parameterIndex == 0) {
+      // First parameter is baseUrl
       return System.getProperty(
-        "otp.baseUrl",
-        System.getenv("OTP_BASE_URL") != null
-          ? System.getenv("OTP_BASE_URL")
+        "baseUrl",
+        System.getenv("BASE_URL") != null
+          ? System.getenv("BASE_URL")
           : DEFAULT_BASE_URL
       );
-    } else if (parameterName.equals("deploymentName")) {
-      // Try to get from system property first, then environment variable, then default
+    } else if (parameterIndex == 1) {
+      // Second parameter is deploymentName
       return System.getProperty(
-        "otp.deploymentName",
-        System.getenv("OTP_DEPLOYMENT_NAME") != null
-          ? System.getenv("OTP_DEPLOYMENT_NAME")
+        "deploymentName",
+        System.getenv("DEPLOYMENT_NAME") != null
+          ? System.getenv("DEPLOYMENT_NAME")
           : DEFAULT_DEPLOYMENT_NAME
       );
     }
 
     throw new IllegalArgumentException(
-      "Unsupported parameter: " + parameterName
+      "Unsupported parameter index: " + parameterIndex
     );
   }
 }

@@ -9,6 +9,6 @@ deployment name="SoundTransitProd" url="https://sound-transit-otp.ibi-transit.co
     test-suite name="ST" class="SoundTransit" interval="*/10 * * * *"
 }
 
-//deployment name="Hope Link Staging" url="https://staging.hopelink.org/otp" {
-//  test-suite name="Hope Link Basic" class="HopeLink" interval="*/10 * * * *"
-//}
+deployment name="Hope Link Prod" url="https://hopelink-otp.ibi-transit.com/" {
+  test-suite name="Hope Link Basic" class="HopeLink" interval="*/10 * * * *"
+}

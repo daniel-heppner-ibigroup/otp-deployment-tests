@@ -15,6 +15,8 @@ import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.model.TripPlan;
 import org.opentripplanner.client.parameters.TripPlanParameters;
@@ -22,15 +24,9 @@ import org.opentripplanner.client.parameters.TripPlanParameters;
 @Tag("smoke-test")
 @Tag("hopelink")
 @DisplayName("Hopelink Smoke Tests")
+@ExtendWith(TestParameterResolver.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class HopeLinkTestSuite extends BaseTestSuite {
-
-  public HopeLinkTestSuite() {
-    this("https://hopelink-otp.ibi-transit.com", "Hopelink");
-  }
-
-  public HopeLinkTestSuite(String baseUrl) {
-    this(baseUrl, "Hopelink");
-  }
 
   public HopeLinkTestSuite(String baseUrl, String deploymentName) {
     super(
