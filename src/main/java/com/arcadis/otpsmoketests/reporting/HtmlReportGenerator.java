@@ -4,9 +4,10 @@ import static j2html.TagCreator.*;
 
 import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertationError;
 import com.arcadis.otpsmoketests.itineraryassertations.LegMatchingState;
-import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
+import com.arcadis.otpsmoketests.itineraryassertations.LegMatchResult;
 import com.arcadis.otpsmoketests.runner.CustomTestRunner;
 import j2html.tags.ContainerTag;
+import j2html.tags.specialized.DivTag;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -180,14 +181,14 @@ public class HtmlReportGenerator {
     );
   }
 
-  private ContainerTag generateTestResult(
+  private ContainerTag<DivTag> generateTestResult(
     CustomTestRunner.TestResult testResult
   ) {
     String testClass = testResult.isPassed()
       ? "test-item passed"
       : "test-item failed";
 
-    ContainerTag testDiv = div(
+    ContainerTag<DivTag> testDiv = div(
       attrs("." + testClass),
       div(
         attrs(".test-header"),
@@ -201,8 +202,9 @@ public class HtmlReportGenerator {
     );
 
     if (!testResult.isPassed() && testResult.getException() != null) {
-      if (testResult.getException() instanceof ItineraryAssertationError) {
-        ItineraryAssertationError error = (ItineraryAssertationError) testResult.getException();
+      if (
+        testResult.getException() instanceof ItineraryAssertationError error
+      ) {
         testDiv.with(generateItineraryErrorDetails(error));
       } else {
         testDiv.with(
@@ -221,10 +223,10 @@ public class HtmlReportGenerator {
     return testDiv;
   }
 
-  private ContainerTag generateItineraryErrorDetails(
+  private ContainerTag<DivTag> generateItineraryErrorDetails(
     ItineraryAssertationError error
   ) {
-    ContainerTag errorDiv = div(
+    ContainerTag<DivTag> errorDiv = div(
       attrs(".error-details"),
       h4("Itinerary Assertion Failures"),
       pre(attrs(".error-message"), text(error.getMessage()))
@@ -252,18 +254,16 @@ public class HtmlReportGenerator {
     return errorDiv;
   }
 
-  private ContainerTag generateMatchResult(
-    SmokeTestItinerary.MatchResult matchResult
-  ) {
+  private ContainerTag generateMatchResult(LegMatchResult legMatchResult) {
     ContainerTag resultDiv = div(attrs(".match-result"));
 
-    if (!matchResult.getErrors().isEmpty()) {
+    if (!legMatchResult.getErrors().isEmpty()) {
       resultDiv.with(
         div(
           attrs(".match-errors"),
           h6("Errors:"),
           ul(
-            matchResult
+            legMatchResult
               .getErrors()
               .stream()
               .map(error -> li(text(error)))
@@ -273,13 +273,13 @@ public class HtmlReportGenerator {
       );
     }
 
-    if (!matchResult.getPartialMatches().isEmpty()) {
+    if (!legMatchResult.getPartialMatches().isEmpty()) {
       resultDiv.with(
         div(
           attrs(".partial-matches"),
           h6("Partial Matches:"),
           ul(
-            matchResult
+            legMatchResult
               .getPartialMatches()
               .stream()
               .map(this::generatePartialMatch)

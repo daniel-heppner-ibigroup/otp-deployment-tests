@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class CustomTestRunner {
     public TestResult(
       String testName,
       boolean passed,
-      Throwable exception,
+      ItineraryAssertationError exception,
       long durationMs
     ) {
       this.testName = testName;
@@ -78,14 +79,6 @@ public class CustomTestRunner {
   public static SuiteResult runTestSuite(
     Class<? extends BaseTestSuite> suiteClass,
     String suiteName,
-    String baseUrl
-  ) {
-    return runTestSuite(suiteClass, suiteName, baseUrl, null);
-  }
-
-  public static SuiteResult runTestSuite(
-    Class<? extends BaseTestSuite> suiteClass,
-    String suiteName,
     String baseUrl,
     String deploymentName
   ) {
@@ -94,20 +87,11 @@ public class CustomTestRunner {
 
     try {
       // Try constructor with baseUrl and deploymentName parameters first
-      BaseTestSuite suiteInstance;
-      try {
-        Constructor<? extends BaseTestSuite> constructor = suiteClass.getConstructor(
-          String.class,
-          String.class
-        );
-        suiteInstance = constructor.newInstance(baseUrl, deploymentName);
-      } catch (NoSuchMethodException e) {
-        // Fall back to single-parameter constructor
-        Constructor<? extends BaseTestSuite> constructor = suiteClass.getConstructor(
-          String.class
-        );
-        suiteInstance = constructor.newInstance(baseUrl);
-      }
+      BaseTestSuite suiteInstance = getBaseTestSuite(
+        suiteClass,
+        baseUrl,
+        deploymentName
+      );
 
       // Find all @Test methods
       Method[] methods = suiteClass.getMethods();
@@ -138,7 +122,6 @@ public class CustomTestRunner {
       }
     } catch (Exception e) {
       logger.error("Failed to instantiate test suite: {}", suiteName, e);
-      testResults.add(new TestResult("suite_instantiation", false, e, 0));
     }
 
     long totalDuration = (System.nanoTime() - suiteStartTime) / 1_000_000;
@@ -161,5 +144,29 @@ public class CustomTestRunner {
     }
 
     return suiteResult;
+  }
+
+  @NotNull
+  private static BaseTestSuite getBaseTestSuite(
+    Class<? extends BaseTestSuite> suiteClass,
+    String baseUrl,
+    String deploymentName
+  )
+    throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    BaseTestSuite suiteInstance;
+    try {
+      Constructor<? extends BaseTestSuite> constructor = suiteClass.getConstructor(
+        String.class,
+        String.class
+      );
+      suiteInstance = constructor.newInstance(baseUrl, deploymentName);
+    } catch (NoSuchMethodException e) {
+      // Fall back to single-parameter constructor
+      Constructor<? extends BaseTestSuite> constructor = suiteClass.getConstructor(
+        String.class
+      );
+      suiteInstance = constructor.newInstance(baseUrl);
+    }
+    return suiteInstance;
   }
 }

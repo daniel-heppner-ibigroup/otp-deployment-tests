@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import org.opentripplanner.client.model.Leg;
 
+/***
+ * This class is designed to allow you to store the results of the criteria matched against a leg.
+ */
 public class LegMatchingState {
 
   private final Leg leg;

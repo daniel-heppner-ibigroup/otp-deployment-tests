@@ -4,17 +4,17 @@ import java.util.List;
 
 public class ItineraryAssertationError extends AssertionError {
 
-  private final List<SmokeTestItinerary.MatchResult> failedResults;
+  private final List<LegMatchResult> failedResults;
 
   public ItineraryAssertationError(
     String message,
-    List<SmokeTestItinerary.MatchResult> failedResults
+    List<LegMatchResult> failedResults
   ) {
     super(message);
     this.failedResults = failedResults;
   }
 
-  public List<SmokeTestItinerary.MatchResult> getFailedResults() {
+  public List<LegMatchResult> getFailedResults() {
     return failedResults;
   }
 }

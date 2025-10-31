@@ -2,7 +2,6 @@ package com.arcadis.otpsmoketests.tests;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
-
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Set;

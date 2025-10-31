@@ -232,10 +232,10 @@ public class SmokeTestItinerary {
   }
 
   public void assertMatches() {
-    List<MatchResult> failedResults = new ArrayList<>();
+    List<LegMatchResult> failedResults = new ArrayList<>();
 
     for (Itinerary itinerary : tripPlan.itineraries()) {
-      MatchResult result = matchesAllLegs(itinerary);
+      LegMatchResult result = matchesAllLegs(itinerary);
       if (result.isSuccess()) {
         return;
       }
@@ -258,7 +258,7 @@ public class SmokeTestItinerary {
 
     error.append("\nFailures by itinerary:\n");
     for (int i = 0; i < failedResults.size(); i++) {
-      MatchResult result = failedResults.get(i);
+      LegMatchResult result = failedResults.get(i);
       Itinerary itinerary = tripPlan.itineraries().get(i);
       error.append("Itinerary ").append(i + 1).append(":\n");
 
@@ -316,15 +316,16 @@ public class SmokeTestItinerary {
     throw new ItineraryAssertationError(error.toString(), failedResults);
   }
 
-    /**
-     * Check each requirement to make sure that some leg on the itinerary matches
-     * If strictItineraryMatching is true, then all transit legs must match a requirement.
-     * @param itinerary Itinerary to be checked
-     * @return MatchResult object containing the results
-     */
-  private MatchResult matchesAllLegs(Itinerary itinerary) {
+  /**
+   * Check each requirement to make sure that some leg on the itinerary matches
+   * If strictItineraryMatching is true, then all transit legs must match a requirement.
+   * @param itinerary Itinerary to be checked
+   * @return MatchResult object containing the results
+   */
+  private LegMatchResult matchesAllLegs(Itinerary itinerary) {
     List<Leg> remainingLegs = new ArrayList<>(itinerary.legs());
     List<String> errors = new ArrayList<>();
+    List<LegMatchingState> completeMatches = new ArrayList<>();
     List<LegMatchingState> partialMatches = new ArrayList<>();
 
     if (distinctLegCriteria.isEmpty()) {
@@ -332,7 +333,11 @@ public class SmokeTestItinerary {
     }
 
     // Try to find a match for each set of criteria
-    for(var criteriaIndex = 0; criteriaIndex < distinctLegCriteria.size(); criteriaIndex++) {
+    for (
+      var criteriaIndex = 0;
+      criteriaIndex < distinctLegCriteria.size();
+      criteriaIndex++
+    ) {
       List<LegCriterion> criteriaSet = distinctLegCriteria.get(criteriaIndex);
       boolean foundMatch = false;
 
@@ -351,6 +356,7 @@ public class SmokeTestItinerary {
         if (state.isFullMatch()) {
           remainingLegs.remove(i); // Remove the matched leg so it can't be matched again
           foundMatch = true;
+          completeMatches.add(state);
           break;
         } else if (state.hasAnyMatch()) {
           // Keep track of partial matches for error reporting
@@ -366,8 +372,9 @@ public class SmokeTestItinerary {
           describeCriteria(criteriaSet).trim()
         );
       }
-    };
+    }
 
+    List<Leg> extraMatches = new ArrayList<>();
     // If strict transit matching is enabled, check that no additional transit legs remain
     if (strictTransitMatching && errors.isEmpty()) {
       List<Leg> additionalTransitLegs = remainingLegs
@@ -380,6 +387,7 @@ public class SmokeTestItinerary {
           "Itinerary contains additional transit legs when strict matching is enabled: "
         );
         for (Leg leg : additionalTransitLegs) {
+          extraMatches.add(leg);
           if (leg.route().shortName().isPresent()) {
             error.append(leg.route().shortName().get()).append(" ");
           } else if (leg.route().longName().isPresent()) {
@@ -393,9 +401,9 @@ public class SmokeTestItinerary {
     }
 
     if (errors.isEmpty()) {
-      return MatchResult.success();
+      return LegMatchResult.success();
     } else {
-      return MatchResult.failure(errors, partialMatches);
+      return new LegMatchResult(completeMatches, partialMatches, extraMatches);
     }
   }
 
@@ -405,48 +413,5 @@ public class SmokeTestItinerary {
       message.append(criterion.message()).append("\n");
     }
     return message.toString();
-  }
-
-  /**
-   * Result of attempting to match an itinerary against all required leg criteria.
-   */
-  public static class MatchResult {
-
-    private final boolean success;
-    private final List<String> errors;
-    private final List<LegMatchingState> partialMatches;
-
-    private MatchResult(
-      boolean success,
-      List<String> errors,
-      List<LegMatchingState> partialMatches
-    ) {
-      this.success = success;
-      this.errors = new ArrayList<>(errors);
-      this.partialMatches = new ArrayList<>(partialMatches);
-    }
-
-    public static MatchResult success() {
-      return new MatchResult(true, List.of(), List.of());
-    }
-
-    public static MatchResult failure(
-      List<String> errors,
-      List<LegMatchingState> partialMatches
-    ) {
-      return new MatchResult(false, errors, partialMatches);
-    }
-
-    public boolean isSuccess() {
-      return success;
-    }
-
-    public List<String> getErrors() {
-      return errors;
-    }
-
-    public List<LegMatchingState> getPartialMatches() {
-      return partialMatches;
-    }
   }
 }
