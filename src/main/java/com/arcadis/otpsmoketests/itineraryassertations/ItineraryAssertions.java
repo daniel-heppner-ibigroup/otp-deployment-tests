@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.opentripplanner.client.model.Itinerary;
 import org.opentripplanner.client.model.Leg;
 import org.opentripplanner.client.model.TripPlan;
@@ -77,7 +78,7 @@ public class ItineraryAssertions {
   }
 
   public ItineraryAssertions withRouteLongName(String... longNames) {
-    var message = "route '" + Arrays.toString(longNames) + "'";
+    var message = "route '%s'".formatted(Arrays.toString(longNames));
     currentLegCriteria.add(
       new LegCriterion(
         message,
@@ -103,7 +104,7 @@ public class ItineraryAssertions {
   }
 
   public ItineraryAssertions withMaxDuration(Duration duration) {
-    var message = "duration '" + duration + "'";
+    var message = "duration '%s'".formatted(duration);
     currentLegCriteria.add(
       new LegCriterion(
         message,
@@ -123,7 +124,7 @@ public class ItineraryAssertions {
   }
 
   public ItineraryAssertions withRouteShortName(String... shortNames) {
-    var message = "route '" + Arrays.toString(shortNames) + "'";
+    var message = "route '%s'".formatted(Arrays.toString(shortNames));
     currentLegCriteria.add(
       new LegCriterion(
         message,
@@ -153,7 +154,7 @@ public class ItineraryAssertions {
     String riderCategoryId,
     String mediumId
   ) {
-    var message = "fare $" + price;
+    var message = "fare $%.2f".formatted(price);
     currentLegCriteria.add(
       new LegCriterion(
         message,
@@ -171,9 +172,9 @@ public class ItineraryAssertions {
             .anyMatch(fp -> fp.product().price().amount().floatValue() == price
             );
           if (matches) {
-            state.addMatch("fare $" + price);
+            state.addMatch(message);
           } else {
-            state.addFailure("fare $" + price);
+            state.addFailure(message);
           }
         }
       )
@@ -199,7 +200,7 @@ public class ItineraryAssertions {
   }
 
   public ItineraryAssertions withMode(String mode) {
-    var message = "mode " + mode;
+    var message = "mode %s".formatted(mode);
     currentLegCriteria.add(
       new LegCriterion(
         message,
@@ -207,9 +208,9 @@ public class ItineraryAssertions {
           Leg leg = state.getLeg();
           boolean matches = leg.mode().toString().equals(mode);
           if (matches) {
-            state.addMatch("mode " + mode);
+            state.addMatch(message);
           } else {
-            state.addFailure("mode " + mode);
+            state.addFailure(message);
           }
         }
       )
@@ -234,77 +235,65 @@ public class ItineraryAssertions {
     }
 
     // If we get here, no itinerary matched all legs
-    StringBuilder error = new StringBuilder(
-      "No itinerary found matching all required legs"
-    );
-    if (strictTransitMatching) {
-      error.append(" with strict transit matching");
-    }
-    error.append(":\n");
+    String strictMatchingText = strictTransitMatching
+      ? " with strict transit matching"
+      : "";
+    String header =
+      "No itinerary found matching all required legs%s:%n".formatted(
+          strictMatchingText
+        );
 
+    StringBuilder criteriaSection = new StringBuilder();
     for (int i = 0; i < distinctLegCriteria.size(); i++) {
-      error.append("Leg ").append(i + 1).append(" criteria:\n");
-      error.append(describeCriteria(distinctLegCriteria.get(i))).append("\n");
+      criteriaSection.append(
+        "Leg %d criteria:%n%s%n".formatted(
+            i + 1,
+            describeCriteria(distinctLegCriteria.get(i))
+          )
+      );
     }
 
-    error.append("\nFailures by itinerary:\n");
+    StringBuilder failuresSection = new StringBuilder();
+    failuresSection.append("%nFailures by itinerary:%n");
+
     for (int i = 0; i < failedResults.size(); i++) {
       LegMatchResult result = failedResults.get(i);
       Itinerary itinerary = tripPlan.itineraries().get(i);
-      error.append("Itinerary ").append(i + 1).append(":\n");
+      failuresSection.append("Itinerary %d:%n".formatted(i + 1));
 
-      for (String err : result.errors()) {
-        error.append("  - ").append(err).append("\n");
-      }
+      // Add errors
+      result
+        .errors()
+        .forEach(err -> failuresSection.append("  - %s%n".formatted(err)));
 
+      // Add partial matches
       if (!result.getPartialMatches().isEmpty()) {
-        error.append("  Partial matches:\n");
-        for (LegMatchingState match : result.getPartialMatches()) {
-          error
-            .append("    - Leg with ")
-            .append(match.getMatchingCriteria())
-            .append(" but missing ")
-            .append(match.getMissingCriteria())
-            .append("\n");
-        }
+        failuresSection.append("  Partial matches:%n");
+        result
+          .getPartialMatches()
+          .forEach(match ->
+            failuresSection.append(
+              "    - Leg with %s but missing %s%n".formatted(
+                  match.getMatchingCriteria(),
+                  match.getMissingCriteria()
+                )
+            )
+          );
       }
 
       // Add actual itinerary breakdown
-      error.append("  Actual itinerary:\n");
+      failuresSection.append("  Actual itinerary:%n");
       for (int legIndex = 0; legIndex < itinerary.legs().size(); legIndex++) {
         Leg leg = itinerary.legs().get(legIndex);
-        error.append("    Leg ").append(legIndex + 1).append(": ");
-
-        if (leg.isTransit()) {
-          error.append("TRANSIT - ");
-          if (leg.route().shortName().isPresent()) {
-            error.append("Route: ").append(leg.route().shortName().get());
-          } else if (leg.route().longName().isPresent()) {
-            error.append("Route: ").append(leg.route().longName().get());
-          } else {
-            error.append("Route: ").append(leg.mode().toString());
-          }
-
-          if (leg.interlineWithPreviousLeg()) {
-            error.append(" (interlined)");
-          }
-
-          error.append(", From: ").append(leg.from().name());
-          error.append(", To: ").append(leg.to().name());
-        } else {
-          error.append(leg.mode().toString().toUpperCase());
-          error.append(" - From: ").append(leg.from().name());
-          error.append(", To: ").append(leg.to().name());
-          error
-            .append(", Distance: ")
-            .append(String.format("%.0fm", leg.distance()));
-        }
-        error.append("\n");
+        failuresSection.append(
+          "    Leg %d: %s".formatted(legIndex + 1, formatLegDescription(leg))
+        );
       }
-      error.append("\n");
+      failuresSection.append("%n");
     }
 
-    throw new ItineraryAssertationError(error.toString(), failedResults);
+    String fullError = header + criteriaSection + failuresSection;
+    throw new ItineraryAssertationError(fullError, failedResults);
   }
 
   /**
@@ -357,10 +346,10 @@ public class ItineraryAssertions {
 
       if (!foundMatch) {
         errors.add(
-          "No leg found matching criteria set " +
-          (criteriaIndex + 1) +
-          ": " +
-          describeCriteria(criteriaSet).trim()
+          "No leg found matching criteria set %d: %s".formatted(
+              criteriaIndex + 1,
+              describeCriteria(criteriaSet).trim()
+            )
         );
       }
     }
@@ -374,20 +363,23 @@ public class ItineraryAssertions {
         .toList();
 
       if (!additionalTransitLegs.isEmpty()) {
-        StringBuilder error = new StringBuilder(
-          "Itinerary contains additional transit legs when strict matching is enabled: "
+        extraMatches.addAll(additionalTransitLegs);
+        String extraLegNames = additionalTransitLegs
+          .stream()
+          .map(leg ->
+            leg
+              .route()
+              .shortName()
+              .or(() -> leg.route().longName())
+              .orElse(leg.mode().toString())
+          )
+          .collect(Collectors.joining(" "));
+
+        errors.add(
+          "Itinerary contains additional transit legs when strict matching is enabled: %s".formatted(
+              extraLegNames
+            )
         );
-        for (Leg leg : additionalTransitLegs) {
-          extraMatches.add(leg);
-          if (leg.route().shortName().isPresent()) {
-            error.append(leg.route().shortName().get()).append(" ");
-          } else if (leg.route().longName().isPresent()) {
-            error.append(leg.route().longName().get()).append(" ");
-          } else {
-            error.append(leg.mode().toString()).append(" ");
-          }
-        }
-        errors.add(error.toString());
       }
     }
 
@@ -400,6 +392,33 @@ public class ItineraryAssertions {
         extraMatches,
         errors
       );
+    }
+  }
+
+  private String formatLegDescription(Leg leg) {
+    if (leg.isTransit()) {
+      String routeName = leg
+        .route()
+        .shortName()
+        .or(() -> leg.route().longName())
+        .orElse(leg.mode().toString());
+
+      String interlinedText = leg.interlineWithPreviousLeg()
+        ? " (interlined)"
+        : "";
+      return "TRANSIT - Route: %s%s, From: %s, To: %s%n".formatted(
+          routeName,
+          interlinedText,
+          leg.from().name(),
+          leg.to().name()
+        );
+    } else {
+      return "%s - From: %s, To: %s, Distance: %.0fm%n".formatted(
+          leg.mode().toString().toUpperCase(),
+          leg.from().name(),
+          leg.to().name(),
+          leg.distance()
+        );
     }
   }
 
