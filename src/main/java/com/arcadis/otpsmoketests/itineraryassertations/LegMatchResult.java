@@ -13,8 +13,8 @@ public record LegMatchResult(
   List<Leg> extraMatches,
   List<String> errors
 ) {
-  public static LegMatchResult success() {
-    return new LegMatchResult(List.of(), List.of(), List.of(), List.of());
+  public static LegMatchResult success(List<LegMatchingState> successfulMatches) {
+    return new LegMatchResult(successfulMatches, List.of(), List.of(), List.of());
   }
 
   // Provide compatibility methods for existing code

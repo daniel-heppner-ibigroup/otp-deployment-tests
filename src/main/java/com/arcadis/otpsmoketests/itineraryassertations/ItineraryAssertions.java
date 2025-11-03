@@ -384,7 +384,7 @@ public class ItineraryAssertions {
     }
 
     if (errors.isEmpty()) {
-      return LegMatchResult.success();
+      return LegMatchResult.success(completeMatches);
     } else {
       return new LegMatchResult(
         completeMatches,
