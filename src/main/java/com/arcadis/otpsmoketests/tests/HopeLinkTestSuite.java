@@ -7,7 +7,7 @@ import static org.opentripplanner.client.model.RequestMode.TRANSIT;
 import static org.opentripplanner.client.model.RequestMode.WALK;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
-import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
+import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertions;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -138,11 +138,10 @@ public class HopeLinkTestSuite extends BaseTestSuite {
   }
 
   private static void checkLongName(TripPlan plan, String longName) {
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteLongName(longName)
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   private static void listLongNames(TripPlan plan) {
@@ -162,16 +161,14 @@ public class HopeLinkTestSuite extends BaseTestSuite {
   public void insideTacoma() throws IOException {
     var plan = flexPlanRequest("Tacoma", "Puyallup", "insideTacoma");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteLongName("Road to Recovery")
-      .assertMatches();
-    SmokeTestItinerary
-      .from(plan)
+      .assertMatches(plan);
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteLongName("Volunteer Services: Southwest")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -188,21 +185,18 @@ public class HopeLinkTestSuite extends BaseTestSuite {
 
     var plan = apiClient.plan(params);
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteLongName("Volunteer Transportation")
-      .assertMatches();
-    SmokeTestItinerary
-      .from(plan)
+      .assertMatches(plan);
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteLongName("Road to Recovery")
-      .assertMatches();
-    SmokeTestItinerary
-      .from(plan)
+      .assertMatches(plan);
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteLongName("Medicaid Transportation")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -293,13 +287,12 @@ public class HopeLinkTestSuite extends BaseTestSuite {
             .build()
         );
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteLongName("D'Arling Direct")
       .hasLeg()
       .withRouteLongName("DC Direct")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -380,13 +373,12 @@ public class HopeLinkTestSuite extends BaseTestSuite {
   @DisplayName("1 Line to Zip")
   public void LinkToZip() throws IOException {
     var plan = flexPlanRequest("ShorelineNStation", "Lynnwood2", "1lineToZip");
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteShortName("1 Line")
       .hasLeg()
       .withRouteLongName("Zip Shuttle")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -398,12 +390,11 @@ public class HopeLinkTestSuite extends BaseTestSuite {
       "LinkToMetroFlex"
     );
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteShortName("1 Line")
       .hasLeg()
       .withRouteLongName("Tukwila")
-      .assertMatches();
+      .assertMatches(plan);
   }
 }

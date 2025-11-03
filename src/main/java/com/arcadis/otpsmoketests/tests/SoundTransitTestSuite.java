@@ -1,7 +1,7 @@
 package com.arcadis.otpsmoketests.tests;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
-import com.arcadis.otpsmoketests.itineraryassertations.SmokeTestItinerary;
+import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertions;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Set;
@@ -141,15 +141,14 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testELineBus");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withMode("BUS")
       .withRouteShortName("E Line")
       .withFarePrice(2.75f, "orca:regular", "orca:cash")
       .withFarePrice(1.0f, "orca:senior", "orca:cash")
       .withFarePrice(1.0f, "orca:special", "orca:electronic")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -162,15 +161,14 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testLightRail");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withMode("TRAM")
       .withRouteShortName("1 Line")
       .withFarePrice(3.0f, "orca:regular", "orca:cash")
       .withFarePrice(1.0f, "orca:senior", "orca:cash")
       .withFarePrice(1.0f, "orca:special", "orca:electronic")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -183,8 +181,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testMultiLegJourney");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withMode("BUS")
       .withRouteShortName("8")
@@ -197,7 +194,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withFarePrice(2.50f, "orca:regular", "orca:cash")
       .withFarePrice(0.50f, "orca:regular", "orca:electronic")
       .withFarePrice(0.00f, "orca:special", "orca:electronic")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -210,13 +207,12 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testColmanDockToUWCSBuilding");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withMode("TRAM")
       .withRouteShortName("1 Line")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -230,26 +226,23 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testKingStStationToTacomaDome");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("S Line")
-      .assertMatches();
-    SmokeTestItinerary
-      .from(plan)
+      .assertMatches(plan);
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("590")
-      .assertMatches();
-    SmokeTestItinerary
-      .from(plan)
+      .assertMatches(plan);
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("578", "577")
       .hasLeg()
       .withRouteShortName("574", "586")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -262,30 +255,27 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testKingStStationTo45thVegThai");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("1 Line")
       .hasLeg()
       .withRouteShortName("44")
-      .assertMatches();
+      .assertMatches(plan);
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("62")
-      .assertMatches();
+      .assertMatches(plan);
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("E Line")
       .hasLeg()
       .withRouteShortName("44")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -301,22 +291,20 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       "testSouthBellevueStationToClimatePledge"
     );
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("550")
       .hasLeg()
       .withRouteShortName("D Line")
-      .assertMatches();
-    SmokeTestItinerary
-      .from(plan)
+      .assertMatches(plan);
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("550")
       .hasLeg()
       .withRouteShortName("Monorail")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -329,15 +317,14 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "sodoToKingSt");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("21")
       .hasLeg()
       .interlinedWithPreviousLeg()
       .withRouteShortName("5")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -351,24 +338,21 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "sodoToNCapitolHill");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("1 Line")
-      .assertMatches();
+      .assertMatches(plan);
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .withStrictTransitMatching()
       .hasLeg()
       .withRouteShortName("1 Line")
       .hasLeg()
       .withRouteShortName("49")
-      .assertMatches();
+      .assertMatches(plan);
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .withStrictTransitMatching()
       .hasLeg()
       .withRouteShortName("50")
@@ -376,7 +360,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withRouteShortName("1 Line")
       .hasLeg()
       .withRouteShortName("49")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -446,12 +430,11 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       "Should get at most 10 itineraries based on custom parameters"
     );
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withMode("BUS")
       .withRouteShortName("E Line")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -464,20 +447,18 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "queenAnneToHopelinkFoodBank");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteShortName("31", "32")
       .hasLeg()
       .withRouteShortName("255")
-      .assertMatches();
-    SmokeTestItinerary
-      .from(plan)
+      .assertMatches(plan);
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteShortName("31", "32")
       .hasLeg()
       .withRouteShortName("239")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -493,18 +474,16 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       "kingStStationToTractorTavernBallard"
     );
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("40")
-      .assertMatches();
-    SmokeTestItinerary
-      .from(plan)
+      .assertMatches(plan);
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("D Line")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -518,29 +497,26 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "kingStStationToMukilteoFerry");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("N Line")
-      .assertMatches();
+      .assertMatches(plan);
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteShortName("1 Line")
       .hasLeg()
       .withRouteShortName("117")
-      .assertMatches();
+      .assertMatches(plan);
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("515")
       .hasLeg()
       .withRouteShortName("117")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -553,20 +529,18 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "greenLakeToKingStStation");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("1 Line")
-      .assertMatches();
+      .assertMatches(plan);
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withRouteShortName("62", "45")
       .hasLeg()
       .withRouteShortName("1 Line")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -579,12 +553,11 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "capitolHillToKingStStation");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("1 Line")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -597,12 +570,11 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "capitolHillToUWStation");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("1 Line")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -615,15 +587,14 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "paseoFremontToSODO");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("5")
       .hasLeg()
       .interlinedWithPreviousLeg()
       .withRouteShortName("21")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -636,12 +607,11 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "capitolHillToColumbiaCity");
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("1 Line")
-      .assertMatches();
+      .assertMatches(plan);
   }
 
   @Test
@@ -657,13 +627,12 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       "s1801SBushPlaceToBellevueTransitCenter"
     );
 
-    SmokeTestItinerary
-      .from(plan)
+    new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
       .withRouteShortName("554")
       .hasLeg()
       .withRouteShortName("550")
-      .assertMatches();
+      .assertMatches(plan);
   }
 }

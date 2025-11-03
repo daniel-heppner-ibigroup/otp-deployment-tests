@@ -61,31 +61,22 @@ import org.opentripplanner.client.model.TripPlan;
  *
  * <p>Note: Walking legs and other non-transit legs are not affected by strict matching.
  */
-public class SmokeTestItinerary {
+public class ItineraryAssertions {
 
   // Each item in this list is a list that represents the complete list of criteria that a leg
   // needs to match in order to pass. For each item, there must be at least one leg that matches all the
   // criteria in the second list.
   private final List<List<LegCriterion>> distinctLegCriteria = new ArrayList<>();
   private List<LegCriterion> currentLegCriteria;
-  private final TripPlan tripPlan;
   private boolean strictTransitMatching = false;
 
-  public SmokeTestItinerary(TripPlan tripPlan) {
-    this.tripPlan = tripPlan;
-  }
-
-  public static SmokeTestItinerary from(TripPlan tripPlan) {
-    return new SmokeTestItinerary(tripPlan);
-  }
-
-  public SmokeTestItinerary hasLeg() {
+  public ItineraryAssertions hasLeg() {
     currentLegCriteria = new ArrayList<>();
     distinctLegCriteria.add(currentLegCriteria);
     return this;
   }
 
-  public SmokeTestItinerary withRouteLongName(String... longNames) {
+  public ItineraryAssertions withRouteLongName(String... longNames) {
     var message = "route '" + Arrays.toString(longNames) + "'";
     currentLegCriteria.add(
       new LegCriterion(
@@ -111,7 +102,7 @@ public class SmokeTestItinerary {
     return this;
   }
 
-  public SmokeTestItinerary withMaxDuration(Duration duration) {
+  public ItineraryAssertions withMaxDuration(Duration duration) {
     var message = "duration '" + duration + "'";
     currentLegCriteria.add(
       new LegCriterion(
@@ -131,7 +122,7 @@ public class SmokeTestItinerary {
     return this;
   }
 
-  public SmokeTestItinerary withRouteShortName(String... shortNames) {
+  public ItineraryAssertions withRouteShortName(String... shortNames) {
     var message = "route '" + Arrays.toString(shortNames) + "'";
     currentLegCriteria.add(
       new LegCriterion(
@@ -157,7 +148,7 @@ public class SmokeTestItinerary {
     return this;
   }
 
-  public SmokeTestItinerary withFarePrice(
+  public ItineraryAssertions withFarePrice(
     float price,
     String riderCategoryId,
     String mediumId
@@ -190,7 +181,7 @@ public class SmokeTestItinerary {
     return this;
   }
 
-  public SmokeTestItinerary interlinedWithPreviousLeg() {
+  public ItineraryAssertions interlinedWithPreviousLeg() {
     currentLegCriteria.add(
       new LegCriterion(
         "interlined with previous leg",
@@ -207,7 +198,7 @@ public class SmokeTestItinerary {
     return this;
   }
 
-  public SmokeTestItinerary withMode(String mode) {
+  public ItineraryAssertions withMode(String mode) {
     var message = "mode " + mode;
     currentLegCriteria.add(
       new LegCriterion(
@@ -226,12 +217,12 @@ public class SmokeTestItinerary {
     return this;
   }
 
-  public SmokeTestItinerary withStrictTransitMatching() {
+  public ItineraryAssertions withStrictTransitMatching() {
     this.strictTransitMatching = true;
     return this;
   }
 
-  public void assertMatches() {
+  public void assertMatches(TripPlan tripPlan) {
     List<LegMatchResult> failedResults = new ArrayList<>();
 
     for (Itinerary itinerary : tripPlan.itineraries()) {
