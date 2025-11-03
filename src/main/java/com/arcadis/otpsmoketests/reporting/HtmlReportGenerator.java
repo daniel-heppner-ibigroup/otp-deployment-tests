@@ -3,8 +3,8 @@ package com.arcadis.otpsmoketests.reporting;
 import static j2html.TagCreator.*;
 
 import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertationError;
-import com.arcadis.otpsmoketests.itineraryassertations.LegMatchingState;
 import com.arcadis.otpsmoketests.itineraryassertations.LegMatchResult;
+import com.arcadis.otpsmoketests.itineraryassertations.LegMatchingState;
 import com.arcadis.otpsmoketests.runner.CustomTestRunner;
 import j2html.tags.ContainerTag;
 import j2html.tags.specialized.DivTag;
@@ -257,14 +257,14 @@ public class HtmlReportGenerator {
   private ContainerTag generateMatchResult(LegMatchResult legMatchResult) {
     ContainerTag resultDiv = div(attrs(".match-result"));
 
-    if (!legMatchResult.getErrors().isEmpty()) {
+    if (!legMatchResult.errors().isEmpty()) {
       resultDiv.with(
         div(
           attrs(".match-errors"),
           h6("Errors:"),
           ul(
             legMatchResult
-              .getErrors()
+              .errors()
               .stream()
               .map(error -> li(text(error)))
               .toArray(ContainerTag[]::new)

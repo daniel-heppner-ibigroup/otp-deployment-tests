@@ -262,7 +262,7 @@ public class SmokeTestItinerary {
       Itinerary itinerary = tripPlan.itineraries().get(i);
       error.append("Itinerary ").append(i + 1).append(":\n");
 
-      for (String err : result.getErrors()) {
+      for (String err : result.errors()) {
         error.append("  - ").append(err).append("\n");
       }
 
@@ -403,7 +403,12 @@ public class SmokeTestItinerary {
     if (errors.isEmpty()) {
       return LegMatchResult.success();
     } else {
-      return new LegMatchResult(completeMatches, partialMatches, extraMatches);
+      return new LegMatchResult(
+        completeMatches,
+        partialMatches,
+        extraMatches,
+        errors
+      );
     }
   }
 

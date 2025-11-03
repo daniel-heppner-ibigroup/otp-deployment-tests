@@ -10,10 +10,11 @@ public record LegMatchResult(
   List<LegMatchingState> successfulMatches,
   List<LegMatchingState> partialMatches,
 
-  List<Leg> extraMatches
+  List<Leg> extraMatches,
+  List<String> errors
 ) {
   public static LegMatchResult success() {
-    return new LegMatchResult(List.of(), List.of(), List.of());
+    return new LegMatchResult(List.of(), List.of(), List.of(), List.of());
   }
 
   // Provide compatibility methods for existing code
