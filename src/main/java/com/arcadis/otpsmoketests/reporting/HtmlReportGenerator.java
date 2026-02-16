@@ -3,7 +3,7 @@ package com.arcadis.otpsmoketests.reporting;
 import static j2html.TagCreator.*;
 
 import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertationError;
-import com.arcadis.otpsmoketests.itineraryassertations.LegMatchResult;
+import com.arcadis.otpsmoketests.itineraryassertations.ItineraryMatchResult;
 import com.arcadis.otpsmoketests.itineraryassertations.LegMatchingState;
 import com.arcadis.otpsmoketests.runner.CustomTestRunner;
 import j2html.tags.ContainerTag;
@@ -254,16 +254,16 @@ public class HtmlReportGenerator {
     return errorDiv;
   }
 
-  private ContainerTag generateMatchResult(LegMatchResult legMatchResult) {
+  private ContainerTag generateMatchResult(ItineraryMatchResult itineraryMatchResult) {
     ContainerTag resultDiv = div(attrs(".match-result"));
 
-    if (!legMatchResult.errors().isEmpty()) {
+    if (!itineraryMatchResult.errors().isEmpty()) {
       resultDiv.with(
         div(
           attrs(".match-errors"),
           h6("Errors:"),
           ul(
-            legMatchResult
+            itineraryMatchResult
               .errors()
               .stream()
               .map(error -> li(text(error)))
@@ -273,13 +273,13 @@ public class HtmlReportGenerator {
       );
     }
 
-    if (!legMatchResult.getPartialMatches().isEmpty()) {
+    if (!itineraryMatchResult.getPartialMatches().isEmpty()) {
       resultDiv.with(
         div(
           attrs(".partial-matches"),
           h6("Partial Matches:"),
           ul(
-            legMatchResult
+            itineraryMatchResult
               .getPartialMatches()
               .stream()
               .map(this::generatePartialMatch)

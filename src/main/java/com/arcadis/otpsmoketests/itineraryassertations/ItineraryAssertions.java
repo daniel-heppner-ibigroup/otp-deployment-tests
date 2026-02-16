@@ -71,6 +71,10 @@ public class ItineraryAssertions {
   private List<LegCriterion> currentLegCriteria;
   private boolean strictTransitMatching = false;
 
+  /***
+   * Adds a new distinct leg criteria set and moves the current leg pointer to the new set.
+   * After calling this, you can start to build new criteria on top of the new expected leg.
+   */
   public ItineraryAssertions hasLeg() {
     currentLegCriteria = new ArrayList<>();
     distinctLegCriteria.add(currentLegCriteria);
@@ -218,16 +222,24 @@ public class ItineraryAssertions {
     return this;
   }
 
+  /***
+   * Enables strict transit matching, which ensures that *all* legs meet some criteria,
+   * and that there are no "extra" transit legs with no matching criteria.
+   */
   public ItineraryAssertions withStrictTransitMatching() {
     this.strictTransitMatching = true;
     return this;
   }
 
+  /***
+   * Asserts that at least one itinerary meets the criteria
+   * @param tripPlan Trip plan containing the itineraries to be checked
+   */
   public void assertMatches(TripPlan tripPlan) {
-    List<LegMatchResult> failedResults = new ArrayList<>();
+    List<ItineraryMatchResult> failedResults = new ArrayList<>();
 
     for (Itinerary itinerary : tripPlan.itineraries()) {
-      LegMatchResult result = matchesAllLegs(itinerary);
+      ItineraryMatchResult result = matchesAllLegs(itinerary);
       if (result.isSuccess()) {
         return;
       }
@@ -235,6 +247,7 @@ public class ItineraryAssertions {
     }
 
     // If we get here, no itinerary matched all legs
+    // the following code is to generate a useful failure message
     String strictMatchingText = strictTransitMatching
       ? " with strict transit matching"
       : "";
@@ -257,7 +270,7 @@ public class ItineraryAssertions {
     failuresSection.append("%nFailures by itinerary:%n");
 
     for (int i = 0; i < failedResults.size(); i++) {
-      LegMatchResult result = failedResults.get(i);
+      ItineraryMatchResult result = failedResults.get(i);
       Itinerary itinerary = tripPlan.itineraries().get(i);
       failuresSection.append("Itinerary %d:%n".formatted(i + 1));
 
@@ -302,7 +315,7 @@ public class ItineraryAssertions {
    * @param itinerary Itinerary to be checked
    * @return MatchResult object containing the results
    */
-  private LegMatchResult matchesAllLegs(Itinerary itinerary) {
+  private ItineraryMatchResult matchesAllLegs(Itinerary itinerary) {
     List<Leg> remainingLegs = new ArrayList<>(itinerary.legs());
     List<String> errors = new ArrayList<>();
     List<LegMatchingState> completeMatches = new ArrayList<>();
@@ -354,7 +367,9 @@ public class ItineraryAssertions {
       }
     }
 
-    List<Leg> extraMatches = new ArrayList<>();
+    // Storing left over transit legs that didn't match
+    // Left empty if strictTransitMatching is off
+    List<Leg> extraLegs = new ArrayList<>();
     // If strict transit matching is enabled, check that no additional transit legs remain
     if (strictTransitMatching && errors.isEmpty()) {
       List<Leg> additionalTransitLegs = remainingLegs
@@ -363,7 +378,7 @@ public class ItineraryAssertions {
         .toList();
 
       if (!additionalTransitLegs.isEmpty()) {
-        extraMatches.addAll(additionalTransitLegs);
+        extraLegs.addAll(additionalTransitLegs);
         String extraLegNames = additionalTransitLegs
           .stream()
           .map(leg ->
@@ -384,12 +399,12 @@ public class ItineraryAssertions {
     }
 
     if (errors.isEmpty()) {
-      return LegMatchResult.success(completeMatches);
+      return ItineraryMatchResult.success(completeMatches);
     } else {
-      return new LegMatchResult(
+      return new ItineraryMatchResult(
         completeMatches,
         partialMatches,
-        extraMatches,
+        extraLegs,
         errors
       );
     }
