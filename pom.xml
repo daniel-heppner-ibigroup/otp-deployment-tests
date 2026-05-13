@@ -15,6 +15,7 @@
         <junit.version>5.11.2</junit.version>
         <spring.boot.version>3.2.1</spring.boot.version>
         <slf4j.version>2.0.16</slf4j.version>
+        <otp.client.version>2.0.2-SNAPSHOT</otp.client.version>
 
         <plugin.prettier.version>0.22</plugin.prettier.version>
         <plugin.prettier.goal>write</plugin.prettier.goal>
@@ -31,8 +32,13 @@
     <dependencies>
         <dependency>
             <groupId>org.opentripplanner</groupId>
+            <artifactId>otp-client-assertions</artifactId>
+            <version>2.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.opentripplanner</groupId>
             <artifactId>otp-client</artifactId>
-            <version>0.1.13</version>
+            <version>${otp.client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

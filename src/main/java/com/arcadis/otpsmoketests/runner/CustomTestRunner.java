@@ -1,7 +1,6 @@
 package com.arcadis.otpsmoketests.runner;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
-import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertationError;
 import com.arcadis.otpsmoketests.reporting.HtmlReportGenerator;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -9,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+import org.opentripplanner.assertions.ItineraryAssertionError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +28,7 @@ public class CustomTestRunner {
     public TestResult(
       String testName,
       boolean passed,
-      ItineraryAssertationError exception,
+      ItineraryAssertionError exception,
       long durationMs
     ) {
       this.testName = testName;
@@ -110,9 +110,9 @@ public class CustomTestRunner {
           testResults.add(new TestResult(testName, true, null, testDuration));
           logger.debug("Test passed: {}.{}", suiteName, testName);
         } catch (InvocationTargetException e) {
-          if (e.getTargetException() instanceof ItineraryAssertationError) {
+          if (e.getTargetException() instanceof ItineraryAssertionError) {
             long testDuration = (System.nanoTime() - testStartTime) / 1_000_000;
-            ItineraryAssertationError cause = (ItineraryAssertationError) e.getCause();
+            ItineraryAssertionError cause = (ItineraryAssertionError) e.getCause();
             testResults.add(
               new TestResult(testName, false, cause, testDuration)
             );
