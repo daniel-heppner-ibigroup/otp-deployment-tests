@@ -2,9 +2,6 @@ package com.arcadis.otpsmoketests.reporting;
 
 import static j2html.TagCreator.*;
 
-import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertationError;
-import com.arcadis.otpsmoketests.itineraryassertations.ItineraryMatchResult;
-import com.arcadis.otpsmoketests.itineraryassertations.LegMatchingState;
 import com.arcadis.otpsmoketests.runner.CustomTestRunner;
 import j2html.tags.ContainerTag;
 import j2html.tags.specialized.DivTag;
@@ -15,6 +12,9 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import org.opentripplanner.assertions.ItineraryAssertionError;
+import org.opentripplanner.assertions.ItineraryMatchResult;
+import org.opentripplanner.assertions.LegMatchingState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -202,9 +202,7 @@ public class HtmlReportGenerator {
     );
 
     if (!testResult.isPassed() && testResult.getException() != null) {
-      if (
-        testResult.getException() instanceof ItineraryAssertationError error
-      ) {
+      if (testResult.getException() instanceof ItineraryAssertionError error) {
         testDiv.with(generateItineraryErrorDetails(error));
       } else {
         testDiv.with(
@@ -224,7 +222,7 @@ public class HtmlReportGenerator {
   }
 
   private ContainerTag<DivTag> generateItineraryErrorDetails(
-    ItineraryAssertationError error
+    ItineraryAssertionError error
   ) {
     ContainerTag<DivTag> errorDiv = div(
       attrs(".error-details"),
@@ -254,7 +252,9 @@ public class HtmlReportGenerator {
     return errorDiv;
   }
 
-  private ContainerTag generateMatchResult(ItineraryMatchResult itineraryMatchResult) {
+  private ContainerTag generateMatchResult(
+    ItineraryMatchResult itineraryMatchResult
+  ) {
     ContainerTag resultDiv = div(attrs(".match-result"));
 
     if (!itineraryMatchResult.errors().isEmpty()) {
