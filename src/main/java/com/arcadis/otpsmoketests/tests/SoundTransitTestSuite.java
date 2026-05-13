@@ -1,7 +1,6 @@
 package com.arcadis.otpsmoketests.tests;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
-import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertions;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Set;
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.opentripplanner.assertions.ItineraryAssertions;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.parameters.TripPlanParameters;
 import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
@@ -27,7 +27,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
     super(
       deploymentName,
       baseUrl,
-      "https://87sp37ezga.execute-api.us-east-1.amazonaws.com/st/autocomplete",
+      "https://a534sqhh3m.execute-api.us-east-1.amazonaws.com/st-qa-west/autocomplete",
       47.61097,
       -122.33701
     );
@@ -55,14 +55,10 @@ public class SoundTransitTestSuite extends BaseTestSuite {
     geocoder.add("CASINO_RD", 47.92175434762228, -122.23896905562611);
     geocoder.add("MARYSVILLE", 48.05523331013222, -122.17763080699298);
     try {
-      geocoder.addGeocoded(
-        "NORTHGATE_MALL",
-        "Northgate Mall, Seattle",
-        "openstreetmap"
-      );
+      geocoder.addGeocoded("NORTHGATE_MALL", "Northgate Mall", "openstreetmap");
       geocoder.addGeocoded(
         "UW_STATION",
-        "University of Washington Station",
+        "University of Washington",
         "openstreetmap"
       );
       geocoder.addGeocoded("colman dock", "Colman Dock", "openstreetmap");
@@ -73,7 +69,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       );
       geocoder.addGeocoded(
         "king st station",
-        "King St Station",
+        "King Street Station",
         "openstreetmap"
       );
       geocoder.addGeocoded("tacoma dome", "Tacoma Dome", "openstreetmap");
@@ -82,17 +78,13 @@ public class SoundTransitTestSuite extends BaseTestSuite {
         "45th Vegetarian Thai",
         "openstreetmap"
       );
-      geocoder.addGeocoded(
-        "s bellevue station",
-        "South Bellevue Station",
-        "otp"
-      );
+      geocoder.addGeocoded("s bellevue station", "South Bellevue", "otp");
       geocoder.addGeocoded("climate pledge", "Climate Pledge", "openstreetmap");
       geocoder.addGeocoded("1st and lander", "1st ave s and s lander", "otp");
       geocoder.addGeocoded(
         "e prospect and broadway",
-        "East Prospect Street & Broadway East",
-        "openstreetmap"
+        "10th Ave E & E Prospect St",
+        "otp"
       );
       geocoder.addGeocoded(
         "hopelink food bank",
@@ -128,7 +120,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
   @Override
   protected TripPlanParameters getDefaultTripPlanParameters() {
     // Sound Transit specific default parameters
-    return TripPlanParameters.builder().withWalkReluctance(15).build();
+    return TripPlanParameters.builder().withWalkReluctance(15d).build();
   }
 
   @Test
@@ -145,7 +137,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .hasLeg()
       .withMode("BUS")
       .withRouteShortName("E Line")
-      .withFarePrice(2.75f, "orca:regular", "orca:cash")
+      .withFarePrice(3.00f, "orca:regular", "orca:cash")
       .withFarePrice(1.0f, "orca:senior", "orca:cash")
       .withFarePrice(1.0f, "orca:special", "orca:electronic")
       .assertMatches(plan);
@@ -192,8 +184,8 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withMode("BUS")
       .withRouteShortName("201", "202")
       .withFarePrice(2.50f, "orca:regular", "orca:cash")
-      .withFarePrice(0.50f, "orca:regular", "orca:electronic")
-      .withFarePrice(0.00f, "orca:special", "orca:electronic")
+      .withFarePrice(2.50f, "orca:regular", "orca:electronic")
+      .withFarePrice(1.00f, "orca:special", "orca:electronic")
       .assertMatches(plan);
   }
 
@@ -369,7 +361,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
     var routes = this.apiClient.routes();
     var actualAgencies = routes
       .stream()
-      .map(route -> route.agency().name())
+      .map(route -> route.getAgency().getName())
       .distinct()
       .sorted()
       .toList();

@@ -7,7 +7,6 @@ import static org.opentripplanner.client.model.RequestMode.TRANSIT;
 import static org.opentripplanner.client.model.RequestMode.WALK;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
-import com.arcadis.otpsmoketests.itineraryassertations.ItineraryAssertions;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -17,6 +16,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.opentripplanner.assertions.ItineraryAssertions;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.model.TripPlan;
 import org.opentripplanner.client.parameters.TripPlanParameters;
@@ -150,8 +150,8 @@ public class HopeLinkTestSuite extends BaseTestSuite {
       .stream()
       .flatMap(itin -> itin.legs().stream())
       .toList()) {
-      if (itin.route() != null && itin.route().longName().isPresent()) {
-        System.out.println(itin.route().longName().get());
+      if (itin.route() != null && itin.route().getLongName() != null) {
+        System.out.println(itin.route().getLongName());
       }
     }
   }
