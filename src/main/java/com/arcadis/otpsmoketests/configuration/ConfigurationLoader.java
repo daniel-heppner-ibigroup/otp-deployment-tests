@@ -28,6 +28,22 @@ public class ConfigurationLoader {
     List<Configuration.DeploymentUnderTest> deployments = new ArrayList<>();
 
     for (KdlNode node : document.nodes()) {
+      if ("reports".equals(node.name())) {
+        config.setReports(
+          new Configuration.ReportSettings(
+            node
+              .getProperty("directory")
+              .map(p -> p.value().toString())
+              .orElse("results"),
+            Integer.parseInt(
+              node
+                .getProperty("retention-days")
+                .map(p -> p.value().toString())
+                .orElse("30")
+            )
+          )
+        );
+      }
       if ("deployment".equals(node.name())) {
         deployments.add(parseDeployment(node));
       }

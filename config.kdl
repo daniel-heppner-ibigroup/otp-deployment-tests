@@ -1,6 +1,9 @@
 // Example OTP deployment configuration
 // This file demonstrates how to configure deployments and test suites
 
+// Mount this directory on persistent storage to retain reports across restarts.
+reports directory="results" retention-days=30
+
 deployment name="SoundTransitQA" url="https://sound-transit-qa-otp.ibi-transit.com" {
   test-suite name="ST" class="SoundTransit" interval="*/10 * * * *"
 }

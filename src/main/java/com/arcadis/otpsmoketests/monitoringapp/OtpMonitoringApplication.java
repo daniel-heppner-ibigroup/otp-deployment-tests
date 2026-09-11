@@ -3,9 +3,10 @@ package com.arcadis.otpsmoketests.monitoringapp;
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.configuration.Configuration;
 import com.arcadis.otpsmoketests.configuration.ConfigurationLoader;
+import com.arcadis.otpsmoketests.reporting.ReportRoutes;
+import com.arcadis.otpsmoketests.reporting.ReportSnapshot;
+import com.arcadis.otpsmoketests.reporting.ReportStore;
 import com.arcadis.otpsmoketests.runner.CustomTestRunner;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinJackson;
 import io.micrometer.core.instrument.Gauge;
@@ -13,6 +14,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import it.sauronsoftware.cron4j.Scheduler;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,11 +56,15 @@ public class OtpMonitoringApplication {
       // Set the meter registry for all test suites to use the same registry as the HTTP endpoint
       BaseTestSuite.setMeterRegistry(meterRegistry);
 
-      TestRunner testRunner = new TestRunner(meterRegistry, config);
-
-      // Configure ObjectMapper with JSR310 module for Java 8 time support
-      ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.registerModule(new JavaTimeModule());
+      ReportStore reportStore = new ReportStore(
+        Path.of(config.getReports().directory()),
+        config.getReports().retentionDays()
+      );
+      TestRunner testRunner = new TestRunner(
+        meterRegistry,
+        config,
+        reportStore
+      );
 
       // Start Javalin HTTP server with custom ObjectMapper
       Javalin app = Javalin
@@ -66,6 +72,7 @@ public class OtpMonitoringApplication {
           jConfig.jsonMapper(new JavalinJackson());
         })
         .start(8080);
+      ReportRoutes.register(app, reportStore);
       app.get("/run-tests", ctx -> ctx.json(testRunner.runTestsManually()));
       app.get("/health", ctx -> ctx.json(Map.of("status", "UP")));
       app.get(
@@ -106,7 +113,7 @@ class TestRunner {
   );
   private final MeterRegistry meterRegistry;
   private final Map<String, TestSuiteConfig> testSuites;
-  private final Configuration configuration;
+  private final ReportStore reportStore;
 
   public record TestSuiteConfig(
     Class<BaseTestSuite> clazz,
@@ -121,9 +128,13 @@ class TestRunner {
   private final Map<String, AtomicLong> lastRunSuiteTestsFailed = new ConcurrentHashMap<>();
   private final Map<String, AtomicLong> lastRunSuiteDurationMs = new ConcurrentHashMap<>();
 
-  public TestRunner(MeterRegistry meterRegistry, Configuration configuration) {
+  public TestRunner(
+    MeterRegistry meterRegistry,
+    Configuration configuration,
+    ReportStore reportStore
+  ) {
     this.meterRegistry = meterRegistry;
-    this.configuration = configuration;
+    this.reportStore = reportStore;
     this.testSuites = new HashMap<>();
 
     // Add test suites from configuration
@@ -246,12 +257,7 @@ class TestRunner {
     );
 
     // Run the test suite with the custom URL and deployment name
-    CustomTestRunner.SuiteResult suiteResult = CustomTestRunner.runTestSuite(
-      config.clazz(),
-      config.suiteName(),
-      config.baseUrl(),
-      config.deploymentName()
-    );
+    CustomTestRunner.SuiteResult suiteResult = runAndSave(config);
 
     // Update suite-specific last run metrics
     lastRunSuiteTestsFound
@@ -279,6 +285,35 @@ class TestRunner {
     }
   }
 
+  private CustomTestRunner.SuiteResult runAndSave(TestSuiteConfig config) {
+    var result = CustomTestRunner.runTestSuite(
+      config.clazz(),
+      config.suiteName(),
+      config.baseUrl(),
+      config.deploymentName()
+    );
+    try {
+      String id = reportStore.newId();
+      reportStore.save(
+        ReportSnapshot.from(
+          id,
+          result,
+          config.deploymentName(),
+          config.baseUrl()
+        )
+      );
+      logger.info("Saved test report: /reports/{}", id);
+    } catch (Exception e) {
+      logger.error(
+        "Could not save report for {}.{}",
+        config.deploymentName(),
+        config.suiteName(),
+        e
+      );
+    }
+    return result;
+  }
+
   private Map<String, Object> executeTests() {
     String runId = UUID.randomUUID().toString();
     Instant startTime = Instant.now();
@@ -298,12 +333,7 @@ class TestRunner {
       TestSuiteConfig config = entry.getValue();
 
       // Run the test suite with the custom URL and deployment name
-      CustomTestRunner.SuiteResult suiteResult = CustomTestRunner.runTestSuite(
-        config.clazz(),
-        config.suiteName(),
-        config.baseUrl(),
-        config.deploymentName()
-      );
+      CustomTestRunner.SuiteResult suiteResult = runAndSave(config);
 
       suiteResults.put(testSuiteKey, suiteResult);
 

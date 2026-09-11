@@ -1,14 +1,15 @@
 package com.arcadis.otpsmoketests.runner;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
-import com.arcadis.otpsmoketests.reporting.HtmlReportGenerator;
+import com.arcadis.otpsmoketests.reporting.TripCapture;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.Instant;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.opentripplanner.assertions.ItineraryAssertionError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,17 +25,40 @@ public class CustomTestRunner {
     private final boolean passed;
     private final Throwable exception;
     private final long durationMs;
+    private final String displayName;
+    private final List<TripCapture.CapturedRequest> requests;
 
     public TestResult(
       String testName,
       boolean passed,
-      ItineraryAssertionError exception,
+      Throwable exception,
       long durationMs
     ) {
+      this(testName, testName, passed, exception, durationMs, List.of());
+    }
+
+    public TestResult(
+      String testName,
+      String displayName,
+      boolean passed,
+      Throwable exception,
+      long durationMs,
+      List<TripCapture.CapturedRequest> requests
+    ) {
       this.testName = testName;
+      this.displayName = displayName;
       this.passed = passed;
       this.exception = exception;
       this.durationMs = durationMs;
+      this.requests = List.copyOf(requests);
+    }
+
+    public String getDisplayName() {
+      return displayName;
+    }
+
+    public List<TripCapture.CapturedRequest> getRequests() {
+      return requests;
     }
 
     public String getTestName() {
@@ -57,7 +81,8 @@ public class CustomTestRunner {
   public record SuiteResult(
     String suiteName,
     List<TestResult> testResults,
-    long totalDurationMs
+    long totalDurationMs,
+    Instant startedAt
   ) {
     public long getTestsFoundCount() {
       return testResults.size();
@@ -83,67 +108,87 @@ public class CustomTestRunner {
     String deploymentName
   ) {
     List<TestResult> testResults = new ArrayList<>();
+    Instant startedAt = Instant.now();
     long suiteStartTime = System.nanoTime();
 
-    try {
-      // Try constructor with baseUrl and deploymentName parameters first
-      BaseTestSuite suiteInstance = getBaseTestSuite(
-        suiteClass,
-        baseUrl,
-        deploymentName
-      );
-
-      // Find all @Test methods
-      Method[] methods = suiteClass.getMethods();
-      var filteredMethods = Arrays
-        .stream(methods)
-        .filter(m -> m.isAnnotationPresent(Test.class))
-        .toList();
-      for (Method method : filteredMethods) {
-        String testName = method.getName();
-        long testStartTime = System.nanoTime();
-
-        try {
-          logger.debug("Running test: {}.{}", suiteName, testName);
-          method.invoke(suiteInstance);
-          long testDuration = (System.nanoTime() - testStartTime) / 1_000_000;
-          testResults.add(new TestResult(testName, true, null, testDuration));
-          logger.debug("Test passed: {}.{}", suiteName, testName);
-        } catch (InvocationTargetException e) {
-          if (e.getTargetException() instanceof ItineraryAssertionError) {
-            long testDuration = (System.nanoTime() - testStartTime) / 1_000_000;
-            ItineraryAssertionError cause = (ItineraryAssertionError) e.getCause();
-            testResults.add(
-              new TestResult(testName, false, cause, testDuration)
-            );
-            logger.error("Test failed: {}.{}", suiteName, testName, cause);
-          }
-        }
+    BaseTestSuite suiteInstance;
+    try (TripCapture setupCapture = TripCapture.begin()) {
+      try {
+        suiteInstance = getBaseTestSuite(suiteClass, baseUrl, deploymentName);
+      } catch (
+        ReflectiveOperationException | RuntimeException | AssertionError e
+      ) {
+        Throwable cause = unwrap(e);
+        testResults.add(
+          new TestResult(
+            "suite-setup",
+            "Suite setup",
+            false,
+            cause,
+            elapsed(suiteStartTime),
+            setupCapture.requests()
+          )
+        );
+        logger.error("Failed to initialize test suite: {}", suiteName, cause);
+        return new SuiteResult(
+          suiteName,
+          testResults,
+          elapsed(suiteStartTime),
+          startedAt
+        );
       }
-    } catch (Exception e) {
-      logger.error("Failed to instantiate test suite: {}", suiteName, e);
     }
-
-    long totalDuration = (System.nanoTime() - suiteStartTime) / 1_000_000;
-    SuiteResult suiteResult = new SuiteResult(
+    var methods = Arrays
+      .stream(suiteClass.getMethods())
+      .filter(method -> method.isAnnotationPresent(Test.class))
+      .sorted(Comparator.comparing(Method::getName))
+      .toList();
+    for (Method method : methods) {
+      long start = System.nanoTime();
+      String name = method.getName();
+      String displayName = method.isAnnotationPresent(DisplayName.class)
+        ? method.getAnnotation(DisplayName.class).value()
+        : name;
+      try (TripCapture capture = TripCapture.begin()) {
+        Throwable failure = null;
+        try {
+          method.invoke(suiteInstance);
+        } catch (
+          ReflectiveOperationException | RuntimeException | AssertionError e
+        ) {
+          failure = unwrap(e);
+          if (failure instanceof VirtualMachineError fatal) throw fatal;
+          if (failure instanceof ThreadDeath fatal) throw fatal;
+          logger.error("Test failed: {}.{}", suiteName, name, failure);
+        }
+        testResults.add(
+          new TestResult(
+            name,
+            displayName,
+            failure == null,
+            failure,
+            elapsed(start),
+            capture.requests()
+          )
+        );
+      }
+    }
+    return new SuiteResult(
       suiteName,
       testResults,
-      totalDuration
+      elapsed(suiteStartTime),
+      startedAt
     );
+  }
 
-    // Generate HTML report
-    try {
-      HtmlReportGenerator reportGenerator = new HtmlReportGenerator();
-      reportGenerator.generateReport(suiteResult, deploymentName, baseUrl);
-    } catch (Exception e) {
-      logger.error(
-        "Failed to generate HTML report for suite '{}'",
-        suiteName,
-        e
-      );
-    }
+  private static long elapsed(long start) {
+    return (System.nanoTime() - start) / 1_000_000;
+  }
 
-    return suiteResult;
+  private static Throwable unwrap(Throwable failure) {
+    return failure instanceof InvocationTargetException invocation
+      ? invocation.getTargetException()
+      : failure;
   }
 
   @NotNull
