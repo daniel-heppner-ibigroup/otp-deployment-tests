@@ -10,6 +10,7 @@ import com.arcadis.otpsmoketests.BaseTestSuite;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -34,7 +35,8 @@ public class HopeLinkTestSuite extends BaseTestSuite {
       baseUrl,
       "https://im5b1wfh6d.execute-api.us-east-1.amazonaws.com/commtrans/autocomplete",
       47.61097,
-      -122.33701
+      -122.33701,
+      ZoneId.of("America/Los_Angeles")
     );
   }
 

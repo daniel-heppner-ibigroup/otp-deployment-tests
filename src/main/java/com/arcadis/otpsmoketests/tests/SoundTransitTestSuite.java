@@ -3,6 +3,7 @@ package com.arcadis.otpsmoketests.tests;
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import java.io.IOException;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
@@ -27,9 +28,10 @@ public class SoundTransitTestSuite extends BaseTestSuite {
     super(
       deploymentName,
       baseUrl,
-      "https://a534sqhh3m.execute-api.us-east-1.amazonaws.com/st-qa-west/autocomplete",
+      "https://im5b1wfh6d.execute-api.us-east-1.amazonaws.com/commtrans/autocomplete",
       47.61097,
-      -122.33701
+      -122.33701,
+      ZoneId.of("America/Los_Angeles")
     );
   }
 
@@ -286,14 +288,14 @@ public class SoundTransitTestSuite extends BaseTestSuite {
     new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
-      .withRouteShortName("550")
+      .withRouteShortName("2 Line")
       .hasLeg()
       .withRouteShortName("D Line")
       .assertMatches(plan);
     new ItineraryAssertions()
       .hasLeg()
       .withStrictTransitMatching()
-      .withRouteShortName("550")
+      .withRouteShortName("2 Line")
       .hasLeg()
       .withRouteShortName("Monorail")
       .assertMatches(plan);
@@ -497,15 +499,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     new ItineraryAssertions()
       .hasLeg()
-      .withRouteShortName("1 Line")
-      .hasLeg()
-      .withRouteShortName("117")
-      .assertMatches(plan);
-
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("515")
+      .withRouteShortName("1 Line", "2 Line")
       .hasLeg()
       .withRouteShortName("117")
       .assertMatches(plan);
@@ -624,7 +618,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       .withStrictTransitMatching()
       .withRouteShortName("554")
       .hasLeg()
-      .withRouteShortName("550")
+      .withRouteShortName("2 Line")
       .assertMatches(plan);
   }
 }

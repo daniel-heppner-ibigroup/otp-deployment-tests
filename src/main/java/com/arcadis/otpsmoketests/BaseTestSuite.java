@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Objects;
 import java.util.Set;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.parameters.TripPlanParameters;
@@ -78,13 +79,15 @@ public abstract class BaseTestSuite {
    *
    * @param suiteName The name of the test suite (used for metrics).
    * @param otpWebUrl The base URL for the OTP instance being tested.
+   * @param timeZone The time zone used by the OTP deployment.
    */
   protected BaseTestSuite(
     String suiteName,
     String otpWebUrl,
     String peliasBaseUrl,
     double lat,
-    double lon
+    double lon,
+    ZoneId timeZone
   ) {
     this.suiteName = suiteName;
     this.otpWebUrl = otpWebUrl;
@@ -94,11 +97,9 @@ public abstract class BaseTestSuite {
         .peliasBaseUrl(peliasBaseUrl)
         .focusPoint(lat, lon)
         .build();
-    // Assuming all tests run against OTP instances configured for America/New_York
-    // If this changes, this might need to become a parameter.
     this.apiClient =
       new TimedOtpApiClient(
-        ZoneId.of("America/New_York"),
+        Objects.requireNonNull(timeZone, "timeZone must not be null"),
         otpWebUrl,
         meterRegistry,
         suiteName

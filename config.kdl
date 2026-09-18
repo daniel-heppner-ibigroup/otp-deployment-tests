@@ -12,6 +12,6 @@ deployment name="SoundTransitProd" url="https://sound-transit-otp-west.ibi-trans
     test-suite name="ST" class="SoundTransit" interval="*/10 * * * *"
 }
 
-deployment name="Hope Link Prod" url="https://hopelink-otp.ibi-transit.com/" {
+deployment name="Hope Link Prod" url="https://hopelink-otp.ibi-transit.com" {
   test-suite name="Hope Link Basic" class="HopeLink" interval="*/10 * * * *"
 }
