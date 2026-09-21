@@ -4,12 +4,15 @@ import com.arcadis.otpsmoketests.geocoding.GeocodingService;
 import com.arcadis.otpsmoketests.monitoringapp.TimedOtpApiClient;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Metrics;
+import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import org.opentripplanner.client.model.RequestMode;
@@ -115,6 +118,17 @@ public abstract class BaseTestSuite {
   protected abstract void initializeCoordinates();
 
   /**
+   * Returns data-driven test cases supplied by this suite.
+   *
+   * <p>Annotation-based suites can rely on the empty default. The custom runner executes each
+   * returned case independently with the same reporting and request capture used for {@code @Test}
+   * methods.
+   */
+  public Collection<ExecutableTestCase> testCases() {
+    return List.of();
+  }
+
+  /**
    * Creates default TripPlanParameters that can be used as a base for test suite customizations.
    *
    * Subclasses can override this method to provide suite-specific default parameters.
@@ -143,10 +157,38 @@ public abstract class BaseTestSuite {
    * @return A LocalDateTime for the next Friday at the specified time
    */
   public static LocalDateTime weekdayAtTime(LocalTime localTime) {
-    var today = LocalDate.now();
-    return today
-      .with(TemporalAdjusters.next(DayOfWeek.FRIDAY))
-      .atTime(localTime);
+    return nextServiceTime(DayOfWeek.FRIDAY, localTime);
+  }
+
+  /**
+   * Returns a LocalDateTime on the next occurrence of the requested service day.
+   * The current date is always excluded to avoid realtime data affecting test results.
+   *
+   * @param serviceDay The day of week on which the test should run
+   * @param localTime The time of day to use
+   * @return A LocalDateTime on the next occurrence of the requested service day
+   */
+  public static LocalDateTime nextServiceTime(
+    DayOfWeek serviceDay,
+    LocalTime localTime
+  ) {
+    return nextServiceTime(serviceDay, localTime, Clock.systemDefaultZone());
+  }
+
+  /** Clock-aware overload for deterministic suite tests. */
+  protected static LocalDateTime nextServiceTime(
+    DayOfWeek serviceDay,
+    LocalTime localTime,
+    Clock clock
+  ) {
+    return LocalDate
+      .now(Objects.requireNonNull(clock, "clock must not be null"))
+      .with(
+        TemporalAdjusters.next(
+          Objects.requireNonNull(serviceDay, "serviceDay must not be null")
+        )
+      )
+      .atTime(Objects.requireNonNull(localTime, "localTime must not be null"));
   }
 
   public static TripPlanParametersBuilder defaultBuilder() {

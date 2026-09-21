@@ -1,6 +1,7 @@
 package com.arcadis.otpsmoketests.runner;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
+import com.arcadis.otpsmoketests.ExecutableTestCase;
 import com.arcadis.otpsmoketests.reporting.TripCapture;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -111,10 +112,15 @@ public class CustomTestRunner {
     Instant startedAt = Instant.now();
     long suiteStartTime = System.nanoTime();
 
-    BaseTestSuite suiteInstance;
+    List<ExecutableTestCase> testCases;
     try (TripCapture setupCapture = TripCapture.begin()) {
       try {
-        suiteInstance = getBaseTestSuite(suiteClass, baseUrl, deploymentName);
+        BaseTestSuite suiteInstance = getBaseTestSuite(
+          suiteClass,
+          baseUrl,
+          deploymentName
+        );
+        testCases = discoverTestCases(suiteClass, suiteInstance);
       } catch (
         ReflectiveOperationException | RuntimeException | AssertionError e
       ) {
@@ -138,33 +144,22 @@ public class CustomTestRunner {
         );
       }
     }
-    var methods = Arrays
-      .stream(suiteClass.getMethods())
-      .filter(method -> method.isAnnotationPresent(Test.class))
-      .sorted(Comparator.comparing(Method::getName))
-      .toList();
-    for (Method method : methods) {
+    for (ExecutableTestCase testCase : testCases) {
       long start = System.nanoTime();
-      String name = method.getName();
-      String displayName = method.isAnnotationPresent(DisplayName.class)
-        ? method.getAnnotation(DisplayName.class).value()
-        : name;
       try (TripCapture capture = TripCapture.begin()) {
         Throwable failure = null;
         try {
-          method.invoke(suiteInstance);
-        } catch (
-          ReflectiveOperationException | RuntimeException | AssertionError e
-        ) {
+          testCase.execute();
+        } catch (Throwable e) {
           failure = unwrap(e);
           if (failure instanceof VirtualMachineError fatal) throw fatal;
           if (failure instanceof ThreadDeath fatal) throw fatal;
-          logger.error("Test failed: {}.{}", suiteName, name, failure);
+          logger.error("Test failed: {}.{}", suiteName, testCase.id(), failure);
         }
         testResults.add(
           new TestResult(
-            name,
-            displayName,
+            testCase.id(),
+            testCase.displayName(),
             failure == null,
             failure,
             elapsed(start),
@@ -181,14 +176,57 @@ public class CustomTestRunner {
     );
   }
 
+  private static List<ExecutableTestCase> discoverTestCases(
+    Class<? extends BaseTestSuite> suiteClass,
+    BaseTestSuite suiteInstance
+  ) {
+    List<ExecutableTestCase> testCases = new ArrayList<>();
+
+    Arrays
+      .stream(suiteClass.getMethods())
+      .filter(method -> method.isAnnotationPresent(Test.class))
+      .sorted(Comparator.comparing(Method::getName))
+      .map(method -> executableMethod(suiteInstance, method))
+      .forEach(testCases::add);
+
+    testCases.addAll(suiteInstance.testCases());
+
+    Set<String> ids = new HashSet<>();
+    for (ExecutableTestCase testCase : testCases) {
+      if (!ids.add(testCase.id())) {
+        throw new IllegalArgumentException(
+          "Duplicate test case ID: " + testCase.id()
+        );
+      }
+    }
+    return List.copyOf(testCases);
+  }
+
+  private static ExecutableTestCase executableMethod(
+    BaseTestSuite suiteInstance,
+    Method method
+  ) {
+    String name = method.getName();
+    String displayName = method.isAnnotationPresent(DisplayName.class)
+      ? method.getAnnotation(DisplayName.class).value()
+      : name;
+    return new ExecutableTestCase(
+      name,
+      displayName,
+      () -> method.invoke(suiteInstance)
+    );
+  }
+
   private static long elapsed(long start) {
     return (System.nanoTime() - start) / 1_000_000;
   }
 
   private static Throwable unwrap(Throwable failure) {
-    return failure instanceof InvocationTargetException invocation
-      ? invocation.getTargetException()
-      : failure;
+    Throwable current = failure;
+    while (current instanceof InvocationTargetException invocation) {
+      current = invocation.getTargetException();
+    }
+    return current;
   }
 
   @NotNull
