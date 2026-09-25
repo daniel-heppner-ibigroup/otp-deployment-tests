@@ -12,4 +12,6 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"] 
+# Mount the deployment configuration at /app/config.kdl when starting the container.
+ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["/app/config.kdl"]

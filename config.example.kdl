@@ -1,0 +1,8 @@
+// Copy this file to config.kdl and replace the URL with your OTP deployment.
+// config.kdl is local to each deployment and is not committed to Git.
+
+reports directory="results" retention-days=30
+
+deployment name="Example OTP" url="https://otp.example.com" {
+  test-suite name="Sound Transit" class="SoundTransit" interval="*/10 * * * *"
+}

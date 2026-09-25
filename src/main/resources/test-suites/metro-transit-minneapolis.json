@@ -1,0 +1,1430 @@
+{
+  "schemaVersion": 1,
+  "defaults": {
+    "modes": [
+      "TRANSIT",
+      "WALK"
+    ],
+    "strictTransitMatching": true
+  },
+  "locations": {
+    "franklin-ave-w-hennepin-ave-minneapolis-minnesota-55405": {
+      "name": "Franklin Ave W & Hennepin Ave, Minneapolis, Minnesota, 55405",
+      "lat": 44.962705,
+      "lon": -93.2914182
+    },
+    "riverside-ave-21st-ave-s-minneapolis-minnesota-55454": {
+      "name": "Riverside Ave & 21st Ave S, Minneapolis, Minnesota, 55454",
+      "lat": 44.968186,
+      "lon": -93.2424808
+    },
+    "4th-st-se-15th-ave-se-minneapolis-minnesota-55414": {
+      "name": "4th St SE & 15th Ave SE, Minneapolis, Minnesota, 55414",
+      "lat": 44.97994,
+      "lon": -93.2344033
+    },
+    "como-ave-dale-st-n-saint-paul-minnesota-55103": {
+      "name": "Como Ave & Dale St N, Saint Paul, Minnesota, 55103",
+      "lat": 44.970166,
+      "lon": -93.1262773
+    },
+    "stop-50231": {
+      "name": "Stop 50231",
+      "lat": 44.857067,
+      "lon": -93.2989443
+    },
+    "stop-172": {
+      "name": "Stop 172",
+      "lat": 44.953644,
+      "lon": -93.2879342
+    },
+    "7600-penn-ave-s-richfield-minnesota-55423": {
+      "name": "7600 Penn Ave S, Richfield, Minnesota, 55423",
+      "lat": 44.8654078,
+      "lon": -93.3088587
+    },
+    "56th-st-w-lyndale-ave-s-minneapolis-minnesota-55419": {
+      "name": "56th St W & Lyndale Ave S, Minneapolis, Minnesota, 55419",
+      "lat": 44.901451,
+      "lon": -93.2883583
+    },
+    "53rd-st-e-chicago-ave-minneapolis-minnesota-55417": {
+      "name": "53rd St E & Chicago Ave, Minneapolis, Minnesota, 55417",
+      "lat": 44.907058,
+      "lon": -93.2626273
+    },
+    "41st-ave-n-fremont-ave-n-minneapolis-minnesota-55412": {
+      "name": "41st Ave N & Fremont Ave N, Minneapolis, Minnesota, 55412",
+      "lat": 45.029575,
+      "lon": -93.2957607
+    },
+    "trailhead-building": {
+      "name": "Trailhead Building",
+      "lat": 44.9913117,
+      "lon": -93.3262325
+    },
+    "38th-st-e-minnehaha-ave-minneapolis-minnesota-55406": {
+      "name": "38th St E & Minnehaha Ave, Minneapolis, Minnesota, 55406",
+      "lat": 44.934166,
+      "lon": -93.2239093
+    },
+    "cedar-lake-rd-royals-dr-minnetonka-minnesota-55305": {
+      "name": "Cedar Lake Rd & Royals Dr, Minnetonka, Minnesota, 55305",
+      "lat": 44.955091,
+      "lon": -93.4103217
+    },
+    "queen-ave-s-laurel-ave-w-minneapolis-minnesota-55405": {
+      "name": "Queen Ave S & Laurel Ave W, Minneapolis, Minnesota, 55405",
+      "lat": 44.97355,
+      "lon": -93.3096207
+    },
+    "osborne-rd-ne-monroe-st-ne-fridley-minnesota-55432": {
+      "name": "Osborne Rd NE & Monroe St NE, Fridley, Minnesota, 55432",
+      "lat": 45.107884,
+      "lon": -93.2535057
+    },
+    "central-ave-ne-lowry-ave-ne-minneapolis-minnesota-55418": {
+      "name": "Central Ave NE & Lowry Ave NE, Minneapolis, Minnesota, 55418",
+      "lat": 45.013168,
+      "lon": -93.2473317
+    },
+    "73rd-ave-ne-university-ave-ne-fridley-minnesota-55432": {
+      "name": "73rd Ave NE & University Ave NE, Fridley, Minnesota, 55432",
+      "lat": 45.100531,
+      "lon": -93.2638152
+    },
+    "73rd-ave-ne-central-ave-ne-fridley-minnesota-55432": {
+      "name": "73rd Ave NE & Central Ave NE, Fridley, Minnesota, 55432",
+      "lat": 45.100486,
+      "lon": -93.2380347
+    },
+    "50th-ave-ne-central-ave-ne-columbia-heights-minnesota-55421": {
+      "name": "50th Ave NE & Central Ave NE, Columbia Heights, Minnesota, 55421",
+      "lat": 45.059005,
+      "lon": -93.2476602
+    },
+    "26th-st-e-nicollet-ave-minneapolis-minnesota-55404": {
+      "name": "26th St E & Nicollet Ave, Minneapolis, Minnesota, 55404",
+      "lat": 44.955532,
+      "lon": -93.2778687
+    },
+    "stop-17742": {
+      "name": "Stop 17742",
+      "lat": 44.925025,
+      "lon": -93.2700663
+    },
+    "stop-14606": {
+      "name": "Stop 14606",
+      "lat": 45.035426,
+      "lon": -93.2650382
+    },
+    "48th-st-e-bloomington-ave-minneapolis-minnesota-55417": {
+      "name": "48th St E & Bloomington Ave, Minneapolis, Minnesota, 55417",
+      "lat": 44.916085,
+      "lon": -93.2524078
+    },
+    "1543-11th-ave-s-minneapolis-minnesota-55404": {
+      "name": "1543 11th Ave S, Minneapolis, Minnesota, 55404",
+      "lat": 44.9676308,
+      "lon": -93.2581295
+    },
+    "robbinsdale-transit-center": {
+      "name": "Robbinsdale Transit Center",
+      "lat": 45.0301521,
+      "lon": -93.3395539
+    },
+    "plymouth-ave-n-washington-ave-n-minneapolis-minnesota-55411": {
+      "name": "Plymouth Ave N & Washington Ave N, Minneapolis, Minnesota, 55411",
+      "lat": 44.992009,
+      "lon": -93.2814597
+    },
+    "blake-rd-n-cambridge-st-hopkins-minnesota-55343": {
+      "name": "Blake Rd N & Cambridge St, Hopkins, Minnesota, 55343",
+      "lat": 44.934202,
+      "lon": -93.3856797
+    },
+    "st-louis-park-city-hall": {
+      "name": "St Louis Park City Hall",
+      "lat": 44.9484659,
+      "lon": -93.3434073
+    },
+    "rhode-island-ave-s-minnetonka-blvd-saint-louis-park-minnesota-55426": {
+      "name": "Rhode Island Ave S & Minnetonka Blvd, Saint Louis Park, Minnesota, 55426",
+      "lat": 44.949448,
+      "lon": -93.3783717
+    },
+    "blake-rd-station": {
+      "name": "Blake Rd Station",
+      "lat": 44.9263123,
+      "lon": -93.3882597
+    },
+    "7265-nicollet-ave-s-richfield-minnesota-55423": {
+      "name": "7265 Nicollet Ave S, Richfield, Minnesota, 55423",
+      "lat": 44.8715409,
+      "lon": -93.2781504
+    },
+    "central-library": {
+      "name": "Central Library",
+      "lat": 44.9808703,
+      "lon": -93.2707964
+    },
+    "66th-st-e-nicollet-ave-s-richfield-minnesota-55423": {
+      "name": "66th St E & Nicollet Ave S, Richfield, Minnesota, 55423",
+      "lat": 44.88355,
+      "lon": -93.2780128
+    },
+    "lowry-ave-ne-central-ave-ne-minneapolis-minnesota-55418": {
+      "name": "Lowry Ave NE & Central Ave NE, Minneapolis, Minnesota, 55418",
+      "lat": 45.013168,
+      "lon": -93.2473317
+    },
+    "va-medical-center": {
+      "name": "VA Medical Center",
+      "lat": 44.9019716,
+      "lon": -93.2038896
+    },
+    "4123-lyndale-ave-n-minneapolis-minnesota-55412": {
+      "name": "4123 Lyndale Ave N, Minneapolis, Minnesota, 55412",
+      "lat": 45.0298767,
+      "lon": -93.2881634
+    },
+    "fremont-ave-n-dowling-ave-n-minneapolis-minnesota-55412": {
+      "name": "Fremont Ave N & Dowling Ave N, Minneapolis, Minnesota, 55412",
+      "lat": 45.023986,
+      "lon": -93.2956437
+    },
+    "2432-cedar-ave-s-minneapolis-minnesota-55404": {
+      "name": "2432 Cedar Ave S, Minneapolis, Minnesota, 55404",
+      "lat": 44.95853,
+      "lon": -93.2473786
+    },
+    "5700-dupont-ave-n-brooklyn-center-minnesota-55430": {
+      "name": "5700 Dupont Ave N, Brooklyn Center, Minnesota, 55430",
+      "lat": 45.0584489,
+      "lon": -93.2937607
+    },
+    "5100-penn-ave-n-minneapolis-minnesota-55430": {
+      "name": "5100 Penn Ave N, Minneapolis, Minnesota, 55430",
+      "lat": 45.0476424,
+      "lon": -93.3092307
+    },
+    "9th-st-s-nicollet-mall-minneapolis-minnesota-55402": {
+      "name": "9th St S & Nicollet Mall, Minneapolis, Minnesota, 55402",
+      "lat": 44.974981,
+      "lon": -93.2738592
+    },
+    "stinson-blvd-ridgway-pkwy-minneapolis-minnesota-55418": {
+      "name": "Stinson Blvd & Ridgway Pkwy, Minneapolis, Minnesota, 55418",
+      "lat": 45.003889,
+      "lon": -93.2269423
+    },
+    "lake-st-w-lyndale-ave-s-minneapolis-minnesota-55408": {
+      "name": "Lake St W & Lyndale Ave S, Minneapolis, Minnesota, 55408",
+      "lat": 44.948368,
+      "lon": -93.2880927
+    },
+    "2800-12th-ave-s-minneapolis-minnesota-55407": {
+      "name": "2800 12th Ave S, Minneapolis, Minnesota, 55407",
+      "lat": 44.9518837,
+      "lon": -93.2576412
+    },
+    "2600-12th-ave-s-minneapolis-minnesota-55407": {
+      "name": "2600 12th Ave S, Minneapolis, Minnesota, 55407",
+      "lat": 44.9554754,
+      "lon": -93.2575972
+    },
+    "golden-valley-rd-xerxes-ave-n-golden-valley-minnesota-55422": {
+      "name": "Golden Valley Rd & Xerxes Ave N, Golden Valley, Minnesota, 55422",
+      "lat": 44.998948,
+      "lon": -93.3184452
+    },
+    "27th-ave-se-hennepin-ave-e-minneapolis-minnesota-55414": {
+      "name": "27th Ave SE & Hennepin Ave E, Minneapolis, Minnesota, 55414",
+      "lat": 44.991568,
+      "lon": -93.2151343
+    },
+    "west-broadway-dupont-ave-n-minneapolis-minnesota-55411": {
+      "name": "West Broadway & Dupont Ave N, Minneapolis, Minnesota, 55411",
+      "lat": 44.999155,
+      "lon": -93.2925927
+    },
+    "rosedale-transit-center": {
+      "name": "Rosedale Transit Center",
+      "lat": 45.0127451,
+      "lon": -93.1683549
+    },
+    "westgate-station": {
+      "name": "Westgate Station",
+      "lat": 44.9674749,
+      "lon": -93.2063914
+    },
+    "701-kasota-ave-minneapolis-minnesota-55414": {
+      "name": "701 Kasota Ave, Minneapolis, Minnesota, 55414",
+      "lat": 44.9811174,
+      "lon": -93.2143746
+    },
+    "701-kasota-ave-minneapolis-minnesota-55414-2": {
+      "name": "701 Kasota Ave, Minneapolis, Minnesota, 55414",
+      "lat": 44.9811296,
+      "lon": -93.2143949
+    },
+    "27th-ave-se-university-ave-se-minneapolis-minnesota-55414": {
+      "name": "27th Ave SE & University Ave SE, Minneapolis, Minnesota, 55414",
+      "lat": 44.972326,
+      "lon": -93.2186173
+    },
+    "78th-st-w-johnson-ave-s-bloomington-minnesota-55435": {
+      "name": "78th St W & Johnson Ave S, Bloomington, Minnesota, 55435",
+      "lat": 44.858863,
+      "lon": -93.3334572
+    },
+    "5000-xerxes-ave-s-minneapolis-minnesota-55410": {
+      "name": "5000 Xerxes Ave S, Minneapolis, Minnesota, 55410",
+      "lat": 44.9123824,
+      "lon": -93.3189352
+    },
+    "10415-smetana-rd-minnetonka-minnesota-55343": {
+      "name": "10415 Smetana Rd, Minnetonka, Minnesota, 55343",
+      "lat": 44.9061186,
+      "lon": -93.4116116
+    },
+    "highland-park": {
+      "name": "Highland Park",
+      "lat": 44.9178705,
+      "lon": -93.1873864
+    },
+    "minnesota-veterans-home": {
+      "name": "Minnesota Veterans Home",
+      "lat": 44.9121271,
+      "lon": -93.2032668
+    },
+    "4615-grand-ave-s-minneapolis-minnesota-55419": {
+      "name": "4615 Grand Ave S, Minneapolis, Minnesota, 55419",
+      "lat": 44.9192941,
+      "lon": -93.2843874
+    },
+    "46th-st-station": {
+      "name": "46th St Station",
+      "lat": 44.9207473,
+      "lon": -93.2198828
+    },
+    "14th-ave-n-penn-ave-n-minneapolis-minnesota-55411": {
+      "name": "14th Ave N & Penn Ave N, Minneapolis, Minnesota, 55411",
+      "lat": 44.993071,
+      "lon": -93.3082212
+    },
+    "32nd-ave-n-douglas-dr-n-crystal-minnesota-55422": {
+      "name": "32nd Ave N & Douglas Dr N, Crystal, Minnesota, 55422",
+      "lat": 45.014617,
+      "lon": -93.3600207
+    }
+  },
+  "tests": [
+    {
+      "id": "route-2-eb-off-peak",
+      "name": "Route 2 EB - Off Peak",
+      "request": {
+        "from": "franklin-ave-w-hennepin-ave-minneapolis-minnesota-55405",
+        "to": "riverside-ave-21st-ave-s-minneapolis-minnesota-55454",
+        "serviceDay": "MONDAY",
+        "time": "11:21:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-2-wb-peak",
+      "name": "Route 2 WB - Peak",
+      "request": {
+        "from": "riverside-ave-21st-ave-s-minneapolis-minnesota-55454",
+        "to": "franklin-ave-w-hennepin-ave-minneapolis-minnesota-55405",
+        "serviceDay": "MONDAY",
+        "time": "07:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "2"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-3-eb-rush-hour",
+      "name": "Route 3 EB - Rush Hour",
+      "request": {
+        "from": "4th-st-se-15th-ave-se-minneapolis-minnesota-55414",
+        "to": "como-ave-dale-st-n-saint-paul-minnesota-55103",
+        "serviceDay": "THURSDAY",
+        "time": "07:15:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-3-wb-non-rush-hour",
+      "name": "Route 3 WB - Non Rush Hour",
+      "request": {
+        "from": "como-ave-dale-st-n-saint-paul-minnesota-55103",
+        "to": "4th-st-se-15th-ave-se-minneapolis-minnesota-55414",
+        "serviceDay": "SATURDAY",
+        "time": "07:15:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-4-nb-rush-hour",
+      "name": "Route 4 NB - Rush Hour",
+      "request": {
+        "from": "stop-50231",
+        "to": "stop-172",
+        "serviceDay": "MONDAY",
+        "time": "08:20:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-4-sb-non-rush-hour",
+      "name": "Route 4 SB - Non Rush Hour",
+      "request": {
+        "from": "stop-172",
+        "to": "stop-50231",
+        "serviceDay": "MONDAY",
+        "time": "20:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-4-sb-to-4-nb-stay-on-thru",
+      "name": "Route 4 SB to 4 NB Stay on Thru",
+      "request": {
+        "from": "7600-penn-ave-s-richfield-minnesota-55423",
+        "to": "56th-st-w-lyndale-ave-s-minneapolis-minnesota-55419",
+        "serviceDay": "TUESDAY",
+        "time": "05:30:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "4"
+            ]
+          },
+          {
+            "mode": "BUS",
+            "routes": [
+              "4"
+            ],
+            "interlinedWithPrevious": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-5-nb-non-rush-hour",
+      "name": "Route 5 NB - Non Rush Hour",
+      "request": {
+        "from": "53rd-st-e-chicago-ave-minneapolis-minnesota-55417",
+        "to": "41st-ave-n-fremont-ave-n-minneapolis-minnesota-55412",
+        "serviceDay": "THURSDAY",
+        "time": "10:05:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-5-sb-rush-hour",
+      "name": "Route 5 SB - Rush Hour",
+      "request": {
+        "from": "41st-ave-n-fremont-ave-n-minneapolis-minnesota-55412",
+        "to": "53rd-st-e-chicago-ave-minneapolis-minnesota-55417",
+        "serviceDay": "THURSDAY",
+        "time": "15:30:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "5"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-7-sb-non-rush-stay-on-through",
+      "name": "Route 7 SB - Non Rush Stay on Through",
+      "request": {
+        "from": "trailhead-building",
+        "to": "38th-st-e-minnehaha-ave-minneapolis-minnesota-55406",
+        "serviceDay": "TUESDAY",
+        "time": "11:45:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "7"
+            ]
+          },
+          {
+            "mode": "BUS",
+            "routes": [
+              "7"
+            ],
+            "interlinedWithPrevious": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-9-eb-am-peak",
+      "name": "Route 9 EB - AM Peak",
+      "request": {
+        "from": "cedar-lake-rd-royals-dr-minnetonka-minnesota-55305",
+        "to": "queen-ave-s-laurel-ave-w-minneapolis-minnesota-55405",
+        "serviceDay": "TUESDAY",
+        "time": "06:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "9"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-9-wb-off-peak",
+      "name": "Route 9 WB - Off Peak",
+      "request": {
+        "from": "queen-ave-s-laurel-ave-w-minneapolis-minnesota-55405",
+        "to": "cedar-lake-rd-royals-dr-minnetonka-minnesota-55305",
+        "serviceDay": "TUESDAY",
+        "time": "11:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "9"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-10-sb-peak",
+      "name": "Route 10 SB Peak",
+      "request": {
+        "from": "osborne-rd-ne-monroe-st-ne-fridley-minnesota-55432",
+        "to": "central-ave-ne-lowry-ave-ne-minneapolis-minnesota-55418",
+        "serviceDay": "TUESDAY",
+        "time": "07:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "10"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-10-nb-off-peak",
+      "name": "Route 10 NB Off Peak",
+      "request": {
+        "from": "central-ave-ne-lowry-ave-ne-minneapolis-minnesota-55418",
+        "to": "osborne-rd-ne-monroe-st-ne-fridley-minnesota-55432",
+        "serviceDay": "TUESDAY",
+        "time": "19:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "10"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-10-northtown-stay-on-through",
+      "name": "Route 10  - Northtown Stay on Through",
+      "request": {
+        "from": "73rd-ave-ne-university-ave-ne-fridley-minnesota-55432",
+        "to": "73rd-ave-ne-central-ave-ne-fridley-minnesota-55432",
+        "serviceDay": "THURSDAY",
+        "time": "05:32:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "10"
+            ]
+          },
+          {
+            "mode": "BUS",
+            "routes": [
+              "10"
+            ],
+            "interlinedWithPrevious": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-10-to-18-stay-on-through",
+      "name": "Route 10 to 18 Stay on Through",
+      "request": {
+        "from": "50th-ave-ne-central-ave-ne-columbia-heights-minnesota-55421",
+        "to": "26th-st-e-nicollet-ave-minneapolis-minnesota-55404",
+        "serviceDay": "THURSDAY",
+        "time": "00:30:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "10"
+            ]
+          },
+          {
+            "mode": "BUS",
+            "routes": [
+              "18"
+            ],
+            "interlinedWithPrevious": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-11-nb-peak",
+      "name": "Route 11 NB Peak",
+      "request": {
+        "from": "stop-17742",
+        "to": "stop-14606",
+        "serviceDay": "TUESDAY",
+        "time": "06:39:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "11"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-11-sb-off-peak",
+      "name": "Route 11 SB Off Peak",
+      "request": {
+        "from": "stop-14606",
+        "to": "stop-17742",
+        "serviceDay": "TUESDAY",
+        "time": "14:12:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "11"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-14-nb-peak",
+      "name": "Route 14 NB Peak",
+      "request": {
+        "from": "48th-st-e-bloomington-ave-minneapolis-minnesota-55417",
+        "to": "1543-11th-ave-s-minneapolis-minnesota-55404",
+        "serviceDay": "TUESDAY",
+        "time": "06:10:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "14"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-14-sb-off-peak",
+      "name": "Route 14 SB Off Peak",
+      "request": {
+        "from": "robbinsdale-transit-center",
+        "to": "plymouth-ave-n-washington-ave-n-minneapolis-minnesota-55411",
+        "serviceDay": "TUESDAY",
+        "time": "13:00:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "14"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-17-eb-peak",
+      "name": "Route 17 EB Peak",
+      "request": {
+        "from": "blake-rd-n-cambridge-st-hopkins-minnesota-55343",
+        "to": "st-louis-park-city-hall",
+        "serviceDay": "WEDNESDAY",
+        "time": "07:02:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "17"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-17-wb-off-peak",
+      "name": "Route 17 WB Off Peak",
+      "request": {
+        "from": "rhode-island-ave-s-minnetonka-blvd-saint-louis-park-minnesota-55426",
+        "to": "blake-rd-station",
+        "serviceDay": "WEDNESDAY",
+        "time": "10:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "17"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-18-nb-peak",
+      "name": "Route 18 NB Peak",
+      "request": {
+        "from": "7265-nicollet-ave-s-richfield-minnesota-55423",
+        "to": "central-library",
+        "serviceDay": "TUESDAY",
+        "time": "07:25:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "18"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-18-sb-off-peak",
+      "name": "Route 18 SB Off Peak",
+      "request": {
+        "from": "central-library",
+        "to": "7265-nicollet-ave-s-richfield-minnesota-55423",
+        "serviceDay": "TUESDAY",
+        "time": "22:40:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "18"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-18-to-10-stay-on-through",
+      "name": "Route 18 to 10 Stay on Through",
+      "request": {
+        "from": "66th-st-e-nicollet-ave-s-richfield-minnesota-55423",
+        "to": "lowry-ave-ne-central-ave-ne-minneapolis-minnesota-55418",
+        "serviceDay": "MONDAY",
+        "time": "00:19:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "18"
+            ]
+          },
+          {
+            "mode": "BUS",
+            "routes": [
+              "10"
+            ],
+            "interlinedWithPrevious": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-22-nb-peak",
+      "name": "Route 22 NB Peak",
+      "request": {
+        "from": "va-medical-center",
+        "to": "4123-lyndale-ave-n-minneapolis-minnesota-55412",
+        "serviceDay": "TUESDAY",
+        "time": "08:37:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "22"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-22-sb-off-peak",
+      "name": "Route 22 SB Off Peak",
+      "request": {
+        "from": "fremont-ave-n-dowling-ave-n-minneapolis-minnesota-55412",
+        "to": "2432-cedar-ave-s-minneapolis-minnesota-55404",
+        "serviceDay": "TUESDAY",
+        "time": "20:41:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "22"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-22-nb-to-sb-stay-on-through-at-bctc",
+      "name": "Route 22 NB to SB Stay on Through at BCTC",
+      "request": {
+        "from": "5700-dupont-ave-n-brooklyn-center-minnesota-55430",
+        "to": "5100-penn-ave-n-minneapolis-minnesota-55430",
+        "serviceDay": "TUESDAY",
+        "time": "10:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "22"
+            ]
+          },
+          {
+            "mode": "BUS",
+            "routes": [
+              "22"
+            ],
+            "interlinedWithPrevious": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-25-nb-peak",
+      "name": "Route 25 NB Peak",
+      "request": {
+        "from": "9th-st-s-nicollet-mall-minneapolis-minnesota-55402",
+        "to": "stinson-blvd-ridgway-pkwy-minneapolis-minnesota-55418",
+        "serviceDay": "TUESDAY",
+        "time": "17:20:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "25"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-25-sb-peak",
+      "name": "Route 25 SB Peak",
+      "request": {
+        "from": "stinson-blvd-ridgway-pkwy-minneapolis-minnesota-55418",
+        "to": "9th-st-s-nicollet-mall-minneapolis-minnesota-55402",
+        "serviceDay": "TUESDAY",
+        "time": "08:20:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "25"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-27-eb-peak",
+      "name": "Route 27 EB Peak",
+      "request": {
+        "from": "lake-st-w-lyndale-ave-s-minneapolis-minnesota-55408",
+        "to": "2800-12th-ave-s-minneapolis-minnesota-55407",
+        "serviceDay": "MONDAY",
+        "time": "07:20:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "27"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-27-wb-off-peak",
+      "name": "Route 27 WB Off-Peak",
+      "request": {
+        "from": "2600-12th-ave-s-minneapolis-minnesota-55407",
+        "to": "lake-st-w-lyndale-ave-s-minneapolis-minnesota-55408",
+        "serviceDay": "MONDAY",
+        "time": "10:30:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "27"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-30-eb-peak",
+      "name": "Route 30 EB Peak",
+      "request": {
+        "from": "golden-valley-rd-xerxes-ave-n-golden-valley-minnesota-55422",
+        "to": "27th-ave-se-hennepin-ave-e-minneapolis-minnesota-55414",
+        "serviceDay": "TUESDAY",
+        "time": "08:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "30"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-30-wb-off-peak",
+      "name": "Route 30 WB Off Peak",
+      "request": {
+        "from": "27th-ave-se-hennepin-ave-e-minneapolis-minnesota-55414",
+        "to": "west-broadway-dupont-ave-n-minneapolis-minnesota-55411",
+        "serviceDay": "TUESDAY",
+        "time": "10:15:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "30"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-32-eb-peak",
+      "name": "Route 32 EB Peak",
+      "request": {
+        "from": "robbinsdale-transit-center",
+        "to": "rosedale-transit-center",
+        "serviceDay": "TUESDAY",
+        "time": "16:20:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "32"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-32-wb-off-peak",
+      "name": "Route 32 WB Off Peak",
+      "request": {
+        "from": "rosedale-transit-center",
+        "to": "robbinsdale-transit-center",
+        "serviceDay": "TUESDAY",
+        "time": "16:20:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "32"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-33-eb-single-leg",
+      "name": "Route 33 EB - Single leg",
+      "request": {
+        "from": "westgate-station",
+        "to": "701-kasota-ave-minneapolis-minnesota-55414",
+        "serviceDay": "MONDAY",
+        "time": "06:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "33"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-33-eb-stay-on-thru",
+      "name": "Route 33 EB - Stay on Thru",
+      "request": {
+        "from": "701-kasota-ave-minneapolis-minnesota-55414-2",
+        "to": "27th-ave-se-university-ave-se-minneapolis-minnesota-55414",
+        "serviceDay": "TUESDAY",
+        "time": "05:22:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "33"
+            ]
+          },
+          {
+            "mode": "BUS",
+            "routes": [
+              "33"
+            ],
+            "interlinedWithPrevious": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-33-wb-single-leg",
+      "name": "Route 33 WB - Single leg",
+      "request": {
+        "from": "701-kasota-ave-minneapolis-minnesota-55414",
+        "to": "westgate-station",
+        "serviceDay": "MONDAY",
+        "time": "16:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "33"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-33-wb-stay-on-thru",
+      "name": "Route 33 WB - Stay on Thru",
+      "request": {
+        "from": "westgate-station",
+        "to": "701-kasota-ave-minneapolis-minnesota-55414",
+        "serviceDay": "MONDAY",
+        "time": "16:00:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "33"
+            ]
+          },
+          {
+            "mode": "BUS",
+            "routes": [
+              "33"
+            ],
+            "interlinedWithPrevious": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-36-nb-peak",
+      "name": "Route 36 NB Peak",
+      "request": {
+        "from": "78th-st-w-johnson-ave-s-bloomington-minnesota-55435",
+        "to": "5000-xerxes-ave-s-minneapolis-minnesota-55410",
+        "serviceDay": "MONDAY",
+        "time": "07:25:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "36"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-36-sb-off-peak",
+      "name": "Route 36 SB Off-Peak",
+      "request": {
+        "from": "5000-xerxes-ave-s-minneapolis-minnesota-55410",
+        "to": "78th-st-w-johnson-ave-s-bloomington-minnesota-55435",
+        "serviceDay": "MONDAY",
+        "time": "10:25:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "36"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-38-eb-peak-to-highland",
+      "name": "Route 38 EB Peak - To Highland",
+      "request": {
+        "from": "10415-smetana-rd-minnetonka-minnesota-55343",
+        "to": "highland-park",
+        "serviceDay": "MONDAY",
+        "time": "07:30:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "38"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-38-eb-peak-to-vets-home",
+      "name": "Route 38 EB Peak - To Vets Home",
+      "request": {
+        "from": "10415-smetana-rd-minnetonka-minnesota-55343",
+        "to": "minnesota-veterans-home",
+        "serviceDay": "MONDAY",
+        "time": "07:30:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "38"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-38-wb-off-peak-from-highland",
+      "name": "Route 38 WB Off-Peak - From Highland",
+      "request": {
+        "from": "highland-park",
+        "to": "10415-smetana-rd-minnetonka-minnesota-55343",
+        "serviceDay": "MONDAY",
+        "time": "12:00:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "38"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-38-wb-off-peak-from-vets-home",
+      "name": "Route 38 WB Off-Peak - From Vets Home",
+      "request": {
+        "from": "minnesota-veterans-home",
+        "to": "10415-smetana-rd-minnetonka-minnesota-55343",
+        "serviceDay": "MONDAY",
+        "time": "11:30:00.000",
+        "searchDirection": "ARRIVE_BY"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "38"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-46-eb-peak",
+      "name": "Route 46 EB Peak",
+      "request": {
+        "from": "4615-grand-ave-s-minneapolis-minnesota-55419",
+        "to": "46th-st-station",
+        "serviceDay": "WEDNESDAY",
+        "time": "07:04:40.356",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "46"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-46-wb-off-peak",
+      "name": "Route 46 WB Off Peak",
+      "request": {
+        "from": "46th-st-station",
+        "to": "4615-grand-ave-s-minneapolis-minnesota-55419",
+        "serviceDay": "WEDNESDAY",
+        "time": "11:06:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "46"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-48-nb-peak",
+      "name": "Route 48 NB Peak",
+      "request": {
+        "from": "14th-ave-n-penn-ave-n-minneapolis-minnesota-55411",
+        "to": "32nd-ave-n-douglas-dr-n-crystal-minnesota-55422",
+        "serviceDay": "WEDNESDAY",
+        "time": "06:40:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "48"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "route-48-sb-off-peak",
+      "name": "Route 48 SB Off Peak",
+      "request": {
+        "from": "32nd-ave-n-douglas-dr-n-crystal-minnesota-55422",
+        "to": "14th-ave-n-penn-ave-n-minneapolis-minnesota-55411",
+        "serviceDay": "WEDNESDAY",
+        "time": "09:40:00.000",
+        "searchDirection": "DEPART_AT"
+      },
+      "expect": {
+        "transitLegs": [
+          {
+            "mode": "BUS",
+            "routes": [
+              "48"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

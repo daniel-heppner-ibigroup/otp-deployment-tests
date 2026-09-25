@@ -39,3 +39,6 @@ build/
 
 # results files
 results/**
+
+# Local deployment configuration
+/config.kdl

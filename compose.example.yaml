@@ -1,0 +1,13 @@
+services:
+  otp-deployment-tests:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: ./config.kdl
+        target: /app/config.kdl
+        read_only: true
+        bind:
+          create_host_path: false
+      - ./results:/app/results

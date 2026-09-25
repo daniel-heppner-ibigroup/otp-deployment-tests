@@ -298,7 +298,7 @@ public abstract class JsonTestSuite extends BaseTestSuite {
     Boolean interlinedWithPrevious
   ) {
     private boolean isInterlinedWithPrevious() {
-      return interlinedWithPrevious;
+      return Boolean.TRUE.equals(interlinedWithPrevious);
     }
   }
 }
