@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "locations": {
+    "a": {
+      "type": "coordinate",
+      "lat": 44.9,
+      "lon": -93.2
+    },
+    "b": {
+      "type": "coordinate",
+      "lat": 44.95,
+      "lon": -93.25
+    }
+  },
+  "tests": [
+    {
+      "type": "trip-plan",
+      "id": "sample",
+      "name": "Sample",
+      "request": {
+        "from": "a",
+        "to": "b",
+        "date": "2026-10-29",
+        "time": "08:30"
+      },
+      "expectation": {
+        "itinerary": {}
+      }
+    }
+  ],
+  "defaults": {
+    "request": {
+      "walkSpeeed": 1.1
+    }
+  }
+}

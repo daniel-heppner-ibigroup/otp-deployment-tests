@@ -15,7 +15,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.opentripplanner.assertions.PlanExpectation;
 import org.opentripplanner.client.model.RequestMode;
+import org.opentripplanner.client.model.TripPlan;
 import org.opentripplanner.client.parameters.TripPlanParameters;
 import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
 
@@ -121,8 +123,7 @@ public abstract class BaseTestSuite {
    * Returns data-driven test cases supplied by this suite.
    *
    * <p>Annotation-based suites can rely on the empty default. The custom runner executes each
-   * returned case independently with the same reporting and request capture used for {@code @Test}
-   * methods.
+   * returned case independently with the same logging and metrics used for {@code @Test} methods.
    */
   public Collection<ExecutableTestCase> testCases() {
     return List.of();
@@ -214,6 +215,10 @@ public abstract class BaseTestSuite {
    */
   protected static int getGeocodingCacheSize() {
     return GeocodingService.getGlobalCacheSize();
+  }
+
+  public static void assertPlan(TripPlan plan, PlanExpectation expectation) {
+    expectation.evaluate(plan).assertMatches();
   }
   // Common utility methods could be added here if needed in the future.
 }

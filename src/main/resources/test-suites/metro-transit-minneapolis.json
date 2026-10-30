@@ -1,322 +1,386 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "defaults": {
-    "modes": [
-      "TRANSIT",
-      "WALK"
-    ],
-    "strictTransitMatching": true
+    "request": {
+      "modes": [
+        "TRANSIT",
+        "WALK"
+      ]
+    },
+    "transitLegMatching": "EXACT_ORDERED"
   },
   "locations": {
     "franklin-ave-w-hennepin-ave-minneapolis-minnesota-55405": {
       "name": "Franklin Ave W & Hennepin Ave, Minneapolis, Minnesota, 55405",
       "lat": 44.962705,
-      "lon": -93.2914182
+      "lon": -93.2914182,
+      "type": "coordinate"
     },
     "riverside-ave-21st-ave-s-minneapolis-minnesota-55454": {
       "name": "Riverside Ave & 21st Ave S, Minneapolis, Minnesota, 55454",
       "lat": 44.968186,
-      "lon": -93.2424808
+      "lon": -93.2424808,
+      "type": "coordinate"
     },
     "4th-st-se-15th-ave-se-minneapolis-minnesota-55414": {
       "name": "4th St SE & 15th Ave SE, Minneapolis, Minnesota, 55414",
       "lat": 44.97994,
-      "lon": -93.2344033
+      "lon": -93.2344033,
+      "type": "coordinate"
     },
     "como-ave-dale-st-n-saint-paul-minnesota-55103": {
       "name": "Como Ave & Dale St N, Saint Paul, Minnesota, 55103",
       "lat": 44.970166,
-      "lon": -93.1262773
+      "lon": -93.1262773,
+      "type": "coordinate"
     },
     "stop-50231": {
       "name": "Stop 50231",
       "lat": 44.857067,
-      "lon": -93.2989443
+      "lon": -93.2989443,
+      "type": "coordinate"
     },
     "stop-172": {
       "name": "Stop 172",
       "lat": 44.953644,
-      "lon": -93.2879342
+      "lon": -93.2879342,
+      "type": "coordinate"
     },
     "7600-penn-ave-s-richfield-minnesota-55423": {
       "name": "7600 Penn Ave S, Richfield, Minnesota, 55423",
       "lat": 44.8654078,
-      "lon": -93.3088587
+      "lon": -93.3088587,
+      "type": "coordinate"
     },
     "56th-st-w-lyndale-ave-s-minneapolis-minnesota-55419": {
       "name": "56th St W & Lyndale Ave S, Minneapolis, Minnesota, 55419",
       "lat": 44.901451,
-      "lon": -93.2883583
+      "lon": -93.2883583,
+      "type": "coordinate"
     },
     "53rd-st-e-chicago-ave-minneapolis-minnesota-55417": {
       "name": "53rd St E & Chicago Ave, Minneapolis, Minnesota, 55417",
       "lat": 44.907058,
-      "lon": -93.2626273
+      "lon": -93.2626273,
+      "type": "coordinate"
     },
     "41st-ave-n-fremont-ave-n-minneapolis-minnesota-55412": {
       "name": "41st Ave N & Fremont Ave N, Minneapolis, Minnesota, 55412",
       "lat": 45.029575,
-      "lon": -93.2957607
+      "lon": -93.2957607,
+      "type": "coordinate"
     },
     "trailhead-building": {
       "name": "Trailhead Building",
       "lat": 44.9913117,
-      "lon": -93.3262325
+      "lon": -93.3262325,
+      "type": "coordinate"
     },
     "38th-st-e-minnehaha-ave-minneapolis-minnesota-55406": {
       "name": "38th St E & Minnehaha Ave, Minneapolis, Minnesota, 55406",
       "lat": 44.934166,
-      "lon": -93.2239093
+      "lon": -93.2239093,
+      "type": "coordinate"
     },
     "cedar-lake-rd-royals-dr-minnetonka-minnesota-55305": {
       "name": "Cedar Lake Rd & Royals Dr, Minnetonka, Minnesota, 55305",
       "lat": 44.955091,
-      "lon": -93.4103217
+      "lon": -93.4103217,
+      "type": "coordinate"
     },
     "queen-ave-s-laurel-ave-w-minneapolis-minnesota-55405": {
       "name": "Queen Ave S & Laurel Ave W, Minneapolis, Minnesota, 55405",
       "lat": 44.97355,
-      "lon": -93.3096207
+      "lon": -93.3096207,
+      "type": "coordinate"
     },
     "osborne-rd-ne-monroe-st-ne-fridley-minnesota-55432": {
       "name": "Osborne Rd NE & Monroe St NE, Fridley, Minnesota, 55432",
       "lat": 45.107884,
-      "lon": -93.2535057
+      "lon": -93.2535057,
+      "type": "coordinate"
     },
     "central-ave-ne-lowry-ave-ne-minneapolis-minnesota-55418": {
       "name": "Central Ave NE & Lowry Ave NE, Minneapolis, Minnesota, 55418",
       "lat": 45.013168,
-      "lon": -93.2473317
+      "lon": -93.2473317,
+      "type": "coordinate"
     },
     "73rd-ave-ne-university-ave-ne-fridley-minnesota-55432": {
       "name": "73rd Ave NE & University Ave NE, Fridley, Minnesota, 55432",
       "lat": 45.100531,
-      "lon": -93.2638152
+      "lon": -93.2638152,
+      "type": "coordinate"
     },
     "73rd-ave-ne-central-ave-ne-fridley-minnesota-55432": {
       "name": "73rd Ave NE & Central Ave NE, Fridley, Minnesota, 55432",
       "lat": 45.100486,
-      "lon": -93.2380347
+      "lon": -93.2380347,
+      "type": "coordinate"
     },
     "50th-ave-ne-central-ave-ne-columbia-heights-minnesota-55421": {
       "name": "50th Ave NE & Central Ave NE, Columbia Heights, Minnesota, 55421",
       "lat": 45.059005,
-      "lon": -93.2476602
+      "lon": -93.2476602,
+      "type": "coordinate"
     },
     "26th-st-e-nicollet-ave-minneapolis-minnesota-55404": {
       "name": "26th St E & Nicollet Ave, Minneapolis, Minnesota, 55404",
       "lat": 44.955532,
-      "lon": -93.2778687
+      "lon": -93.2778687,
+      "type": "coordinate"
     },
     "stop-17742": {
       "name": "Stop 17742",
       "lat": 44.925025,
-      "lon": -93.2700663
+      "lon": -93.2700663,
+      "type": "coordinate"
     },
     "stop-14606": {
       "name": "Stop 14606",
       "lat": 45.035426,
-      "lon": -93.2650382
+      "lon": -93.2650382,
+      "type": "coordinate"
     },
     "48th-st-e-bloomington-ave-minneapolis-minnesota-55417": {
       "name": "48th St E & Bloomington Ave, Minneapolis, Minnesota, 55417",
       "lat": 44.916085,
-      "lon": -93.2524078
+      "lon": -93.2524078,
+      "type": "coordinate"
     },
     "1543-11th-ave-s-minneapolis-minnesota-55404": {
       "name": "1543 11th Ave S, Minneapolis, Minnesota, 55404",
       "lat": 44.9676308,
-      "lon": -93.2581295
+      "lon": -93.2581295,
+      "type": "coordinate"
     },
     "robbinsdale-transit-center": {
       "name": "Robbinsdale Transit Center",
       "lat": 45.0301521,
-      "lon": -93.3395539
+      "lon": -93.3395539,
+      "type": "coordinate"
     },
     "plymouth-ave-n-washington-ave-n-minneapolis-minnesota-55411": {
       "name": "Plymouth Ave N & Washington Ave N, Minneapolis, Minnesota, 55411",
       "lat": 44.992009,
-      "lon": -93.2814597
+      "lon": -93.2814597,
+      "type": "coordinate"
     },
     "blake-rd-n-cambridge-st-hopkins-minnesota-55343": {
       "name": "Blake Rd N & Cambridge St, Hopkins, Minnesota, 55343",
       "lat": 44.934202,
-      "lon": -93.3856797
+      "lon": -93.3856797,
+      "type": "coordinate"
     },
     "st-louis-park-city-hall": {
       "name": "St Louis Park City Hall",
       "lat": 44.9484659,
-      "lon": -93.3434073
+      "lon": -93.3434073,
+      "type": "coordinate"
     },
     "rhode-island-ave-s-minnetonka-blvd-saint-louis-park-minnesota-55426": {
       "name": "Rhode Island Ave S & Minnetonka Blvd, Saint Louis Park, Minnesota, 55426",
       "lat": 44.949448,
-      "lon": -93.3783717
+      "lon": -93.3783717,
+      "type": "coordinate"
     },
     "blake-rd-station": {
       "name": "Blake Rd Station",
       "lat": 44.9263123,
-      "lon": -93.3882597
+      "lon": -93.3882597,
+      "type": "coordinate"
     },
     "7265-nicollet-ave-s-richfield-minnesota-55423": {
       "name": "7265 Nicollet Ave S, Richfield, Minnesota, 55423",
       "lat": 44.8715409,
-      "lon": -93.2781504
+      "lon": -93.2781504,
+      "type": "coordinate"
     },
     "central-library": {
       "name": "Central Library",
       "lat": 44.9808703,
-      "lon": -93.2707964
+      "lon": -93.2707964,
+      "type": "coordinate"
     },
     "66th-st-e-nicollet-ave-s-richfield-minnesota-55423": {
       "name": "66th St E & Nicollet Ave S, Richfield, Minnesota, 55423",
       "lat": 44.88355,
-      "lon": -93.2780128
+      "lon": -93.2780128,
+      "type": "coordinate"
     },
     "lowry-ave-ne-central-ave-ne-minneapolis-minnesota-55418": {
       "name": "Lowry Ave NE & Central Ave NE, Minneapolis, Minnesota, 55418",
       "lat": 45.013168,
-      "lon": -93.2473317
+      "lon": -93.2473317,
+      "type": "coordinate"
     },
     "va-medical-center": {
       "name": "VA Medical Center",
       "lat": 44.9019716,
-      "lon": -93.2038896
+      "lon": -93.2038896,
+      "type": "coordinate"
     },
     "4123-lyndale-ave-n-minneapolis-minnesota-55412": {
       "name": "4123 Lyndale Ave N, Minneapolis, Minnesota, 55412",
       "lat": 45.0298767,
-      "lon": -93.2881634
+      "lon": -93.2881634,
+      "type": "coordinate"
     },
     "fremont-ave-n-dowling-ave-n-minneapolis-minnesota-55412": {
       "name": "Fremont Ave N & Dowling Ave N, Minneapolis, Minnesota, 55412",
       "lat": 45.023986,
-      "lon": -93.2956437
+      "lon": -93.2956437,
+      "type": "coordinate"
     },
     "2432-cedar-ave-s-minneapolis-minnesota-55404": {
       "name": "2432 Cedar Ave S, Minneapolis, Minnesota, 55404",
       "lat": 44.95853,
-      "lon": -93.2473786
+      "lon": -93.2473786,
+      "type": "coordinate"
     },
     "5700-dupont-ave-n-brooklyn-center-minnesota-55430": {
       "name": "5700 Dupont Ave N, Brooklyn Center, Minnesota, 55430",
       "lat": 45.0584489,
-      "lon": -93.2937607
+      "lon": -93.2937607,
+      "type": "coordinate"
     },
     "5100-penn-ave-n-minneapolis-minnesota-55430": {
       "name": "5100 Penn Ave N, Minneapolis, Minnesota, 55430",
       "lat": 45.0476424,
-      "lon": -93.3092307
+      "lon": -93.3092307,
+      "type": "coordinate"
     },
     "9th-st-s-nicollet-mall-minneapolis-minnesota-55402": {
       "name": "9th St S & Nicollet Mall, Minneapolis, Minnesota, 55402",
       "lat": 44.974981,
-      "lon": -93.2738592
+      "lon": -93.2738592,
+      "type": "coordinate"
     },
     "stinson-blvd-ridgway-pkwy-minneapolis-minnesota-55418": {
       "name": "Stinson Blvd & Ridgway Pkwy, Minneapolis, Minnesota, 55418",
       "lat": 45.003889,
-      "lon": -93.2269423
+      "lon": -93.2269423,
+      "type": "coordinate"
     },
     "lake-st-w-lyndale-ave-s-minneapolis-minnesota-55408": {
       "name": "Lake St W & Lyndale Ave S, Minneapolis, Minnesota, 55408",
       "lat": 44.948368,
-      "lon": -93.2880927
+      "lon": -93.2880927,
+      "type": "coordinate"
     },
     "2800-12th-ave-s-minneapolis-minnesota-55407": {
       "name": "2800 12th Ave S, Minneapolis, Minnesota, 55407",
       "lat": 44.9518837,
-      "lon": -93.2576412
+      "lon": -93.2576412,
+      "type": "coordinate"
     },
     "2600-12th-ave-s-minneapolis-minnesota-55407": {
       "name": "2600 12th Ave S, Minneapolis, Minnesota, 55407",
       "lat": 44.9554754,
-      "lon": -93.2575972
+      "lon": -93.2575972,
+      "type": "coordinate"
     },
     "golden-valley-rd-xerxes-ave-n-golden-valley-minnesota-55422": {
       "name": "Golden Valley Rd & Xerxes Ave N, Golden Valley, Minnesota, 55422",
       "lat": 44.998948,
-      "lon": -93.3184452
+      "lon": -93.3184452,
+      "type": "coordinate"
     },
     "27th-ave-se-hennepin-ave-e-minneapolis-minnesota-55414": {
       "name": "27th Ave SE & Hennepin Ave E, Minneapolis, Minnesota, 55414",
       "lat": 44.991568,
-      "lon": -93.2151343
+      "lon": -93.2151343,
+      "type": "coordinate"
     },
     "west-broadway-dupont-ave-n-minneapolis-minnesota-55411": {
       "name": "West Broadway & Dupont Ave N, Minneapolis, Minnesota, 55411",
       "lat": 44.999155,
-      "lon": -93.2925927
+      "lon": -93.2925927,
+      "type": "coordinate"
     },
     "rosedale-transit-center": {
       "name": "Rosedale Transit Center",
       "lat": 45.0127451,
-      "lon": -93.1683549
+      "lon": -93.1683549,
+      "type": "coordinate"
     },
     "westgate-station": {
       "name": "Westgate Station",
       "lat": 44.9674749,
-      "lon": -93.2063914
+      "lon": -93.2063914,
+      "type": "coordinate"
     },
     "701-kasota-ave-minneapolis-minnesota-55414": {
       "name": "701 Kasota Ave, Minneapolis, Minnesota, 55414",
       "lat": 44.9811174,
-      "lon": -93.2143746
+      "lon": -93.2143746,
+      "type": "coordinate"
     },
     "701-kasota-ave-minneapolis-minnesota-55414-2": {
       "name": "701 Kasota Ave, Minneapolis, Minnesota, 55414",
       "lat": 44.9811296,
-      "lon": -93.2143949
+      "lon": -93.2143949,
+      "type": "coordinate"
     },
     "27th-ave-se-university-ave-se-minneapolis-minnesota-55414": {
       "name": "27th Ave SE & University Ave SE, Minneapolis, Minnesota, 55414",
       "lat": 44.972326,
-      "lon": -93.2186173
+      "lon": -93.2186173,
+      "type": "coordinate"
     },
     "78th-st-w-johnson-ave-s-bloomington-minnesota-55435": {
       "name": "78th St W & Johnson Ave S, Bloomington, Minnesota, 55435",
       "lat": 44.858863,
-      "lon": -93.3334572
+      "lon": -93.3334572,
+      "type": "coordinate"
     },
     "5000-xerxes-ave-s-minneapolis-minnesota-55410": {
       "name": "5000 Xerxes Ave S, Minneapolis, Minnesota, 55410",
       "lat": 44.9123824,
-      "lon": -93.3189352
+      "lon": -93.3189352,
+      "type": "coordinate"
     },
     "10415-smetana-rd-minnetonka-minnesota-55343": {
       "name": "10415 Smetana Rd, Minnetonka, Minnesota, 55343",
       "lat": 44.9061186,
-      "lon": -93.4116116
+      "lon": -93.4116116,
+      "type": "coordinate"
     },
     "highland-park": {
       "name": "Highland Park",
       "lat": 44.9178705,
-      "lon": -93.1873864
+      "lon": -93.1873864,
+      "type": "coordinate"
     },
     "minnesota-veterans-home": {
       "name": "Minnesota Veterans Home",
       "lat": 44.9121271,
-      "lon": -93.2032668
+      "lon": -93.2032668,
+      "type": "coordinate"
     },
     "4615-grand-ave-s-minneapolis-minnesota-55419": {
       "name": "4615 Grand Ave S, Minneapolis, Minnesota, 55419",
       "lat": 44.9192941,
-      "lon": -93.2843874
+      "lon": -93.2843874,
+      "type": "coordinate"
     },
     "46th-st-station": {
       "name": "46th St Station",
       "lat": 44.9207473,
-      "lon": -93.2198828
+      "lon": -93.2198828,
+      "type": "coordinate"
     },
     "14th-ave-n-penn-ave-n-minneapolis-minnesota-55411": {
       "name": "14th Ave N & Penn Ave N, Minneapolis, Minnesota, 55411",
       "lat": 44.993071,
-      "lon": -93.3082212
+      "lon": -93.3082212,
+      "type": "coordinate"
     },
     "32nd-ave-n-douglas-dr-n-crystal-minnesota-55422": {
       "name": "32nd Ave N & Douglas Dr N, Crystal, Minnesota, 55422",
       "lat": 45.014617,
-      "lon": -93.3600207
+      "lon": -93.3600207,
+      "type": "coordinate"
     }
   },
   "tests": [
@@ -330,15 +394,18 @@
         "time": "11:21:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "2"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "2"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -351,15 +418,18 @@
         "time": "07:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "2"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "2"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -372,15 +442,18 @@
         "time": "07:15:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "3"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "3"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -393,15 +466,18 @@
         "time": "07:15:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "3"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "3"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -414,15 +490,18 @@
         "time": "08:20:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "4"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "4"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -435,15 +514,18 @@
         "time": "20:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "4"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "4"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -456,22 +538,25 @@
         "time": "05:30:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "4"
-            ]
-          },
-          {
-            "mode": "BUS",
-            "routes": [
-              "4"
-            ],
-            "interlinedWithPrevious": true
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "4"
+              ]
+            },
+            {
+              "mode": "BUS",
+              "interlinedWithPrevious": true,
+              "routeShortNames": [
+                "4"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -484,15 +569,18 @@
         "time": "10:05:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "5"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "5"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -505,15 +593,18 @@
         "time": "15:30:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "5"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "5"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -526,22 +617,25 @@
         "time": "11:45:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "7"
-            ]
-          },
-          {
-            "mode": "BUS",
-            "routes": [
-              "7"
-            ],
-            "interlinedWithPrevious": true
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "7"
+              ]
+            },
+            {
+              "mode": "BUS",
+              "interlinedWithPrevious": true,
+              "routeShortNames": [
+                "7"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -554,15 +648,18 @@
         "time": "06:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "9"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "9"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -575,15 +672,18 @@
         "time": "11:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "9"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "9"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -596,15 +696,18 @@
         "time": "07:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "10"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "10"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -617,15 +720,18 @@
         "time": "19:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "10"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "10"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -638,22 +744,25 @@
         "time": "05:32:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "10"
-            ]
-          },
-          {
-            "mode": "BUS",
-            "routes": [
-              "10"
-            ],
-            "interlinedWithPrevious": true
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "10"
+              ]
+            },
+            {
+              "mode": "BUS",
+              "interlinedWithPrevious": true,
+              "routeShortNames": [
+                "10"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -666,22 +775,25 @@
         "time": "00:30:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "10"
-            ]
-          },
-          {
-            "mode": "BUS",
-            "routes": [
-              "18"
-            ],
-            "interlinedWithPrevious": true
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "10"
+              ]
+            },
+            {
+              "mode": "BUS",
+              "interlinedWithPrevious": true,
+              "routeShortNames": [
+                "18"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -694,15 +806,18 @@
         "time": "06:39:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "11"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "11"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -715,15 +830,18 @@
         "time": "14:12:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "11"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "11"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -736,15 +854,18 @@
         "time": "06:10:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "14"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "14"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -757,15 +878,18 @@
         "time": "13:00:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "14"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "14"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -778,15 +902,18 @@
         "time": "07:02:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "17"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "17"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -799,15 +926,18 @@
         "time": "10:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "17"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "17"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -820,15 +950,18 @@
         "time": "07:25:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "18"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "18"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -841,15 +974,18 @@
         "time": "22:40:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "18"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "18"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -862,22 +998,25 @@
         "time": "00:19:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "18"
-            ]
-          },
-          {
-            "mode": "BUS",
-            "routes": [
-              "10"
-            ],
-            "interlinedWithPrevious": true
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "18"
+              ]
+            },
+            {
+              "mode": "BUS",
+              "interlinedWithPrevious": true,
+              "routeShortNames": [
+                "10"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -890,15 +1029,18 @@
         "time": "08:37:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "22"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "22"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -911,15 +1053,18 @@
         "time": "20:41:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "22"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "22"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -932,22 +1077,25 @@
         "time": "10:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "22"
-            ]
-          },
-          {
-            "mode": "BUS",
-            "routes": [
-              "22"
-            ],
-            "interlinedWithPrevious": true
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "22"
+              ]
+            },
+            {
+              "mode": "BUS",
+              "interlinedWithPrevious": true,
+              "routeShortNames": [
+                "22"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -960,15 +1108,18 @@
         "time": "17:20:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "25"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "25"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -981,15 +1132,18 @@
         "time": "08:20:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "25"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "25"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1002,15 +1156,18 @@
         "time": "07:20:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "27"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "27"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1023,15 +1180,18 @@
         "time": "10:30:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "27"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "27"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1044,15 +1204,18 @@
         "time": "08:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "30"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "30"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1065,15 +1228,18 @@
         "time": "10:15:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "30"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "30"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1086,15 +1252,18 @@
         "time": "16:20:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "32"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "32"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1107,15 +1276,18 @@
         "time": "16:20:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "32"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "32"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1128,15 +1300,18 @@
         "time": "06:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "33"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "33"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1149,22 +1324,25 @@
         "time": "05:22:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "33"
-            ]
-          },
-          {
-            "mode": "BUS",
-            "routes": [
-              "33"
-            ],
-            "interlinedWithPrevious": true
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "33"
+              ]
+            },
+            {
+              "mode": "BUS",
+              "interlinedWithPrevious": true,
+              "routeShortNames": [
+                "33"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1177,15 +1355,18 @@
         "time": "16:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "33"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "33"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1198,22 +1379,25 @@
         "time": "16:00:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "33"
-            ]
-          },
-          {
-            "mode": "BUS",
-            "routes": [
-              "33"
-            ],
-            "interlinedWithPrevious": true
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "33"
+              ]
+            },
+            {
+              "mode": "BUS",
+              "interlinedWithPrevious": true,
+              "routeShortNames": [
+                "33"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1226,15 +1410,18 @@
         "time": "07:25:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "36"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "36"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1247,15 +1434,18 @@
         "time": "10:25:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "36"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "36"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1268,15 +1458,18 @@
         "time": "07:30:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "38"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "38"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1289,15 +1482,18 @@
         "time": "07:30:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "38"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "38"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1310,15 +1506,18 @@
         "time": "12:00:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "38"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "38"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1331,15 +1530,18 @@
         "time": "11:30:00.000",
         "searchDirection": "ARRIVE_BY"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "38"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "38"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1352,15 +1554,18 @@
         "time": "07:04:40.356",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "46"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "46"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1373,15 +1578,18 @@
         "time": "11:06:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "46"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "46"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1394,15 +1602,18 @@
         "time": "06:40:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "48"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "48"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -1415,15 +1626,18 @@
         "time": "09:40:00.000",
         "searchDirection": "DEPART_AT"
       },
-      "expect": {
-        "transitLegs": [
-          {
-            "mode": "BUS",
-            "routes": [
-              "48"
-            ]
-          }
-        ]
+      "type": "trip-plan",
+      "expectation": {
+        "itinerary": {
+          "transitLegs": [
+            {
+              "mode": "BUS",
+              "routeShortNames": [
+                "48"
+              ]
+            }
+          ]
+        }
       }
     }
   ]

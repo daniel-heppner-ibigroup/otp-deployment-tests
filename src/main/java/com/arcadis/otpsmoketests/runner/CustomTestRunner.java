@@ -2,11 +2,9 @@ package com.arcadis.otpsmoketests.runner;
 
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.ExecutableTestCase;
-import com.arcadis.otpsmoketests.reporting.TripCapture;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.time.Instant;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
@@ -20,81 +18,28 @@ public class CustomTestRunner {
     CustomTestRunner.class
   );
 
-  public static class TestResult {
-
-    private final String testName;
-    private final boolean passed;
-    private final Throwable exception;
-    private final long durationMs;
-    private final String displayName;
-    private final List<TripCapture.CapturedRequest> requests;
-
-    public TestResult(
-      String testName,
-      boolean passed,
-      Throwable exception,
-      long durationMs
-    ) {
-      this(testName, testName, passed, exception, durationMs, List.of());
-    }
-
-    public TestResult(
-      String testName,
-      String displayName,
-      boolean passed,
-      Throwable exception,
-      long durationMs,
-      List<TripCapture.CapturedRequest> requests
-    ) {
-      this.testName = testName;
-      this.displayName = displayName;
-      this.passed = passed;
-      this.exception = exception;
-      this.durationMs = durationMs;
-      this.requests = List.copyOf(requests);
-    }
-
-    public String getDisplayName() {
-      return displayName;
-    }
-
-    public List<TripCapture.CapturedRequest> getRequests() {
-      return requests;
-    }
-
-    public String getTestName() {
-      return testName;
-    }
-
-    public boolean isPassed() {
-      return passed;
-    }
-
-    public Throwable getException() {
-      return exception;
-    }
-
-    public long getDurationMs() {
-      return durationMs;
-    }
-  }
+  public record TestResult(
+    String testName,
+    boolean passed,
+    Throwable exception,
+    long durationMs
+  ) {}
 
   public record SuiteResult(
     String suiteName,
     List<TestResult> testResults,
-    long totalDurationMs,
-    Instant startedAt
+    long totalDurationMs
   ) {
     public long getTestsFoundCount() {
       return testResults.size();
     }
 
     public long getTestsSucceededCount() {
-      return testResults.stream().mapToLong(t -> t.isPassed() ? 1 : 0).sum();
+      return testResults.stream().mapToLong(t -> t.passed() ? 1 : 0).sum();
     }
 
     public long getTestsFailedCount() {
-      return testResults.stream().mapToLong(t -> t.isPassed() ? 0 : 1).sum();
+      return testResults.stream().mapToLong(t -> t.passed() ? 0 : 1).sum();
     }
 
     public long getTestsSkippedCount() {
@@ -109,71 +54,41 @@ public class CustomTestRunner {
     String deploymentName
   ) {
     List<TestResult> testResults = new ArrayList<>();
-    Instant startedAt = Instant.now();
     long suiteStartTime = System.nanoTime();
 
     List<ExecutableTestCase> testCases;
-    try (TripCapture setupCapture = TripCapture.begin()) {
-      try {
-        BaseTestSuite suiteInstance = getBaseTestSuite(
-          suiteClass,
-          baseUrl,
-          deploymentName
-        );
-        testCases = discoverTestCases(suiteClass, suiteInstance);
-      } catch (
-        ReflectiveOperationException | RuntimeException | AssertionError e
-      ) {
-        Throwable cause = unwrap(e);
-        testResults.add(
-          new TestResult(
-            "suite-setup",
-            "Suite setup",
-            false,
-            cause,
-            elapsed(suiteStartTime),
-            setupCapture.requests()
-          )
-        );
-        logger.error("Failed to initialize test suite: {}", suiteName, cause);
-        return new SuiteResult(
-          suiteName,
-          testResults,
-          elapsed(suiteStartTime),
-          startedAt
-        );
-      }
+    try {
+      BaseTestSuite suiteInstance = getBaseTestSuite(
+        suiteClass,
+        baseUrl,
+        deploymentName
+      );
+      testCases = discoverTestCases(suiteClass, suiteInstance);
+    } catch (
+      ReflectiveOperationException | RuntimeException | AssertionError e
+    ) {
+      Throwable cause = unwrap(e);
+      testResults.add(
+        new TestResult("suite-setup", false, cause, elapsed(suiteStartTime))
+      );
+      logger.error("Failed to initialize test suite: {}", suiteName, cause);
+      return new SuiteResult(suiteName, testResults, elapsed(suiteStartTime));
     }
     for (ExecutableTestCase testCase : testCases) {
       long start = System.nanoTime();
-      try (TripCapture capture = TripCapture.begin()) {
-        Throwable failure = null;
-        try {
-          testCase.execute();
-        } catch (Throwable e) {
-          failure = unwrap(e);
-          if (failure instanceof VirtualMachineError fatal) throw fatal;
-          if (failure instanceof ThreadDeath fatal) throw fatal;
-          logger.error("Test failed: {}.{}", suiteName, testCase.id(), failure);
-        }
-        testResults.add(
-          new TestResult(
-            testCase.id(),
-            testCase.displayName(),
-            failure == null,
-            failure,
-            elapsed(start),
-            capture.requests()
-          )
-        );
+      Throwable failure = null;
+      try {
+        testCase.execute();
+      } catch (Throwable e) {
+        failure = unwrap(e);
+        if (failure instanceof VirtualMachineError fatal) throw fatal;
+        logger.error("Test failed: {}.{}", suiteName, testCase.id(), failure);
       }
+      testResults.add(
+        new TestResult(testCase.id(), failure == null, failure, elapsed(start))
+      );
     }
-    return new SuiteResult(
-      suiteName,
-      testResults,
-      elapsed(suiteStartTime),
-      startedAt
-    );
+    return new SuiteResult(suiteName, testResults, elapsed(suiteStartTime));
   }
 
   private static List<ExecutableTestCase> discoverTestCases(

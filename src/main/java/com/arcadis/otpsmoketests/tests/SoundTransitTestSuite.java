@@ -1,5 +1,9 @@
 package com.arcadis.otpsmoketests.tests;
 
+import static org.opentripplanner.assertions.Expectations.containingTransitLegs;
+import static org.opentripplanner.assertions.Expectations.exactTransitLegs;
+import static org.opentripplanner.assertions.Expectations.route;
+
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import java.io.IOException;
 import java.time.LocalTime;
@@ -12,7 +16,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.opentripplanner.assertions.ItineraryAssertions;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.parameters.TripPlanParameters;
 import org.opentripplanner.client.parameters.TripPlanParametersBuilder;
@@ -135,14 +138,16 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testELineBus");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withMode("BUS")
-      .withRouteShortName("E Line")
-      .withFarePrice(3.00f, "orca:regular", "orca:cash")
-      .withFarePrice(1.0f, "orca:senior", "orca:cash")
-      .withFarePrice(1.0f, "orca:special", "orca:electronic")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      containingTransitLegs(
+        route("E Line")
+          .withMode("BUS")
+          .withFarePrice(3.00f, "orca:regular", "orca:cash")
+          .withFarePrice(1.0f, "orca:senior", "orca:cash")
+          .withFarePrice(1.0f, "orca:special", "orca:electronic")
+      )
+    );
   }
 
   @Test
@@ -155,14 +160,16 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testLightRail");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withMode("TRAM")
-      .withRouteShortName("1 Line")
-      .withFarePrice(3.0f, "orca:regular", "orca:cash")
-      .withFarePrice(1.0f, "orca:senior", "orca:cash")
-      .withFarePrice(1.0f, "orca:special", "orca:electronic")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      containingTransitLegs(
+        route("1 Line")
+          .withMode("TRAM")
+          .withFarePrice(3.0f, "orca:regular", "orca:cash")
+          .withFarePrice(1.0f, "orca:senior", "orca:cash")
+          .withFarePrice(1.0f, "orca:special", "orca:electronic")
+      )
+    );
   }
 
   @Test
@@ -175,20 +182,21 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testMultiLegJourney");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withMode("BUS")
-      .withRouteShortName("8")
-      .withFarePrice(2.00f, "orca:regular", "orca:cash")
-      .withFarePrice(2.00f, "orca:regular", "orca:electronic")
-      .withFarePrice(1.00f, "orca:special", "orca:electronic")
-      .hasLeg()
-      .withMode("BUS")
-      .withRouteShortName("201", "202")
-      .withFarePrice(2.50f, "orca:regular", "orca:cash")
-      .withFarePrice(2.50f, "orca:regular", "orca:electronic")
-      .withFarePrice(1.00f, "orca:special", "orca:electronic")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      containingTransitLegs(
+        route("8")
+          .withMode("BUS")
+          .withFarePrice(2.00f, "orca:regular", "orca:cash")
+          .withFarePrice(2.00f, "orca:regular", "orca:electronic")
+          .withFarePrice(1.00f, "orca:special", "orca:electronic"),
+        route("201", "202")
+          .withMode("BUS")
+          .withFarePrice(2.50f, "orca:regular", "orca:cash")
+          .withFarePrice(2.50f, "orca:regular", "orca:electronic")
+          .withFarePrice(1.00f, "orca:special", "orca:electronic")
+      )
+    );
   }
 
   @Test
@@ -201,12 +209,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testColmanDockToUWCSBuilding");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withMode("TRAM")
-      .withRouteShortName("1 Line")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("1 Line").withMode("TRAM")));
   }
 
   @Test
@@ -220,23 +223,12 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testKingStStationToTacomaDome");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("S Line")
-      .assertMatches(plan);
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("590")
-      .assertMatches(plan);
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("578", "577")
-      .hasLeg()
-      .withRouteShortName("574", "586")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("S Line")));
+    assertPlan(plan, exactTransitLegs(route("590")));
+    assertPlan(
+      plan,
+      exactTransitLegs(route("578", "577"), route("574", "586"))
+    );
   }
 
   @Test
@@ -249,27 +241,11 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "testKingStStationTo45thVegThai");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("1 Line")
-      .hasLeg()
-      .withRouteShortName("44")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("1 Line"), route("44")));
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("62")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("62")));
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("E Line")
-      .hasLeg()
-      .withRouteShortName("44")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("E Line"), route("44")));
   }
 
   @Test
@@ -285,20 +261,8 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       "testSouthBellevueStationToClimatePledge"
     );
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("2 Line")
-      .hasLeg()
-      .withRouteShortName("D Line")
-      .assertMatches(plan);
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("2 Line")
-      .hasLeg()
-      .withRouteShortName("Monorail")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("2 Line"), route("D Line")));
+    assertPlan(plan, exactTransitLegs(route("2 Line"), route("Monorail")));
   }
 
   @Test
@@ -311,14 +275,13 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "sodoToKingSt");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("21")
-      .hasLeg()
-      .interlinedWithPreviousLeg()
-      .withRouteShortName("5")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      exactTransitLegs(
+        route("21"),
+        route("5").withInterlinedWithPreviousLeg(true)
+      )
+    );
   }
 
   @Test
@@ -332,29 +295,14 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "sodoToNCapitolHill");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("1 Line")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("1 Line")));
 
-    new ItineraryAssertions()
-      .withStrictTransitMatching()
-      .hasLeg()
-      .withRouteShortName("1 Line")
-      .hasLeg()
-      .withRouteShortName("49")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("1 Line"), route("49")));
 
-    new ItineraryAssertions()
-      .withStrictTransitMatching()
-      .hasLeg()
-      .withRouteShortName("50")
-      .hasLeg()
-      .withRouteShortName("1 Line")
-      .hasLeg()
-      .withRouteShortName("49")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      exactTransitLegs(route("50"), route("1 Line"), route("49"))
+    );
   }
 
   @Test
@@ -424,11 +372,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       "Should get at most 10 itineraries based on custom parameters"
     );
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withMode("BUS")
-      .withRouteShortName("E Line")
-      .assertMatches(plan);
+    assertPlan(plan, containingTransitLegs(route("E Line").withMode("BUS")));
   }
 
   @Test
@@ -441,18 +385,8 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "queenAnneToHopelinkFoodBank");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteShortName("31", "32")
-      .hasLeg()
-      .withRouteShortName("255")
-      .assertMatches(plan);
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteShortName("31", "32")
-      .hasLeg()
-      .withRouteShortName("239")
-      .assertMatches(plan);
+    assertPlan(plan, containingTransitLegs(route("31", "32"), route("255")));
+    assertPlan(plan, containingTransitLegs(route("31", "32"), route("239")));
   }
 
   @Test
@@ -468,16 +402,8 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       "kingStStationToTractorTavernBallard"
     );
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("40")
-      .assertMatches(plan);
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("D Line")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("40")));
+    assertPlan(plan, exactTransitLegs(route("D Line")));
   }
 
   @Test
@@ -491,18 +417,12 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "kingStStationToMukilteoFerry");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("N Line")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("N Line")));
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteShortName("1 Line", "2 Line")
-      .hasLeg()
-      .withRouteShortName("117")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      containingTransitLegs(route("1 Line", "2 Line"), route("117"))
+    );
   }
 
   @Test
@@ -515,18 +435,9 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "greenLakeToKingStStation");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("1 Line")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("1 Line")));
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteShortName("62", "45")
-      .hasLeg()
-      .withRouteShortName("1 Line")
-      .assertMatches(plan);
+    assertPlan(plan, containingTransitLegs(route("62", "45"), route("1 Line")));
   }
 
   @Test
@@ -539,11 +450,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "capitolHillToKingStStation");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("1 Line")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("1 Line")));
   }
 
   @Test
@@ -556,11 +463,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "capitolHillToUWStation");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("1 Line")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("1 Line")));
   }
 
   @Test
@@ -573,14 +476,13 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "paseoFremontToSODO");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("5")
-      .hasLeg()
-      .interlinedWithPreviousLeg()
-      .withRouteShortName("21")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      exactTransitLegs(
+        route("5"),
+        route("21").withInterlinedWithPreviousLeg(true)
+      )
+    );
   }
 
   @Test
@@ -593,11 +495,7 @@ public class SoundTransitTestSuite extends BaseTestSuite {
 
     var plan = apiClient.timedPlan(params, "capitolHillToColumbiaCity");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("1 Line")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("1 Line")));
   }
 
   @Test
@@ -613,12 +511,6 @@ public class SoundTransitTestSuite extends BaseTestSuite {
       "s1801SBushPlaceToBellevueTransitCenter"
     );
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withStrictTransitMatching()
-      .withRouteShortName("554")
-      .hasLeg()
-      .withRouteShortName("2 Line")
-      .assertMatches(plan);
+    assertPlan(plan, exactTransitLegs(route("554"), route("2 Line")));
   }
 }

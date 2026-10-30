@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 2,
+  "defaults": {
+    "request": {
+      "modes": [
+        "BUS",
+        "WALK"
+      ],
+      "numItineraries": 5,
+      "wheelchair": true,
+      "searchDirection": "ARRIVE_BY",
+      "searchWindowSeconds": 1800,
+      "walkReluctance": 2,
+      "carReluctance": 3,
+      "bikeReluctance": 4,
+      "bikeWalkingReluctance": 5,
+      "walkSpeed": 1.1,
+      "optimize": "SAFE",
+      "triangle": {
+        "safetyFactor": 0.5,
+        "slopeFactor": 0.2,
+        "timeFactor": 0.3
+      },
+      "banned": {
+        "routes": [
+          "feed:r"
+        ],
+        "agencies": [
+          "feed:a"
+        ],
+        "trips": [
+          "feed:t"
+        ],
+        "stops": [
+          "feed:s"
+        ],
+        "stopsHard": [
+          "feed:h"
+        ]
+      },
+      "pageCursor": "default-cursor"
+    },
+    "transitLegMatching": "ORDERED_SUBSEQUENCE"
+  },
+  "locations": {
+    "a": {
+      "type": "stop-id",
+      "id": "feed:123"
+    },
+    "b": {
+      "lat": 44.95,
+      "lon": -93.25,
+      "type": "coordinate"
+    }
+  },
+  "tests": [
+    {
+      "id": "walking",
+      "name": "Walking with explicit request overrides",
+      "type": "trip-plan",
+      "request": {
+        "from": "a",
+        "to": "b",
+        "date": "2026-11-02",
+        "time": "08:30",
+        "modes": [
+          "WALK"
+        ],
+        "numItineraries": 2,
+        "wheelchair": false,
+        "searchDirection": "DEPART_AT",
+        "searchWindowSeconds": 0,
+        "walkReluctance": 1.2,
+        "carReluctance": 1.3,
+        "bikeReluctance": 1.4,
+        "bikeWalkingReluctance": 1.5,
+        "walkSpeed": 1.6,
+        "optimize": "TRIANGLE",
+        "triangle": {
+          "safetyFactor": 0.2,
+          "slopeFactor": 0.3,
+          "timeFactor": 0.5
+        },
+        "banned": {},
+        "pageCursor": "explicit-cursor"
+      },
+      "expectation": {
+        "allOf": [
+          {
+            "itineraryCountBetween": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          },
+          {
+            "anyOf": [
+              {
+                "itinerary": {
+                  "transitLegs": [
+                    {
+                      "routeShortNames": [
+                        "999"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "itinerary": {
+                  "transitLegMatching": "EXACT_ORDERED",
+                  "transitLegs": [],
+                  "maxDurationSeconds": 600
+                }
+              }
+            ]
+          },
+          {
+            "itinerary": {
+              "itineraryMatching": "NONE",
+              "transitLegs": [
+                {
+                  "routeShortNames": [
+                    "999"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "next-week",
+      "name": "Next weekday with inherited request defaults",
+      "type": "trip-plan",
+      "request": {
+        "from": "a",
+        "to": "b",
+        "serviceDay": "THURSDAY",
+        "time": "09:00"
+      },
+      "expectation": {
+        "allOf": [
+          {
+            "itinerary": {
+              "maxDurationSeconds": 600
+            }
+          },
+          {
+            "itineraryCountBetween": {
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "agencies",
+      "name": "Expected agencies",
+      "type": "agency-list",
+      "agencies": [
+        "Metro Transit"
+      ]
+    }
+  ]
+}

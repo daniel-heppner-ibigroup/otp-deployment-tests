@@ -1,5 +1,8 @@
 package com.arcadis.otpsmoketests.tests;
 
+import static org.opentripplanner.assertions.Expectations.containingTransitLegs;
+import static org.opentripplanner.assertions.Expectations.route;
+import static org.opentripplanner.assertions.Expectations.routeLongName;
 import static org.opentripplanner.client.model.RequestMode.FLEX_ACCESS;
 import static org.opentripplanner.client.model.RequestMode.FLEX_DIRECT;
 import static org.opentripplanner.client.model.RequestMode.FLEX_EGRESS;
@@ -17,7 +20,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.opentripplanner.assertions.ItineraryAssertions;
 import org.opentripplanner.client.model.RequestMode;
 import org.opentripplanner.client.model.TripPlan;
 import org.opentripplanner.client.parameters.TripPlanParameters;
@@ -140,10 +142,7 @@ public class HopeLinkTestSuite extends BaseTestSuite {
   }
 
   private static void checkLongName(TripPlan plan, String longName) {
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteLongName(longName)
-      .assertMatches(plan);
+    assertPlan(plan, containingTransitLegs(routeLongName(longName)));
   }
 
   private static void listLongNames(TripPlan plan) {
@@ -163,14 +162,11 @@ public class HopeLinkTestSuite extends BaseTestSuite {
   public void insideTacoma() throws IOException {
     var plan = flexPlanRequest("Tacoma", "Puyallup", "insideTacoma");
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteLongName("Road to Recovery")
-      .assertMatches(plan);
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteLongName("Volunteer Services: Southwest")
-      .assertMatches(plan);
+    assertPlan(plan, containingTransitLegs(routeLongName("Road to Recovery")));
+    assertPlan(
+      plan,
+      containingTransitLegs(routeLongName("Volunteer Services: Southwest"))
+    );
   }
 
   @Test
@@ -187,18 +183,15 @@ public class HopeLinkTestSuite extends BaseTestSuite {
 
     var plan = apiClient.plan(params);
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteLongName("Volunteer Transportation")
-      .assertMatches(plan);
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteLongName("Road to Recovery")
-      .assertMatches(plan);
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteLongName("Medicaid Transportation")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      containingTransitLegs(routeLongName("Volunteer Transportation"))
+    );
+    assertPlan(plan, containingTransitLegs(routeLongName("Road to Recovery")));
+    assertPlan(
+      plan,
+      containingTransitLegs(routeLongName("Medicaid Transportation"))
+    );
   }
 
   @Test
@@ -289,12 +282,13 @@ public class HopeLinkTestSuite extends BaseTestSuite {
             .build()
         );
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteLongName("D'Arling Direct")
-      .hasLeg()
-      .withRouteLongName("DC Direct")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      containingTransitLegs(
+        routeLongName("D'Arling Direct"),
+        routeLongName("DC Direct")
+      )
+    );
   }
 
   @Test
@@ -375,12 +369,10 @@ public class HopeLinkTestSuite extends BaseTestSuite {
   @DisplayName("1 Line to Zip")
   public void LinkToZip() throws IOException {
     var plan = flexPlanRequest("ShorelineNStation", "Lynnwood2", "1lineToZip");
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteShortName("1 Line")
-      .hasLeg()
-      .withRouteLongName("Zip Shuttle")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      containingTransitLegs(route("1 Line"), routeLongName("Zip Shuttle"))
+    );
   }
 
   @Test
@@ -392,11 +384,9 @@ public class HopeLinkTestSuite extends BaseTestSuite {
       "LinkToMetroFlex"
     );
 
-    new ItineraryAssertions()
-      .hasLeg()
-      .withRouteShortName("1 Line")
-      .hasLeg()
-      .withRouteLongName("Tukwila")
-      .assertMatches(plan);
+    assertPlan(
+      plan,
+      containingTransitLegs(route("1 Line"), routeLongName("Tukwila"))
+    );
   }
 }

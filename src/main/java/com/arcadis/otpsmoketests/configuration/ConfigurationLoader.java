@@ -23,34 +23,15 @@ public class ConfigurationLoader {
     throws KdlParseException, IOException {
     KdlParser parser = KdlParser.v2();
     KdlDocument document = parser.parse(kdlContent);
-    Configuration config = new Configuration();
-
     List<Configuration.DeploymentUnderTest> deployments = new ArrayList<>();
 
     for (KdlNode node : document.nodes()) {
-      if ("reports".equals(node.name())) {
-        config.setReports(
-          new Configuration.ReportSettings(
-            node
-              .getProperty("directory")
-              .map(p -> p.value().toString())
-              .orElse("results"),
-            Integer.parseInt(
-              node
-                .getProperty("retention-days")
-                .map(p -> p.value().toString())
-                .orElse("30")
-            )
-          )
-        );
-      }
       if ("deployment".equals(node.name())) {
         deployments.add(parseDeployment(node));
       }
     }
 
-    config.setDeploymentsUnderTest(deployments);
-    return config;
+    return new Configuration(deployments);
   }
 
   private static Configuration.DeploymentUnderTest parseDeployment(

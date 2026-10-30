@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 2,
+  "defaults": {
+    "request": {
+      "modes": [
+        "BUS",
+        "WALK"
+      ],
+      "numItineraries": 5,
+      "wheelchair": true,
+      "searchDirection": "ARRIVE_BY"
+    },
+    "transitLegMatching": "ORDERED_SUBSEQUENCE"
+  },
+  "locations": {
+    "a": {
+      "lat": 44.9,
+      "lon": -93.2,
+      "type": "coordinate"
+    },
+    "b": {
+      "lat": 44.95,
+      "lon": -93.25,
+      "type": "coordinate"
+    }
+  },
+  "tests": [
+    {
+      "id": "walking",
+      "name": "Walking with explicit request overrides",
+      "type": "trip-plan",
+      "request": {
+        "from": "a",
+        "to": "b",
+        "date": "2026-11-02",
+        "time": "08:30",
+        "modes": [
+          "WALK"
+        ],
+        "numItineraries": 2,
+        "wheelchair": false,
+        "searchDirection": "DEPART_AT",
+        "serviceDay": "MONDAY"
+      },
+      "expectation": {
+        "allOf": [
+          {
+            "itineraryCountBetween": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          },
+          {
+            "anyOf": [
+              {
+                "itinerary": {
+                  "transitLegs": [
+                    {
+                      "routeShortNames": [
+                        "999"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "itinerary": {
+                  "transitLegMatching": "EXACT_ORDERED",
+                  "transitLegs": [],
+                  "maxDurationSeconds": 600
+                }
+              }
+            ]
+          },
+          {
+            "itinerary": {
+              "itineraryMatching": "NONE",
+              "transitLegs": [
+                {
+                  "routeShortNames": [
+                    "999"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

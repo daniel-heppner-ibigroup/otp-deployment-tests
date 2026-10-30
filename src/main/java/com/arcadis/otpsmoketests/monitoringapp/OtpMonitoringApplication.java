@@ -3,9 +3,6 @@ package com.arcadis.otpsmoketests.monitoringapp;
 import com.arcadis.otpsmoketests.BaseTestSuite;
 import com.arcadis.otpsmoketests.configuration.Configuration;
 import com.arcadis.otpsmoketests.configuration.ConfigurationLoader;
-import com.arcadis.otpsmoketests.reporting.ReportRoutes;
-import com.arcadis.otpsmoketests.reporting.ReportSnapshot;
-import com.arcadis.otpsmoketests.reporting.ReportStore;
 import com.arcadis.otpsmoketests.runner.CustomTestRunner;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinJackson;
@@ -14,7 +11,6 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import it.sauronsoftware.cron4j.Scheduler;
-import java.nio.file.Path;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +36,7 @@ public class OtpMonitoringApplication {
         config = ConfigurationLoader.loadFromFile(configPath);
         logger.info(
           "Configuration loaded successfully with {} deployments",
-          config.getDeploymentsUnderTest().size()
+          config.deploymentsUnderTest().size()
         );
       } catch (Exception e) {
         logger.error("Failed to load configuration from: {}", configPath, e);
@@ -56,15 +52,7 @@ public class OtpMonitoringApplication {
       // Set the meter registry for all test suites to use the same registry as the HTTP endpoint
       BaseTestSuite.setMeterRegistry(meterRegistry);
 
-      ReportStore reportStore = new ReportStore(
-        Path.of(config.getReports().directory()),
-        config.getReports().retentionDays()
-      );
-      TestRunner testRunner = new TestRunner(
-        meterRegistry,
-        config,
-        reportStore
-      );
+      TestRunner testRunner = new TestRunner(meterRegistry, config);
 
       // Start Javalin HTTP server with custom ObjectMapper
       Javalin app = Javalin
@@ -72,7 +60,6 @@ public class OtpMonitoringApplication {
           jConfig.jsonMapper(new JavalinJackson());
         })
         .start(8080);
-      ReportRoutes.register(app, reportStore);
       app.get("/run-tests", ctx -> ctx.json(testRunner.runTestsManually()));
       app.get("/health", ctx -> ctx.json(Map.of("status", "UP")));
       app.get(
@@ -113,7 +100,6 @@ class TestRunner {
   );
   private final MeterRegistry meterRegistry;
   private final Map<String, TestSuiteConfig> testSuites;
-  private final ReportStore reportStore;
 
   public record TestSuiteConfig(
     Class<BaseTestSuite> clazz,
@@ -128,17 +114,12 @@ class TestRunner {
   private final Map<String, AtomicLong> lastRunSuiteTestsFailed = new ConcurrentHashMap<>();
   private final Map<String, AtomicLong> lastRunSuiteDurationMs = new ConcurrentHashMap<>();
 
-  public TestRunner(
-    MeterRegistry meterRegistry,
-    Configuration configuration,
-    ReportStore reportStore
-  ) {
+  public TestRunner(MeterRegistry meterRegistry, Configuration configuration) {
     this.meterRegistry = meterRegistry;
-    this.reportStore = reportStore;
     this.testSuites = new HashMap<>();
 
     // Add test suites from configuration
-    for (Configuration.DeploymentUnderTest deployment : configuration.getDeploymentsUnderTest()) {
+    for (Configuration.DeploymentUnderTest deployment : configuration.deploymentsUnderTest()) {
       for (Configuration.TestSuite testSuite : deployment.suites()) {
         addTestSuite(
           testSuite.clazz(),
@@ -257,7 +238,7 @@ class TestRunner {
     );
 
     // Run the test suite with the custom URL and deployment name
-    CustomTestRunner.SuiteResult suiteResult = runAndSave(config);
+    CustomTestRunner.SuiteResult suiteResult = runTestSuite(config);
 
     // Update suite-specific last run metrics
     lastRunSuiteTestsFound
@@ -285,33 +266,13 @@ class TestRunner {
     }
   }
 
-  private CustomTestRunner.SuiteResult runAndSave(TestSuiteConfig config) {
-    var result = CustomTestRunner.runTestSuite(
+  private CustomTestRunner.SuiteResult runTestSuite(TestSuiteConfig config) {
+    return CustomTestRunner.runTestSuite(
       config.clazz(),
       config.suiteName(),
       config.baseUrl(),
       config.deploymentName()
     );
-    try {
-      String id = reportStore.newId();
-      reportStore.save(
-        ReportSnapshot.from(
-          id,
-          result,
-          config.deploymentName(),
-          config.baseUrl()
-        )
-      );
-      logger.info("Saved test report: /reports/{}", id);
-    } catch (Exception e) {
-      logger.error(
-        "Could not save report for {}.{}",
-        config.deploymentName(),
-        config.suiteName(),
-        e
-      );
-    }
-    return result;
   }
 
   private Map<String, Object> executeTests() {
@@ -333,7 +294,7 @@ class TestRunner {
       TestSuiteConfig config = entry.getValue();
 
       // Run the test suite with the custom URL and deployment name
-      CustomTestRunner.SuiteResult suiteResult = runAndSave(config);
+      CustomTestRunner.SuiteResult suiteResult = runTestSuite(config);
 
       suiteResults.put(testSuiteKey, suiteResult);
 
@@ -352,23 +313,23 @@ class TestRunner {
       suiteResult
         .testResults()
         .stream()
-        .filter(testResult -> !testResult.isPassed())
+        .filter(testResult -> !testResult.passed())
         .forEach(testResult -> {
           Map<String, Object> failureDetails = new HashMap<>();
           failureDetails.put("deployment", config.deploymentName());
           failureDetails.put("suite", config.suiteName());
           failureDetails.put("testClass", config.clazz().getSimpleName());
-          failureDetails.put("testName", testResult.getTestName());
+          failureDetails.put("testName", testResult.testName());
           failureDetails.put(
             "errorMessage",
-            testResult.getException() != null
-              ? testResult.getException().getMessage()
+            testResult.exception() != null
+              ? testResult.exception().getMessage()
               : "Unknown error"
           );
           failureDetails.put(
             "stackTrace",
-            testResult.getException() != null
-              ? Arrays.toString(testResult.getException().getStackTrace())
+            testResult.exception() != null
+              ? Arrays.toString(testResult.exception().getStackTrace())
               : ""
           );
           allFailures.add(failureDetails);
