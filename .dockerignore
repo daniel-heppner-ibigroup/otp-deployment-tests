@@ -2,3 +2,5 @@
 target
 results
 config.kdl
+**/node_modules
+**/*.tsbuildinfo

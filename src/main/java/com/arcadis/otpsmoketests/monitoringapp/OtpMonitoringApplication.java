@@ -6,6 +6,7 @@ import com.arcadis.otpsmoketests.configuration.ConfigurationLoader;
 import com.arcadis.otpsmoketests.runner.CustomTestRunner;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinJackson;
+import io.javalin.http.staticfiles.Location;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.prometheus.PrometheusConfig;
@@ -58,8 +59,20 @@ public class OtpMonitoringApplication {
       Javalin app = Javalin
         .create(jConfig -> {
           jConfig.jsonMapper(new JavalinJackson());
+          if (
+            OtpMonitoringApplication.class.getResource(
+              "/web/suite-builder/index.html"
+            ) != null
+          ) {
+            jConfig.staticFiles.add(staticFiles -> {
+              staticFiles.hostedPath = "/suite-builder";
+              staticFiles.directory = "/web/suite-builder";
+              staticFiles.location = Location.CLASSPATH;
+            });
+          }
         })
         .start(8080);
+      app.get("/", ctx -> ctx.redirect("/suite-builder/"));
       app.get("/run-tests", ctx -> ctx.json(testRunner.runTestsManually()));
       app.get("/health", ctx -> ctx.json(Map.of("status", "UP")));
       app.get(

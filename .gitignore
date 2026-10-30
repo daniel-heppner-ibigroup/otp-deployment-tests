@@ -42,3 +42,7 @@ results/**
 
 # Local deployment configuration
 /config.kdl
+
+# Suite builder dependencies and TypeScript build metadata
+node_modules/
+*.tsbuildinfo

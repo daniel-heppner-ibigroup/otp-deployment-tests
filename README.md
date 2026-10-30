@@ -19,6 +19,22 @@ for manually running all suites.
 
 JSON suites and extension rules are documented in [JSON test suites](docs/json-test-suites.md).
 
+## Test suite editor
+
+The React/Vite SPA builds and edits schema v2 JSON suites, with reusable mapped
+locations, request defaults, and nested expectations. Build the UI and runner
+together with Node.js 24/npm installed:
+
+```sh
+mvn -Pweb-ui clean package
+```
+
+Open `/suite-builder/` on the monitoring server (port 8080). Docker builds include
+the UI automatically. For frontend development, run `npm ci` and `npm run dev`
+in `src/main/web`. See the [editor documentation](src/main/web/README.md) for
+workflows and build details. Export your work before closing the page; suites
+stay in browser memory until downloaded.
+
 ## Building
 
 The runner requires the companion `otp-java-client` **3.0.0-SNAPSHOT**. Build and
