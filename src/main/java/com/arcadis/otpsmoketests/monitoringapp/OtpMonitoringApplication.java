@@ -86,7 +86,7 @@ public class OtpMonitoringApplication {
       scheduler.start();
 
       logger.info(
-        "OTP Monitoring Application started on port 8080, metrics at /metrics"
+        "OTP Sentinel started on port 8080, metrics at /metrics"
       );
 
       // Add shutdown hook

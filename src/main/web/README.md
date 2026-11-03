@@ -1,8 +1,9 @@
-# OTP suite builder
+# OTP Sentinel suite builder
 
-A browser-only React + TypeScript SPA built with Vite. Its forms and AJV 2020
-validation use the runner's actual `test-suite-v2.schema.json`, imported directly
-from `src/main/resources/test-suites/schema` rather than a copied schema.
+The browser-only suite editor for OTP Sentinel, built with React, TypeScript,
+and Vite. Its forms and AJV 2020 validation use the runner's actual
+`test-suite-v2.schema.json`, imported directly from
+`src/main/resources/test-suites/schema` rather than a copied schema.
 
 Use Node.js 24 and npm:
 

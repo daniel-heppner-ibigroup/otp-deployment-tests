@@ -1,0 +1,2345 @@
+{
+  "validations": [
+    {
+      "name": "Route 2 EB - Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Franklin Ave W & Hennepin Ave, Minneapolis, Minnesota, 55405",
+          "point": {
+            "x": 477016.8891095484,
+            "y": 4978848.715658745
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Riverside Ave & 21st Ave S, Minneapolis, Minnesota, 55454",
+          "point": {
+            "x": 480878.2340837075,
+            "y": 4979444.874061264
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-02-20T11:21:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "2",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        }
+      ]
+    },
+    {
+      "name": "Route 2 WB - Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Riverside Ave & 21st Ave S, Minneapolis, Minnesota, 55454",
+          "point": {
+            "x": 480878.2340837075,
+            "y": 4979444.874061264
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Franklin Ave W & Hennepin Ave, Minneapolis, Minnesota, 55405",
+          "point": {
+            "x": 477016.8891095484,
+            "y": 4978848.715658745
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-02-20T07:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "2",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        }
+      ]
+    },
+    {
+      "name": "Route 3 EB - Rush Hour",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "4th St SE & 15th Ave SE, Minneapolis, Minnesota, 55414",
+          "point": {
+            "x": 481518.99235740345,
+            "y": 4980748.714880901
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Como Ave & Dale St N, Saint Paul, Minnesota, 55103",
+          "point": {
+            "x": 490042.2544095204,
+            "y": 4979643.984540192
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-04-27T07:15:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "3",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        }
+      ]
+    },
+    {
+      "name": "Route 3 WB - Non Rush Hour",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Como Ave & Dale St N, Saint Paul, Minnesota, 55103",
+          "point": {
+            "x": 490042.2544095204,
+            "y": 4979643.984540192
+          },
+          "landmarkid": 0
+        },
+
+        "destination": {
+          "description": "4th St SE & 15th Ave SE, Minneapolis, Minnesota, 55414",
+          "point": {
+            "x": 481518.99235740345,
+            "y": 4980748.714880901
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-04-29T07:15:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "3",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        }
+      ]
+    },
+    {
+      "name": "Route 4 NB - Rush Hour",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Stop 50231",
+          "point": {
+            "x": 476380.11299983674,
+            "y": 4967116.02070025
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Stop 172",
+          "point": {
+            "x": 477288.0852998387,
+            "y": 4977841.179200246
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-04-10T08:20:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "4",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        }
+      ]
+    },
+    {
+      "name": "Route 4 SB - Non Rush Hour",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+
+          "description": "Stop 172",
+          "point": {
+            "x": 477288.0852998387,
+            "y": 4977841.179200246
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Stop 50231",
+          "point": {
+            "x": 476380.11299983674,
+            "y": 4967116.02070025
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-04-10T20:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "4",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        }
+      ]
+    },
+    {
+      "name": "Route 4 SB to 4 NB Stay on Thru",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "7600 Penn Ave S, Richfield, Minnesota, 55423",
+          "point": {
+            "x": 475600.28802067984,
+            "y": 4968045.485589595
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "56th St W & Lyndale Ave S, Minneapolis, Minnesota, 55419",
+          "point": {
+            "x": 477234.0328932413,
+            "y": 4972043.391730765
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2024-05-21T05:30:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "4",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 2
+        },
+        {
+          "assertiontype": "Xfer",
+          "leg": 0,
+          "route": "4",
+          "route2": "4",
+          "direction": "S",
+          "direction2": "N",
+          "xfertype": "Stayonthru",
+          "offstop": 26164,
+          "onstop": 26164
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 5 NB - Non Rush Hour",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "53rd St E & Chicago Ave, Minneapolis, Minnesota, 55417",
+          "point": {
+            "x": 479267.5177330163,
+            "y": 4972659.352558866
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "41st Ave N & Fremont Ave N, Minneapolis, Minnesota, 55412",
+          "point": {
+            "x": 476701.525251428,
+            "y": 4986278.359245554
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "A",
+        "walkdist": 0.25,
+        "minimize": "W",
+        "accessible": false,
+        "xmode": "BX",
+        "datetime": "2023-04-27T10:05:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "5",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        }
+      ]
+    },
+    {
+      "name": "Route 5 SB - Rush Hour",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "41st Ave N & Fremont Ave N, Minneapolis, Minnesota, 55412",
+          "point": {
+            "x": 476701.525251428,
+            "y": 4986278.359245554
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "53rd St E & Chicago Ave, Minneapolis, Minnesota, 55417",
+          "point": {
+            "x": 479267.5177330163,
+            "y": 4972659.352558866
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.25,
+        "minimize": "W",
+        "accessible": false,
+        "xmode": "BX",
+        "datetime": "2023-04-27T15:30:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "5",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        }
+      ]
+    },
+    {
+      "name": "Route 7 SB - Non Rush Stay on Through",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Trailhead Building",
+          "point": {
+            "x": 474283.99999984,
+            "y": 4982037.000000245
+          },
+          "landmarkid": 2147
+        },
+        "destination": {
+          "description": "38th St E & Minnehaha Ave, Minneapolis, Minnesota, 55406",
+          "point": {
+            "x": 482332.3271402415,
+            "y": 4975661.503528117
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-06-06T11:45:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "7",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 2
+        },
+        {
+          "assertiontype": "Xfer",
+          "leg": 0,
+          "route": "7",
+          "route2": "7",
+          "direction": "N",
+          "direction2": "S",
+          "xfertype": "Stayonthru",
+          "offstop": 40828,
+          "onstop": 28554
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 9 EB - AM Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Cedar Lake Rd & Royals Dr, Minnetonka, Minnesota, 55305",
+          "point": {
+            "x": 467635.11889874097,
+            "y": 4978043.484407668
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Queen Ave S & Laurel Ave W, Minneapolis, Minnesota, 55405",
+          "point": {
+            "x": 475585.92469529697,
+            "y": 4980058.771784071
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T06:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "9",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 9 WB - Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Queen Ave S & Laurel Ave W, Minneapolis, Minnesota, 55405",
+          "point": {
+            "x": 475585.92469529697,
+            "y": 4980058.771784071
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Cedar Lake Rd & Royals Dr, Minnetonka, Minnesota, 55305",
+          "point": {
+            "x": 467635.11889874097,
+            "y": 4978043.484407668
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T11:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "9",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 10 SB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Osborne Rd NE & Monroe St NE, Fridley, Minnesota, 55432",
+          "point": {
+            "x": 480057.4010544308,
+            "y": 4994966.312275422
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Central Ave NE & Lowry Ave NE, Minneapolis, Minnesota, 55418",
+          "point": {
+            "x": 480510.940392293,
+            "y": 4984442.950905052
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T07:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "10",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 10 NB Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Central Ave NE & Lowry Ave NE, Minneapolis, Minnesota, 55418",
+          "point": {
+            "x": 480510.940392293,
+            "y": 4984442.950905052
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Osborne Rd NE & Monroe St NE, Fridley, Minnesota, 55432",
+          "point": {
+            "x": 480057.4010544308,
+            "y": 4994966.312275422
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T19:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "10",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 10  - Northtown Stay on Through",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "73rd Ave NE & University Ave NE, Fridley, Minnesota, 55432",
+          "point": {
+            "x": 479243.71685822855,
+            "y": 4994152.066263887
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "73rd Ave NE & Central Ave NE, Fridley, Minnesota, 55432",
+          "point": {
+            "x": 481272.0429431744,
+            "y": 4994140.7747285385
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2024-05-16T05:32:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "10",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 2
+        },
+        {
+          "assertiontype": "Xfer",
+          "leg": 0,
+          "route": "10",
+          "route2": "10",
+          "direction": "N",
+          "direction2": "S",
+          "xfertype": "Stayonthru",
+          "offstop": 38151,
+          "onstop": 38151
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 10 to 18 Stay on Through",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "50th Ave NE & Central Ave NE, Columbia Heights, Minnesota, 55421",
+          "point": {
+            "x": 480500.6292154109,
+            "y": 4989534.971281779
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "26th St E & Nicollet Ave, Minneapolis, Minnesota, 55404",
+          "point": {
+            "x": 478082.7585874084,
+            "y": 4978048.140535835
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2024-05-16T00:30:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "10",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 2
+        },
+        {
+          "assertiontype": "Xfer",
+          "leg": 0,
+          "route": "10",
+          "route2": "18",
+          "direction": "S",
+          "direction2": "S",
+          "xfertype": "Stayonthru",
+          "offstop": 15235,
+          "onstop": 15235
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 11 NB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Stop 17742",
+          "point": {
+            "x": 478686.90649983735,
+            "y": 4974657.156200246
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Stop 14606",
+          "point": {
+            "x": 479123.808799838,
+            "y": 4986919.955200247
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T06:39:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "11",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 11 SB Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Stop 14606",
+          "point": {
+            "x": 479123.808799838,
+            "y": 4986919.955200247
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Stop 17742",
+          "point": {
+            "x": 478686.90649983735,
+            "y": 4974657.156200246
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T14:12:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "11",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 14 NB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "48th St E & Bloomington Ave, Minneapolis, Minnesota, 55417",
+          "point": {
+            "x": 480077.390540206,
+            "y": 4973659.562258374
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "1543 11th Ave S, Minneapolis, Minnesota, 55404",
+          "point": {
+            "x": 479643.99412542605,
+            "y": 4979387.013070914
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "W",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T06:10:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "14",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 14 SB Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Robbinsdale Transit Center",
+          "point": {
+            "x": 473251.99999983824,
+            "y": 4986356.000100247
+          },
+          "landmarkid": 6347
+        },
+        "destination": {
+          "description": "Plymouth Ave N & Washington Ave N, Minneapolis, Minnesota, 55411",
+          "point": {
+            "x": 477813.5835408127,
+            "y": 4982101.23060005
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T13:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "14",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 17 EB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Blake Rd N & Cambridge St, Hopkins, Minnesota, 55343",
+          "point": {
+            "x": 469567.7668506082,
+            "y": 4975713.46405616
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "St Louis Park City Hall",
+          "point": {
+            "x": 472909.99999983876,
+            "y": 4977283.000000249
+          },
+          "landmarkid": 3867
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BX",
+        "datetime": "2023-07-19T07:02:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "17",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 17 WB Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Rhode Island Ave S & Minnetonka Blvd, Saint Louis Park, Minnesota, 55426",
+          "point": {
+            "x": 470152.30857171223,
+            "y": 4977404.368304914
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Blake Rd Station",
+          "point": {
+            "x": 469359.99999983626,
+            "y": 4974838.000000248
+          },
+          "landmarkid": 30302
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2024-12-11T10:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "17",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 18 NB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "7265 Nicollet Ave S, Richfield, Minnesota, 55423",
+          "point": {
+            "x": 478028.55890737224,
+            "y": 4968718.01178197
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Central Library",
+          "point": {
+            "x": 478649.99999983853,
+            "y": 4980861.000000246
+          },
+          "landmarkid": 3733
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T07:25:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "18",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 18 SB Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Central Library",
+          "point": {
+            "x": 478649.99999983853,
+            "y": 4980861.000000246
+          },
+          "landmarkid": 3733
+        },
+        "destination": {
+          "description": "7265 Nicollet Ave S, Richfield, Minnesota, 55423",
+          "point": {
+            "x": 478028.55890737224,
+            "y": 4968718.01178197
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T22:40:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "18",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 18 to 10 Stay on Through",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "66th St E & Nicollet Ave S, Richfield, Minnesota, 55423",
+          "point": {
+            "x": 478044.0026944087,
+            "y": 4970052.005540674
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Lowry Ave NE & Central Ave NE, Minneapolis, Minnesota, 55418",
+          "point": {
+            "x": 480510.940392293,
+            "y": 4984442.950905052
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2024-05-20T00:19:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "18",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 2
+        },
+        {
+          "assertiontype": "Xfer",
+          "leg": 0,
+          "route": "18",
+          "route2": "10",
+          "direction": "N",
+          "direction2": "N",
+          "xfertype": "Stayonthru",
+          "offstop": 15236,
+          "onstop": 15236
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 22 NB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "VA Medical Center",
+          "point": {
+            "x": 483902.99999983987,
+            "y": 4972081.0001002485
+          },
+          "landmarkid": 1678
+        },
+        "destination": {
+          "description": "4123 Lyndale Ave N, Minneapolis, Minnesota, 55412",
+          "point": {
+            "x": 477300.1197253268,
+            "y": 4986309.7203861335
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T08:37:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "22",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 22 SB Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Fremont Ave N & Dowling Ave N, Minneapolis, Minnesota, 55412",
+          "point": {
+            "x": 476708.4754226251,
+            "y": 4985657.4556949055
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "2432 Cedar Ave S, Minneapolis, Minnesota, 55404",
+          "point": {
+            "x": 480488.72610299394,
+            "y": 4978373.39336454
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T20:41:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "22",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 22 NB to SB Stay on Through at BCTC",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "5700 Dupont Ave N, Brooklyn Center, Minnesota, 55430",
+          "point": {
+            "x": 476870.71831996244,
+            "y": 4989485.331834271
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "5100 Penn Ave N, Minneapolis, Minnesota, 55430",
+          "point": {
+            "x": 475648.09743903513,
+            "y": 4988289.392860987
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2024-06-18T10:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "22",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 2
+        },
+        {
+          "assertiontype": "Xfer",
+          "leg": 0,
+          "route": "22",
+          "route2": "22",
+          "direction": "N",
+          "direction2": "S",
+          "xfertype": "Stayonthru",
+          "offstop": 37336,
+          "onstop": 37336
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 25 NB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "9th St S & Nicollet Mall, Minneapolis, Minnesota, 55402",
+          "point": {
+            "x": 478406.3107360374,
+            "y": 4980207.588569207
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Stinson Blvd & Ridgway Pkwy, Minneapolis, Minnesota, 55418",
+          "point": {
+            "x": 482114.68877502636,
+            "y": 4983407.4669847265
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T17:20:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "25",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 25 SB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Stinson Blvd & Ridgway Pkwy, Minneapolis, Minnesota, 55418",
+          "point": {
+            "x": 482114.68877502636,
+            "y": 4983407.4669847265
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "9th St S & Nicollet Mall, Minneapolis, Minnesota, 55402",
+          "point": {
+            "x": 478406.3107360374,
+            "y": 4980207.588569207
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T08:20:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "25",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 27 EB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Lake St W & Lyndale Ave S, Minneapolis, Minnesota, 55408",
+          "point": {
+            "x": 477273.50090628094,
+            "y": 4977255.132010829
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "2800 12th Ave S, Minneapolis, Minnesota, 55407",
+          "point": {
+            "x": 479676.9427421051,
+            "y": 4977637.596204471
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2025-06-16T07:20:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "27",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 27 WB Off-Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "2600 12th Ave S, Minneapolis, Minnesota, 55407",
+          "point": {
+            "x": 479681.68085154623,
+            "y": 4978036.575770713
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Lake St W & Lyndale Ave S, Minneapolis, Minnesota, 55408",
+          "point": {
+            "x": 477273.50090628094,
+            "y": 4977255.132010829
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2025-06-16T10:30:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "27",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 30 EB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Golden Valley Rd & Xerxes Ave N, Golden Valley, Minnesota, 55422",
+          "point": {
+            "x": 474901.18526890996,
+            "y": 4982882.856099602
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "27th Ave SE & Hennepin Ave E, Minneapolis, Minnesota, 55414",
+          "point": {
+            "x": 483041.64259590424,
+            "y": 4982036.221951857
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T08:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "30",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 30 WB Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "27th Ave SE & Hennepin Ave E, Minneapolis, Minnesota, 55414",
+          "point": {
+            "x": 483041.64259590424,
+            "y": 4982036.221951857
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "West Broadway & Dupont Ave N, Minneapolis, Minnesota, 55411",
+          "point": {
+            "x": 476938.8775071901,
+            "y": 4982898.168202495
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T10:15:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "30",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 32 EB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Robbinsdale Transit Center",
+          "point": {
+            "x": 473251.99999983824,
+            "y": 4986356.000100247
+          },
+          "landmarkid": 6347
+        },
+        "destination": {
+          "description": "Rosedale Transit Center",
+          "point": {
+            "x": 486733.9999998391,
+            "y": 4984380.000000248
+          },
+          "landmarkid": 2753
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T16:20:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "32",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 32 WB Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Rosedale Transit Center",
+          "point": {
+            "x": 486733.9999998391,
+            "y": 4984380.000000248
+          },
+          "landmarkid": 2753
+        },
+        "destination": {
+          "description": "Robbinsdale Transit Center",
+          "point": {
+            "x": 473251.99999983824,
+            "y": 4986356.000100247
+          },
+          "landmarkid": 6347
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-11T16:20:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "32",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 33 EB - Single leg",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Westgate Station",
+          "point": {
+            "x": 483723.9999998392,
+            "y": 4979358.000100247
+          },
+          "landmarkid": 27282
+        },
+        "destination": {
+          "description": "701 Kasota Ave, Minneapolis, Minnesota, 55414",
+          "point": {
+            "x": 483098.45483836584,
+            "y": 4980875.139045544
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-10T06:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "33",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 33 EB - Stay on Thru",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "701 Kasota Ave, Minneapolis, Minnesota, 55414",
+          "point": {
+            "x": 483096.8561165431,
+            "y": 4980876.499029536
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "27th Ave SE & University Ave SE, Minneapolis, Minnesota, 55414",
+          "point": {
+            "x": 482761.3231779967,
+            "y": 4979899.421487933
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "X",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2024-05-21T05:22:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "33",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 2
+        },
+        {
+          "assertiontype": "Xfer",
+          "leg": 0,
+          "route": "33",
+          "route2": "33",
+          "direction": "E",
+          "direction2": "E",
+          "xfertype": "Stayonthru",
+          "offstop": 35160,
+          "onstop": 35160
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 33 WB - Single leg",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "701 Kasota Ave, Minneapolis, Minnesota, 55414",
+          "point": {
+            "x": 483098.45483836584,
+            "y": 4980875.139045544
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Westgate Station",
+          "point": {
+            "x": 483723.9999998392,
+            "y": 4979358.000100247
+          },
+          "landmarkid": 27282
+        },
+
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-10T16:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "33",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 33 WB - Stay on Thru",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "Westgate Station",
+          "point": {
+            "x": 483723.9999998392,
+            "y": 4979358.000100247
+          },
+          "landmarkid": 27282
+        },
+        "destination": {
+          "description": "701 Kasota Ave, Minneapolis, Minnesota, 55414",
+          "point": {
+            "x": 483098.45483836584,
+            "y": 4980875.139045544
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-10T16:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "33",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 2
+        },
+        {
+          "assertiontype": "Xfer",
+          "leg": 0,
+          "route": "33",
+          "route2": "33",
+          "direction": "W",
+          "direction2": "W",
+          "xfertype": "Stayonthru",
+          "offstop": 38321,
+          "onstop": 38321
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 36 NB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "78th St W & Johnson Ave S, Bloomington, Minnesota, 55435",
+          "point": {
+            "x": 473654.0256965535,
+            "y": 4967326.143636816
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "5000 Xerxes Ave S, Minneapolis, Minnesota, 55410",
+          "point": {
+            "x": 474824.7446281605,
+            "y": 4973266.743055868
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2025-12-08T07:25:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "36",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 36 SB Off-Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "5000 Xerxes Ave S, Minneapolis, Minnesota, 55410",
+          "point": {
+            "x": 474824.7446281605,
+            "y": 4973266.743055868
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "78th St W & Johnson Ave S, Bloomington, Minnesota, 55435",
+          "point": {
+            "x": 473654.0256965535,
+            "y": 4967326.143636816
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2025-12-08T10:25:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "36",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 38 EB Peak - To Highland",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "10415 Smetana Rd, Minnetonka, Minnesota, 55343",
+          "point": {
+            "x": 467505.77292538167,
+            "y": 4972603.850972266
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Highland Park",
+          "point": {
+            "x": 485209.9999998382,
+            "y": 4973844.000000247
+          },
+          "landmarkid": 28947
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2025-06-16T07:30:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "38",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 38 EB Peak - To Vets Home",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "10415 Smetana Rd, Minnetonka, Minnesota, 55343",
+          "point": {
+            "x": 467505.77292538167,
+            "y": 4972603.850972266
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "Minnesota Veterans Home",
+          "point": {
+            "x": 483954.99999983824,
+            "y": 4973209.000000248
+          },
+          "landmarkid": 3468
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2025-06-16T07:30:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "38",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 38 WB Off-Peak - From Highland",
+      "active": true,
+      "tripplanparams": {
+        "destination": {
+          "description": "10415 Smetana Rd, Minnetonka, Minnesota, 55343",
+          "point": {
+            "x": 467505.77292538167,
+            "y": 4972603.850972266
+          },
+          "landmarkid": 0
+        },
+        "origin": {
+          "description": "Highland Park",
+          "point": {
+            "x": 485209.9999998382,
+            "y": 4973844.000000247
+          },
+          "landmarkid": 28947
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2025-06-16T12:00:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "38",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 38 WB Off-Peak - From Vets Home",
+      "active": true,
+      "tripplanparams": {
+        "destination": {
+          "description": "10415 Smetana Rd, Minnetonka, Minnesota, 55343",
+          "point": {
+            "x": 467505.77292538167,
+            "y": 4972603.850972266
+          },
+          "landmarkid": 0
+        },
+        "origin": {
+          "description": "Minnesota Veterans Home",
+          "point": {
+            "x": 483954.99999983824,
+            "y": 4973209.000000248
+          },
+          "landmarkid": 3468
+        },
+        "arrdep": "A",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2025-06-16T11:30:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "38",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 46 EB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "4615 Grand Ave S, Minneapolis, Minnesota, 55419",
+          "point": {
+            "x": 477554.4751862132,
+            "y": 4974024.393889017
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "46th St Station",
+          "point": {
+            "x": 482645.9999998378,
+            "y": 4974170.000000247
+          },
+          "landmarkid": 11137
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-12T07:04:40.356"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "46",
+          "direction": "E",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2
+        }
+      ]
+    },
+    {
+      "name": "Route 46 WB Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "46th St Station",
+          "point": {
+            "x": 482645.9999998378,
+            "y": 4974170.000000247
+          },
+          "landmarkid": 11137
+        },
+        "destination": {
+          "description": "4615 Grand Ave S, Minneapolis, Minnesota, 55419",
+          "point": {
+            "x": 477554.4751862132,
+            "y": 4974024.393889017
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2023-07-12T11:06:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "46",
+          "direction": "W",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 48 NB Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "14th Ave N & Penn Ave N, Minneapolis, Minnesota, 55411",
+          "point": {
+            "x": 475704.52409032406,
+            "y": 4982226.880299541
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "32nd Ave N & Douglas Dr N, Crystal, Minnesota, 55422",
+          "point": {
+            "x": 471632.0758371558,
+            "y": 4984637.204298172
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2026-07-15T06:40:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "48",
+          "direction": "N",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    },
+    {
+      "name": "Route 48 SB Off Peak",
+      "active": true,
+      "tripplanparams": {
+        "origin": {
+          "description": "32nd Ave N & Douglas Dr N, Crystal, Minnesota, 55422",
+          "point": {
+            "x": 471632.0758371558,
+            "y": 4984637.204298172
+          },
+          "landmarkid": 0
+        },
+        "destination": {
+          "description": "14th Ave N & Penn Ave N, Minneapolis, Minnesota, 55411",
+          "point": {
+            "x": 475704.52409032406,
+            "y": 4982226.880299541
+          },
+          "landmarkid": 0
+        },
+        "arrdep": "D",
+        "walkdist": 0.5,
+        "minimize": "T",
+        "accessible": false,
+        "xmode": "BCKLX",
+        "datetime": "2026-07-15T09:40:00.000"
+      },
+      "assertions": [
+        {
+          "assertiontype": "Routedir",
+          "leg": 0,
+          "route": "48",
+          "direction": "S",
+          "routetype": "B"
+        },
+        {
+          "assertiontype": "Legcount",
+          "legcount": 1
+        },
+        {
+          "assertiontype": "Fare",
+          "fare": 2.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 services:
-  otp-deployment-tests:
+  otp-sentinel:
     build: .
     ports:
       - "8080:8080"

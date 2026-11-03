@@ -58,13 +58,13 @@ export function EditorHeader({
           event.preventDefault();
           onHome();
         }}
-        aria-label="OTP suite builder home"
+        aria-label="OTP Sentinel suite builder home"
       >
         <span className="brand-mark">
           <Route size={25} strokeWidth={1.7} />
         </span>
         <span>
-          <strong>OTP</strong>
+          <strong>OTP Sentinel</strong>
           <span>Suite builder</span>
         </span>
       </a>

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://opentripplanner.org/schemas/deployment-test-suite-v2.schema.json",
-  "title": "OTP deployment test suite",
+  "title": "OTP Sentinel test suite",
   "type": "object",
   "additionalProperties": false,
   "properties": {

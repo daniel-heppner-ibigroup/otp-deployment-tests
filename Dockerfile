@@ -19,7 +19,7 @@ RUN mvn package -DskipTests -Dplugin.prettier.skip=true
 FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
+COPY --from=builder /app/target/otp-sentinel-*.jar app.jar
 
 EXPOSE 8080
 # Mount the deployment configuration at /app/config.kdl when starting the container.

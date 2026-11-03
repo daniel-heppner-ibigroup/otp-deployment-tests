@@ -1,4 +1,9 @@
-# OTP deployment tests
+# OTP Sentinel
+
+Continuous journey testing and monitoring for OpenTripPlanner. Define expected
+trip results, run checks against live OTP deployments on a schedule, and expose
+test results and response times through Prometheus metrics. The included suite
+builder lets you create and edit JSON test suites in your browser.
 
 Copy the example configuration and set the deployment URL to your OTP instance:
 
@@ -43,9 +48,11 @@ install that checkout locally before building this project:
 ```sh
 cd ../otp-java-client
 mvn -Dtest='*Test,!IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false -Dgpg.skip=true -Dmaven.javadoc.skip=true install
-cd ../otp-deployment-tests
+cd ../otp-sentinel
 mvn test package
 ```
+
+The build produces `target/otp-sentinel-1.0-SNAPSHOT.jar`.
 
 A clean CI or Docker build needs this snapshot in its configured artifact
 repository or a published version containing these changes, followed by an
